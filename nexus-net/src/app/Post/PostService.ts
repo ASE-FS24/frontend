@@ -6,24 +6,26 @@ const mockPosts = [
     {
         id: "MockPost101",
         authorId: "MockUser1",
+        type: "Project",
         title: "Mock Title 1",
         shortDescription: "This is a short description of the first mock post.",
         description: "This is the long description of the first mock post. This is the long description of the first mock post. This is the long description of the first mock post. This is the long description of the first mock post.",
         image: "",
         comments: [],
         likes: 4,
-        Hashtags: ["#MockPost4ever"]
+        hashtags: ["#MockPost4ever"]
     },
     {
         id: "MockPost102",
         authorId: "MockUser1",
+        type: "Project",
         title: "Mock Title 2",
         shortDescription: "This is a short description of the second mock post.",
         description: "This is the long description of the second mock post. This is the long description of the second mock post. This is the long description of the second mock post. This is the long description of the second mock post.",
         image: "",
         comments: [],
         likes: 3,
-        Hashtags: ["#MockPost4ever"]
+        hashtags: ["#MockPost4ever"]
     }
 ]
 
