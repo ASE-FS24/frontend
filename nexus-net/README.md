@@ -11,6 +11,10 @@ In the project directory, you can run:
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
+
+Runs the app in the following URL from AWS (uses S3 bucket).\
+Open [http://nexusnet-frontend.s3-website.eu-central-1.amazonaws.com/](http://nexusnet-frontend.s3-website.eu-central-1.amazonaws.com/) to view the hosted website online.
+
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
