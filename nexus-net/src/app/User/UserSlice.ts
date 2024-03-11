@@ -1,6 +1,6 @@
 import {createAsyncThunk, createEntityAdapter, createSelector, createSlice,} from '@reduxjs/toolkit';
 import {User} from "./UserType";
-import {getAllUsers} from "./userService";
+import {getAllUsers} from "./UserService";
 
 const userAdapter = createEntityAdapter<User>();
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {

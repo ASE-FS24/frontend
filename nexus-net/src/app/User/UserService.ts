@@ -1,3 +1,5 @@
+import {Post} from "../Post/PostType";
+
 const baseurl = process.env.REACT_APP_USER_BASEURL;
 
 
