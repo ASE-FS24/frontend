@@ -9,7 +9,7 @@
 /coverage
 
 # production
-/build
+# /build #commenting build folder to see if direct deployment is easier.
 
 # misc
 .DS_Store
