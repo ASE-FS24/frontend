@@ -9,9 +9,8 @@ export interface User {
     motto?: string;
     university: string;
     bio?: string;
-    degreeProgram?: 'Bachelors' | 'Masters' | "PhD" | "Other";
+    degreeProgram?: string;
     birthday?: string;
     profilePicture?: string;
-    posts: Array<Post>;
-    followedUsers: Array<User>;
+    followedUsers: Array<String>;
 }
