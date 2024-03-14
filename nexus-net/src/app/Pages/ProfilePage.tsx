@@ -2,6 +2,7 @@ import {useAppSelector} from "../hooks";
 import styled from "styled-components";
 import {selectActiveUser} from "../User/LoggedInUserSlice";
 import UserComponent from "../User/UserComponent";
+import {signOut} from "../Util/auth";
 
 
 const StyledProfileContainer = styled.div`
@@ -16,6 +17,7 @@ function ProfilePage() {
     return (
         <StyledProfileContainer>
             {activeUser && <UserComponent user={activeUser}/>}
+            <button onClick={() => signOut()}>Sign out</button>
         </StyledProfileContainer>
     )
 }

@@ -24,12 +24,11 @@ function Home() {
 
     return (
         <StyledMainPage>
-            {/*<StyledPosts>*/}
-            {/*    {posts && posts.map((post) => (*/}
-            {/*        <Post key={post.id} post={post}/>*/}
-            {/*    ))}*/}
-            {/*</StyledPosts>*/}
-            <Register/>
+            <StyledPosts>
+                {posts && posts.map((post) => (
+                    <Post key={post.id} post={post}/>
+                ))}
+            </StyledPosts>
         </StyledMainPage>
     );
 }

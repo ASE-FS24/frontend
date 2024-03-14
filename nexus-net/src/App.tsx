@@ -4,6 +4,8 @@ import Home from "./app/Pages/MainPage";
 import {BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import Register from "./app/Pages/RegisterPage";
 import ConfirmSignUp from "./app/Pages/ConfirmSignUpPage";
+import Login from "./app/Pages/LoginPage";
+import ProfilePage from "./app/Pages/ProfilePage";
 
 function App() {
     return (
@@ -24,6 +26,8 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/confirm-sign-up" element={<ConfirmSignUp />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/profile" element={<ProfilePage />} />
                 </Routes>
             </main>
         </BrowserRouter>
