@@ -1,5 +1,6 @@
 import { useState } from "react"
 import {confirmSignUp} from "../Util/auth";
+import {Link} from "react-router-dom";
 
 export default function ConfirmSignUp() {
     const [username, setUsername] = useState("");
@@ -23,7 +24,8 @@ export default function ConfirmSignUp() {
         return (
             <div>
                 <h2>Confirmation successful!</h2>
-                <p>You can now log in with your credentials. Go rock that app!</p>
+                <p>You can now log in with your credentials</p>
+                <Link to="/login">Login</Link>
             </div>
         )
     }
