@@ -1,42 +1,31 @@
 import {
-    CognitoUserPool,
-    CognitoUser,
-    AuthenticationDetails, CognitoUserAttribute,
+    CognitoUserPool, CognitoUser, AuthenticationDetails, CognitoUserAttribute,
 } from "amazon-cognito-identity-js"
-import UserPool, {cognitoConfig} from "../cognitoConfig"
+import {cognitoConfig} from "../cognitoConfig"
 
 const userPool = new CognitoUserPool({
-    UserPoolId: cognitoConfig.UserPoolId,
-    ClientId: cognitoConfig.ClientId,
+    UserPoolId: cognitoConfig.UserPoolId, ClientId: cognitoConfig.ClientId,
 })
 
 export function signUp(username, email, password) {
     const emailAttribute = new CognitoUserAttribute({
-        Name: "email",
-        Value: email
+        Name: "email", Value: email
     });
     return new Promise((resolve, reject) => {
-        userPool.signUp(
-            username,
-            password,
-            [emailAttribute],
-            null,
-            (err, result) => {
-                if (err) {
-                    reject(err)
-                    return
-                }
-                resolve(result.user)
+        userPool.signUp(username, password, [emailAttribute], [], (err, result) => {
+            if (err) {
+                reject(err)
+                return
             }
-        )
+            resolve(result.user)
+        })
     })
 }
 
 export function confirmSignUp(username, code) {
     return new Promise((resolve, reject) => {
         const cognitoUser = new CognitoUser({
-            Username: username,
-            Pool: userPool,
+            Username: username, Pool: userPool,
         })
 
         cognitoUser.confirmRegistration(code, true, (err, result) => {

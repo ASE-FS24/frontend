@@ -1,5 +1,6 @@
 import {useState} from "react";
 import {signUp} from "../Util/auth";
+import {Link} from "react-router-dom";
 
 
 export default function Register() {
@@ -14,10 +15,11 @@ export default function Register() {
         setError("")
 
         try {
-            await signUp(username, email, password);
-            setSuccess(true);
+            await signUp(username, email, password)
+            setSuccess(true)
         } catch (err: any) {
-            setError(err.message);
+            console.log(err)
+            setError(err.message)
         }
     }
     if (success) {
@@ -25,6 +27,7 @@ export default function Register() {
             <div>
                 <h2>SignUp successful!</h2>
                 <p>Please check your email for the confirmation code.</p>
+                <Link to="/confirm-sign-up">Confirm email</Link>
             </div>
         )
     }
@@ -37,7 +40,7 @@ export default function Register() {
                        onChange={(event) => setEmail(event.target.value)}/>
                 <label htmlFor={"username"}>Username:</label>
                 <input id="username" value={username}
-                onChange={(event) => setUsername(event.target.value)}/>
+                       onChange={(event) => setUsername(event.target.value)}/>
                 <label htmlFor={"password"}>Password:</label>
                 <input id="password" value={password}
                        onChange={(event) => setPassword(event.target.value)}/>
