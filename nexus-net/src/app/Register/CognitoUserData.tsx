@@ -23,7 +23,7 @@ export function CognitoSubPage(props: AppProps) {
             <label htmlFor={"password"}>Password:</label>
             <input id="password" value={props.password}
                    onChange={(event) => props.setPassword(event.target.value)}/>
-            <button onClick={(event) => props.setPage(2)}>Next</button>
+            <button onClick={() => props.setPage(2)}>Next</button>
         </div>
     )
 }

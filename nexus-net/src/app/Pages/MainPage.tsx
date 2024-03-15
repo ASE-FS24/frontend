@@ -2,7 +2,7 @@ import styled from "styled-components";
 import {useAppSelector} from "../hooks";
 import Post from "../Post/PostComponent";
 import {selectAllPosts} from "../Post/PostSlice";
-import Register from "./RegisterPage";
+import Header from "./Header";
 
 
 const StyledMainPage = styled.div`
@@ -23,13 +23,16 @@ function Home() {
     const posts = useAppSelector(selectAllPosts);
 
     return (
-        <StyledMainPage>
-            <StyledPosts>
-                {posts && posts.map((post) => (
-                    <Post key={post.id} post={post}/>
-                ))}
-            </StyledPosts>
-        </StyledMainPage>
+        <>
+            <Header/>
+            <StyledMainPage>
+                <StyledPosts>
+                    {posts && posts.map((post) => (
+                        <Post key={post.id} post={post}/>
+                    ))}
+                </StyledPosts>
+            </StyledMainPage>
+        </>
     );
 }
 
