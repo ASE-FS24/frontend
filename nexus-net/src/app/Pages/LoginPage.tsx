@@ -1,11 +1,11 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {signIn} from "../Util/auth";
 import {useNavigate} from "react-router-dom";
 import {getLoggedInUserThunk} from "../User/LoggedInUserSlice";
 import {store} from "../store";
-import styled from "styled-components";
+import styled, {css} from "styled-components";
 
-const StyledLoginContainer = styled.div`
+export const StyledLoginContainer = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
@@ -15,16 +15,20 @@ const StyledLoginContainer = styled.div`
   flex-direction: column;
 `;
 
-const StyledLogoContainer = styled.div`
-  margin-top: -150px;
+export const StyledLogoContainer = styled.div<{margin?: string}>`
+  margin-top: ${props => props.margin || '-150px'};
   position: relative;
+  
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
-const StyledLogo = styled.img`
+export const StyledLogo = styled.img`
   width: 400px;
 `;
 
-const StyledSlogan = styled.div`
+export const StyledSlogan = styled.div`
   position: absolute;
   color: #06f3d7;
   top: -25px;
@@ -51,26 +55,32 @@ const StyledButtonContainer = styled.div`
     justify-content: space-between;
 `;
 
-const StyledButton = styled.button`
+export const StyledButton = styled.button<{ margin?: string, disabled?: boolean }>`
   border: 1px solid #ff0000;
   background-color: #000000;
   color: #ffffff;
   border-radius: 5px;
   width: 150px;
   height: 40px;
-  margin: 15px;
   font-size: 1.5rem;
   font-weight: bold;
   box-shadow: -5px -5px 10px 2px rgba(0,0,0,.8);
+  margin: ${props => props => props.margin || '15px auto'};
+  ${props => props.disabled && css`
+     opacity: 0.5;`
+}
   
   &:hover {
-    box-shadow: -2px -2px 5px 2px rgba(0,0,0,.8);
-    cursor: pointer;
-    scale: 0.95;
+    ${props => !props.disabled && css`
+      box-shadow: -2px -2px 5px 2px rgba(0, 0, 0, .8);
+      cursor: pointer;
+      scale: 0.95;`
+    }
+    
   }
 `;
 
-const StyledError = styled.p`
+export const StyledError = styled.p`
   color: #ff0000;
 `;
 
@@ -89,6 +99,12 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
+    const [disabled, setDisabled] = useState(true);
+
+    useEffect(() => {
+        setDisabled(username === "" || password === "");
+    }, [username, password])
+
     const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setError("")
@@ -105,11 +121,10 @@ export default function Login() {
 
     return (
         <StyledLoginContainer>
-            <StyledLogoContainer>
+            <StyledLogoContainer onClick={() => navigate("/")}>
                 <StyledLogo src="/logo.png"/>
                 <StyledSlogan>Enter to create</StyledSlogan>
             </StyledLogoContainer>
-            <StyledLogo/>
             <StyledForm onSubmit={onSubmit}>
                 <StyledInput id="username"
                        type="text"
@@ -122,8 +137,8 @@ export default function Login() {
                        value={password}
                        onChange={(event) => setPassword(event.target.value)}/>
                 <StyledButtonContainer>
-                    <StyledButton onClick={() => navigate("/register")}>Register</StyledButton>
-                    <StyledButton type={"submit"}>Login</StyledButton>
+                    <StyledButton margin={"15px"} onClick={() => navigate("/register")}>Register</StyledButton>
+                    <StyledButton disabled={disabled} margin={"15px"} type={"submit"}>Login</StyledButton>
                 </StyledButtonContainer>
                 {error && <StyledError>{error}</StyledError>}
                 <StyledForgotPassword
