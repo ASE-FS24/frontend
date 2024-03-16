@@ -1,5 +1,25 @@
 import {SetStateAction} from "react";
+import {StyledButton, StyledInput} from "../Pages/LoginPage";
+import styled from "styled-components";
 
+
+const StyledTextArea = styled.textarea`
+  font-size: 1.25rem;
+  padding: 5px;
+  border-radius: 15px;
+  margin: 15px;
+  box-shadow: -5px -5px 10px 2px rgba(0,0,0,.8);
+`;
+
+const StyledSelect = styled.select`
+  font-size: 1.5rem;
+  padding: 5px;
+  margin: 15px;
+  box-shadow: -5px -5px 10px 2px rgba(0,0,0,.8);
+  &:hover{
+    cursor: pointer;
+  }
+`;
 
 interface AppProps {
     firstName: string;
@@ -17,38 +37,47 @@ interface AppProps {
     birthday: string;
     setBirthday: React.Dispatch<SetStateAction<string>>;
     setPage: React.Dispatch<SetStateAction<number>>;
+    disabled: boolean;
 }
 
 export function NexusNetSubPage(props: AppProps) {
     return(
-        <div>
-            <label htmlFor={"firstName"}>First name:</label>
-            <input id="firstName" value={props.firstName}
+        <>
+            <StyledInput id="firstName"
+                         value={props.firstName}
+                         placeholder="First name*"
                    onChange={(event) => props.setFirstName(event.target.value)}/>
-            <label htmlFor={"lastName"}>Last name:</label>
-            <input id="lastName" value={props.lastName}
+            <StyledInput id="lastName"
+                         value={props.lastName}
+                         placeholder="Last name*"
                    onChange={(event) => props.setLastName(event.target.value)}/>
-            <label htmlFor={"motto"}>What is your motto in life?</label>
-            <input id="motto" value={props.motto}
+            <StyledInput id="motto"
+                         value={props.motto}
+                         placeholder="Your motto in life"
                    onChange={(event) => props.setMotto(event.target.value)}/>
-            <label htmlFor={"university"}>What university do you study at?</label>
-            <input id="university" value={props.university}
+            <StyledInput id="university"
+                         value={props.university}
+                         placeholder="Your university*"
                    onChange={(event) => props.setUniversity(event.target.value)}/>
-            <label htmlFor={"degreeProgram"}>Degree Program</label>
-            <select id="degreeProgram" name="degreeProgram" onChange={(event) => props.setDegreeProgram(event.target.value)}>
-                <option label="Please select" value="Please select" selected disabled hidden></option>
+            <StyledSelect id="degreeProgram" name="degreeProgram" onChange={(event) => props.setDegreeProgram(event.target.value)}>
+                <option label="Select your degree program" value="" selected disabled hidden></option>
                 <option label="Bachelors" value="Bachelors"></option>
                 <option label="Masters" value="Masters"></option>
                 <option label="PhD" value="PhD"></option>
-            </select>
-            <label htmlFor={"bio"}>Tell us about yourself!</label>
-            <textarea id="bio" value={props.bio}
+            </StyledSelect>
+            <StyledTextArea id="bio"
+                            rows={6}
+                            cols={30}
+                            value={props.bio}
+                            placeholder="Tell us something about yourself!"
                    onChange={(event) => props.setBio(event.target.value)}/>
-            <label htmlFor={"birthday"}>Your date of birth:</label>
-            <input id="birthday" value={props.birthday}
+            <StyledInput id="birthday"
+                         type="date"
+                         value={props.birthday}
                       onChange={(event) => props.setBirthday(event.target.value)}/>
-            <button onClick={(event) => props.setPage(1)}>Back</button>
-            <button type="submit">Register</button>
-        </div>
+            {/*{error && <StyledError>{error}</StyledError>}*/}
+            <StyledButton onClick={(event) => props.setPage(1)}>Back</StyledButton>
+            <StyledButton disabled={props.disabled} type="submit">Register</StyledButton>
+        </>
     )
 }
