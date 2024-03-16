@@ -1,9 +1,9 @@
 import {useAppSelector} from "../hooks";
 import {selectActiveUser} from "../User/LoggedInUserSlice";
 import styled from "styled-components";
-import {ReactComponent as UserSVG} from "../static/images/user.svg";
-import {ReactComponent as MessageSVG} from "../static/images/Message.svg";
-import {ReactComponent as NetworkSVG} from "../static/images/network.svg";
+import {ReactComponent as UserSVG} from "../../static/images/user.svg";
+import {ReactComponent as MessageSVG} from "../../static/images/Message.svg";
+import {ReactComponent as NetworkSVG} from "../../static/images/network.svg";
 import {useNavigate} from "react-router-dom";
 
 
