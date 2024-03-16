@@ -1,6 +1,6 @@
 import {User} from "./UserType";
 import styled from "styled-components";
-import {ReactComponent as ProfileSVG} from "../static/images/profile.svg";
+import {ReactComponent as ProfileSVG} from "../../static/images/profile.svg";
 
 const StyledUserContainer = styled.div`
   display: flex;

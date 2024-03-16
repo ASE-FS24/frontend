@@ -1,6 +1,6 @@
 import {Post} from "./PostType";
 
-const baseurl = process.env.REACT_APP_USER_BASEURL;
+const baseurl = process.env.REACT_APP_POST_BASEURL;
 
 const mockPosts = [
     {
@@ -30,15 +30,17 @@ const mockPosts = [
 ]
 
 export function getAllPosts(): Promise<Post[]> {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(mockPosts);
-        }, 1000); // Simulate a 1 second delay
-    });
-    // return fetch(baseurl + "posts/all/")
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         return data
-    //     })
-    //     .catch(error => console.log(error))
+    return fetch(baseurl + "posts/all/")
+        .then(response => response.json())
+        .then(data => {
+            return data
+        })
+        .catch(error => {
+            console.log(error);
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(mockPosts);
+                }, 1000); // Simulate a 1 second delay
+            });
+        })
 }

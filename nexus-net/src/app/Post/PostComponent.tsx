@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import {Post} from "./PostType";
-import {ReactComponent as LikeSVG} from "../static/images/heart.svg";
-import {ReactComponent as FireSVG} from "../static/images/fire.svg";
-import {ReactComponent as ShareSVG} from "../static/images/share.svg";
-import {ReactComponent as ReportSVG} from "../static/images/report.svg";
+import {ReactComponent as LikeSVG} from "../../static/images/heart.svg";
+import {ReactComponent as FireSVG} from "../../static/images/fire.svg";
+import {ReactComponent as ShareSVG} from "../../static/images/share.svg";
+import {ReactComponent as ReportSVG} from "../../static/images/report.svg";
 
 
 const StyledPost = styled.div`

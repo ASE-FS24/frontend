@@ -1,5 +1,4 @@
 import {User} from "./UserType";
-import {log} from "util";
 
 const baseurl = process.env.REACT_APP_USER_BASEURL;
 
@@ -38,57 +37,65 @@ const mockUsers = [
 
 
 export function getAllUsers(): Promise<User[]> {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(mockUsers);
-        }, 1000)
-    })
-    // return fetch(baseurl + "users/all/")
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         return data
-    //     })
-    //     .catch(error => console.log(error))
+    return fetch(baseurl + "users/all/")
+        .then(response => response.json())
+        .then(data => {
+            return data
+        })
+        .catch(error => {
+            console.log(error)
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(mockUsers);
+                }, 1000)
+            })
+        })
 }
 
 export function createUser(user: User) {
-    console.log("User created:");
-    console.log(JSON.stringify(user));
-    // return fetch( baseurl + "users", {
-    //     method: 'PUT',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(user)
-    // })
-    //     .then(response => response.json())
-    //     .catch(error => console.log(error));
+    return fetch(baseurl + "users", {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(user)
+    })
+        .then(response => response.json())
+        .catch(error => {
+            console.log(error)
+            console.log("Mock user created:");
+            console.log(JSON.stringify(user));
+        });
 }
 
 export function getUser(userId: string): Promise<User> {
-    // return fetch( baseurl + "users/" + userId)
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         return data
-    //     })
-    //     .catch(error => console.log(error));
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(mockUser);
-        }, 1000)
-    })
+    return fetch(baseurl + "users/" + userId)
+        .then(response => response.json())
+        .then(data => {
+            return data
+        })
+        .catch(error => {
+            console.log(error);
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(mockUser);
+                }, 1000)
+            })
+        });
 }
 
 export function getUserByUsername(username: string): Promise<User> {
-    // return fetch( baseurl + "users/" + userId)
-    //     .then(response => response.json())
-    //     .then(data => {
-    //         return data
-    //     })
-    //     .catch(error => console.log(error));
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve(mockUser);
-        }, 1000)
-    })
+    return fetch(baseurl + "users/username" + username)
+        .then(response => response.json())
+        .then(data => {
+            return data
+        })
+        .catch(error => {
+            console.log(error);
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(mockUser);
+                }, 1000)
+            })
+        });
 }
