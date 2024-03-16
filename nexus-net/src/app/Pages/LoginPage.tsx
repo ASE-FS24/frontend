@@ -62,6 +62,12 @@ const StyledButton = styled.button`
   font-size: 1.5rem;
   font-weight: bold;
   box-shadow: -5px -5px 10px 2px rgba(0,0,0,.8);
+  
+  &:hover {
+    box-shadow: -2px -2px 5px 2px rgba(0,0,0,.8);
+    cursor: pointer;
+    scale: 0.95;
+  }
 `;
 
 const StyledError = styled.p`
