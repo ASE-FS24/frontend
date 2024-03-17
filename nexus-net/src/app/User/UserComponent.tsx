@@ -1,5 +1,6 @@
 import {User} from "./UserType";
 import styled from "styled-components";
+import {ReactComponent as ProfileSVG} from "../../static/images/profile.svg";
 
 const StyledUserContainer = styled.div`
   display: flex;
@@ -26,6 +27,7 @@ const StyledUserBio = styled.div`
 function UserComponent({user}: {user: User}) {
     return (
         <StyledUserContainer>
+            <ProfileSVG style={{color: "#000000", width: "45px", height: "45px"}}/>
             <StyledUsername>{user.username}</StyledUsername>
             <StyledUserInfo>{user.firstName}</StyledUserInfo>
             <StyledUserInfo>{user.lastName}</StyledUserInfo>
