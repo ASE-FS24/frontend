@@ -9,13 +9,41 @@ import {ReactComponent as FilterActiveSVG} from "../../static/images/funnel-fill
 import {ReactComponent as SortDownSVG} from "../../static/images/sort-down.svg";
 import {ReactComponent as SortUpSVG} from "../../static/images/sort-up.svg";
 import {ReactComponent as LikeSVG} from "../../static/images/heart.svg";
+import {selectActiveUser} from "../User/LoggedInUserSlice";
+import {useNavigate} from "react-router-dom";
 
 
 const StyledMainPage = styled.div`
   display: flex;
-  justify-content: center;
   flex-direction: row;
 `;
+
+const StyledMenuContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 25%;
+  max-width: 25%;
+  font-size: 2rem;
+  padding: 20px;
+`;
+
+export const StyledMenuButton = styled.button`
+  background-color: #000000;
+  color: #ffffff;
+  border-radius: 5px;
+  width: 250px;
+  height: 30px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  box-shadow: -2px -2px 10px 2px rgba(255, 255, 255, .8);
+  margin: 15px 50px;
+
+  &:hover {
+    box-shadow: -1px -1px 5px 2px rgba(255, 255, 255, .8);
+    cursor: pointer;
+    scale: 0.95;
+  }`;
 
 const StyledContentContainer = styled.div`
   display: flex;
@@ -81,6 +109,8 @@ export const StyledFilterButton = styled.button<{ selected: boolean }>`
   }`;
 
 function Home() {
+    const activeUser = useAppSelector(selectActiveUser);
+    const navigate = useNavigate();
     const allPosts = useAppSelector(selectAllPosts);
     const [posts, setPosts] = useState(allPosts);
     const [projectFilter, setProjectFilter] = useState(false);
@@ -115,6 +145,14 @@ function Home() {
         <>
             <Header/>
             <StyledMainPage>
+                <StyledMenuContainer>
+                    {activeUser !== null ?
+                        <>
+                            <StyledMenuButton onClick={() => navigate("/post/create")}>New Post</StyledMenuButton>
+                            <StyledMenuButton>Connections</StyledMenuButton>
+                        </> :
+                        <></>}
+                </StyledMenuContainer>
                 <StyledContentContainer>
                     <StyledFiltersContainer>
                         {allFilter ? <FilterSVG style={{color: "#000000", width: "35px", height: "35px"}}/> :
