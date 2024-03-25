@@ -1,4 +1,5 @@
-import {useEffect, useId, useState} from "react";
+import {useEffect, useState} from "react";
+import { v4 as uuidv4 } from 'uuid';
 import {signUp} from "../Util/auth";
 import {CognitoSubPage} from "../Register/CognitoUserData";
 import {NexusNetSubPage} from "../Register/NexusNetUserData";
@@ -16,7 +17,7 @@ import {
 
 
 export default function Register() {
-    const userId = useId();
+    const userId = uuidv4();
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

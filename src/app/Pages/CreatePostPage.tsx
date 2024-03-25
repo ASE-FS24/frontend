@@ -10,6 +10,8 @@ import {newPost} from "../Post/PostSlice";
 import {useNavigate} from "react-router-dom";
 import {StyledSelect, StyledTextArea} from "../Register/NexusNetUserData";
 import {ReactComponent as XSVG} from "../../static/images/x.svg";
+import { v4 as uuidv4 } from 'uuid';
+
 
 
 
@@ -50,7 +52,7 @@ const StyledHashtag = styled.div`
 
 export default function CreatePost() {
     const activeUser = useAppSelector(selectActiveUser);
-    const postId = useId();
+    const postId = uuidv4();
     const [type, setType] = useState("");
     const [title, setTitle] = useState("");
     const [shortDescription, setShortDescription] = useState("");
