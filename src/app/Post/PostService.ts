@@ -16,7 +16,7 @@ const mockPosts = [
         edited: false,
         editedDate: "",
         comments: [],
-        likes: 4,
+        likes: 0,
         hashtags: ["#MockPost4ever"]
     },
     {
@@ -48,7 +48,7 @@ const mockPosts = [
         edited: true,
         editedDate: "2024-03-16T11:19:00Z",
         comments: [],
-        likes: 4,
+        likes: 2,
         hashtags: ["#MockPost4ever"]
     },
     {
@@ -64,7 +64,7 @@ const mockPosts = [
         edited: false,
         editedDate: "",
         comments: [],
-        likes: 4,
+        likes: 12,
         hashtags: ["#MockPost4ever"]
     }
 ]
