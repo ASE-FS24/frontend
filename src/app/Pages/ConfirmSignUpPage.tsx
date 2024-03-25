@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react"
 import {confirmSignUp} from "../Util/auth";
-import {Link, useSearchParams} from "react-router-dom";
+import {useSearchParams} from "react-router-dom";
 import {
     StyledButton,
     StyledForm,
@@ -30,7 +30,7 @@ export default function ConfirmSignUp() {
     const [username, setUsername] = useState("");
     const [code, setCode] = useState("");
     const [error, setError] = useState("");
-    const [success, setSuccess] = useState(true);
+    const [success, setSuccess] = useState(false);
     const navigate = useNavigate();
 
     const [searchParams] = useSearchParams();
