@@ -1,6 +1,8 @@
 import {createAsyncThunk, createSlice,} from '@reduxjs/toolkit';
-import {getAllPosts} from "./PostService";
+import {createNewPost, getAllPosts} from "./PostService";
 import {Post} from "./PostType";
+import {createUser} from "../User/UserService";
+import {loggedInUserSlice} from "../User/LoggedInUserSlice";
 
 interface IPostState {
     entities: any[];
@@ -21,7 +23,13 @@ export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
 export const postsSlice = createSlice({
     name: 'posts',
     initialState,
-    reducers: {},
+    reducers: {
+        newPost: (state, action) => {
+            const newPost = action.payload;
+            createNewPost(newPost).then();
+            state.entities = [...state.entities, newPost];
+        }
+    },
     extraReducers(builder) {
         builder
             .addCase(fetchPosts.pending, (state) => {
@@ -42,6 +50,8 @@ export default postsSlice.reducer
 interface RootState {
     posts: ReturnType<typeof postsSlice.reducer>;
 }
+
+export const {newPost} = postsSlice.actions
 
 // export const selectAllPosts = (state: RootState) => state.posts.entities;
 function compareCreationDate(post1: Post, post2: Post) {

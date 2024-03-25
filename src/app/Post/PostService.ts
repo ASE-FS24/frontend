@@ -84,3 +84,25 @@ export function getAllPosts(): Promise<Post[]> {
             });
         })
 }
+
+export function createNewPost(post: Post): Promise<Post> {
+    return fetch(baseurl + "posts/", {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(post)
+    })
+        .then(response => response.json())
+        .then(data => {
+            return post
+        })
+        .catch(error => {
+            console.log(error);
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(post);
+                }, 1000); // Simulate a 1 second delay
+            });
+        })
+}
