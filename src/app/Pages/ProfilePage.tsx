@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { selectActiveUser } from "../User/LoggedInUserSlice";
 import UserComponent from "../User/UserComponent";
 import { signOut } from "../Util/auth";
+import { useNavigate } from "react-router-dom";
+
 
 const StyledProfileContainer = styled.div`
   position: relative; /* Add relative positioning */
@@ -38,11 +40,18 @@ const SignOutButton = styled.button`
 `;
 
 function ProfilePage() {
+  const navigate = useNavigate(); // Get the navigate function from React Router
+
   const activeUser = useAppSelector(selectActiveUser);
+
+  const handleSignOut = () => {
+    signOut(); // Perform signout action
+    navigate("/login"); // Redirect to login page after signout
+  };
 
   return (
     <StyledProfileContainer>
-      <SignOutButton onClick={() => signOut()}>Sign out</SignOutButton>
+      <SignOutButton onClick={handleSignOut}>Sign out</SignOutButton>
       <ProfileHeading>Welcome {activeUser && activeUser.name}</ProfileHeading>
       {activeUser && <UserComponent user={activeUser} />}
     </StyledProfileContainer>
