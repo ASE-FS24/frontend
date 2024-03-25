@@ -83,7 +83,7 @@ export default function Register() {
             followedUsers: []
         }
         dispatch(setLoggedInUser(newUser));
-        navigate("/confirm-sign-up");
+        navigate(`/confirm-sign-up?username=${username}`);
     }
 
     return (

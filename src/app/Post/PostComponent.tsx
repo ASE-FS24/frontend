@@ -110,7 +110,7 @@ function PostComponent({post}: { post: Post }) {
             </StyledPostContent>
             <StyledInteractionsContainer>
                 <StyledIconContainer>
-                    <LikeSVG style={{width: "45px", height: "45px"}}/>
+                    <LikeSVG style={{color: "#E72950", width: "45px", height: "45px"}}/>
                 </StyledIconContainer>
                 <StyledIconContainer>
                     <FireSVG style={{width: "45px", height: "45px"}}/>

@@ -112,7 +112,7 @@ export default function Login() {
         try {
             await signIn(username, password);
             store.dispatch(getLoggedInUserThunk(username));
-            navigate("/profile");
+            navigate("/");
 
         } catch (err: any) {
             setError(err.message)
