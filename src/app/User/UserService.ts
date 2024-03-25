@@ -3,7 +3,7 @@ import {User} from "./UserType";
 const baseurl = process.env.REACT_APP_USER_BASEURL;
 
 const mockUser = {
-    id: "MockUser2",
+    id: "ae14b32e-9418-4be6-bebf-b56903d40578",
     email: "user2@mock.com",
     firstName: "User2",
     lastName: "Mock",
@@ -19,7 +19,7 @@ const mockUser = {
 
 const mockUsers = [
     {
-        id: "MockUser1",
+        id: "ae14b32e-9418-4be6-bebf-b56903d40577",
         email: "gleinad11@gmail.com",
         firstName: "User1",
         lastName: "Mock",
@@ -54,7 +54,7 @@ export function getAllUsers(): Promise<User[]> {
 
 export function createUser(user: User) {
     return fetch(baseurl + "users", {
-        method: 'PUT',
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
@@ -85,7 +85,7 @@ export function getUser(userId: string): Promise<User> {
 }
 
 export function getUserByUsername(username: string): Promise<User> {
-    return fetch(baseurl + "users/username" + username)
+    return fetch(baseurl + "users/username/" + username)
         .then(response => response.json())
         .then(data => {
             return data

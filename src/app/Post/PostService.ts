@@ -4,7 +4,7 @@ const baseurl = process.env.REACT_APP_POST_BASEURL;
 
 const mockPosts = [
     {
-        id: "MockPost101",
+        id: "ae14b32e-9418-4be6-bebf-b56903d40576",
         author: "mockuser1",
         type: "Project",
         status: "IN PROGRESS",
@@ -20,7 +20,7 @@ const mockPosts = [
         hashtags: ["#MockPost4ever"]
     },
     {
-        id: "MockPost102",
+        id: "ae14b32e-9418-4be6-bebf-b56903d40575",
         author: "mockuser1",
         type: "Post",
         status: "NEW",
@@ -36,7 +36,7 @@ const mockPosts = [
         hashtags: ["#MockPost4ever"]
     },
     {
-        id: "MockPost103",
+        id: "ae14b32e-9418-4be6-bebf-b56903d40574",
         author: "mockuser1",
         type: "Post",
         status: "NEW",
@@ -52,7 +52,7 @@ const mockPosts = [
         hashtags: ["#MockPost4ever"]
     },
     {
-        id: "MockPost104",
+        id: "ae14b32e-9418-4be6-bebf-b56903d40573",
         author: "mockuser1",
         type: "Project",
         status: "COMPLETED",
