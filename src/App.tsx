@@ -6,6 +6,7 @@ import ConfirmSignUp from "./app/Pages/ConfirmSignUpPage";
 import Login from "./app/Pages/LoginPage";
 import ProfilePage from "./app/Pages/ProfilePage";
 import styled from "styled-components";
+import CreatePost from "./app/Pages/CreatePostPage";
 
 const StyledMain = styled.main`
   background: center no-repeat url("/background.jpg");
@@ -23,6 +24,7 @@ function App() {
                     <Route path="/confirm-sign-up" element={<ConfirmSignUp/>}/>
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/profile" element={<ProfilePage/>}/>
+                    <Route path="/post/create" element={<CreatePost/>}/>
                 </Routes>
             </StyledMain>
         </BrowserRouter>
