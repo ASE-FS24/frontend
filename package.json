@@ -19,7 +19,9 @@
     "web-vitals": "^2.1.4",
     "styled-components": "^6.1.8",
     "amazon-cognito-identity-js": "^6.3.12",
-    "react-router-dom": "^6.22.3"
+    "react-router-dom": "^6.22.3",
+    "uuid": "^9.0.1",
+    "@types/uuid": "^9.0.8"
   },
   "scripts": {
     "start": "react-scripts start",
