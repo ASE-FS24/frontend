@@ -15,6 +15,7 @@ import {StyledButton, StyledButtonSmall, StyledInput} from "../Pages/LoginPage";
 import {useAppSelector} from "../hooks";
 import {selectActiveUser} from "../User/LoggedInUserSlice";
 import { v4 as uuidv4 } from 'uuid';
+import {likePost} from "./PostService";
 
 
 const StyledPost = styled.div`
@@ -171,7 +172,7 @@ function PostComponent({post}: { post: Post }) {
                     <StyledPostDescription>{post.description}</StyledPostDescription>
                 </StyledPostContent>
                 <StyledInteractionsContainer>
-                    <StyledIconContainer>
+                    <StyledIconContainer onClick={() => activeUser && likePost(post.id, activeUser.id)}>
                         <LikeSVG style={{color: "#E72950", width: "45px", height: "45px"}}/>
                     </StyledIconContainer>
                     <StyledIconContainer onClick={() => setShowComments(!showComments)}>

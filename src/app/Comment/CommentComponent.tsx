@@ -3,6 +3,9 @@ import {Comment} from "./CommentType";
 import {ReactComponent as LikeSVG} from "../../static/images/heart.svg";
 import React from "react";
 import {StyledIconContainer} from "../Post/PostComponent";
+import {likeComment} from "./CommentService";
+import {useAppSelector} from "../hooks";
+import {selectActiveUser} from "../User/LoggedInUserSlice";
 
 
 const StyledComment = styled.div`
@@ -43,11 +46,12 @@ const StyledLikesCount = styled.div`
 `;
 
 function CommentComponent({ comment }: { comment: Comment }) {
+    const activeUser = useAppSelector(selectActiveUser);
     return(
         <StyledComment>
             <StyledCommentContent>{comment.content}</StyledCommentContent>
             <StyledCommentAuthor>Author</StyledCommentAuthor>
-            <StyledLikeContainer>
+            <StyledLikeContainer onClick={() => activeUser && likeComment(comment.id, activeUser.id)}>
                 <LikeSVG style={{color: "#E72950"}}/>
             </StyledLikeContainer>
             <StyledLikesCount>

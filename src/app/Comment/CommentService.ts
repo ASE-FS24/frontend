@@ -1,4 +1,5 @@
 import {Comment} from "./CommentType";
+import {Post} from "../Post/PostType";
 
 const baseurl = process.env.REACT_APP_POST_BASEURL;
 
@@ -69,5 +70,21 @@ export function getComments(postId: string): Promise<Comment[]> {
                     resolve(filteredComments);
                 }, 1000); // Simulate a 1 second delay
             });
+        })
+}
+
+export function likeComment(commentId: string, userId: string): Promise<Post> {
+    return fetch(baseurl + "likes/comment/" + commentId + "?userId=" + userId, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            return data
+        })
+        .catch(error => {
+            console.log(error);
         })
 }

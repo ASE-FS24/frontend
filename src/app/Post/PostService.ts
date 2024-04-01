@@ -106,3 +106,19 @@ export function createNewPost(post: Post): Promise<Post> {
             });
         })
 }
+
+export function likePost(postId: string, userId: string): Promise<Post> {
+    return fetch(baseurl + "likes/post/" + postId + "?userId=" + userId, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            return data
+        })
+        .catch(error => {
+            console.log(error);
+        })
+}
