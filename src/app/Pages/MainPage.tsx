@@ -17,6 +17,7 @@ import {useNavigate} from "react-router-dom";
 const StyledMainPage = styled.div`
   display: flex;
   flex-direction: row;
+  height: calc(100vh - 64px);
 `;
 
 const StyledMenuContainer = styled.div`
@@ -52,7 +53,6 @@ const StyledContentContainer = styled.div`
   width: 50%;
   flex-direction: column;
   margin: 0;
-  padding-top: 15px;
   background: rgb(255, 255, 255, 0.5);
 `;
 
@@ -116,6 +116,7 @@ const StyledPosts = styled.div`
   margin-top: 15px;
   max-height: 85vh;
   overflow: auto;
+  padding: 15px 0 15px 0;
 `;
 
 export const StyledFilterButton = styled.button<{ selected: boolean }>`

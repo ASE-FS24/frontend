@@ -9,11 +9,12 @@ import {ReactComponent as PostSVG} from "../../static/images/camera.svg";
 import {dateFormatter} from "../Util/util";
 import CommentComponent from "../Comment/CommentComponent";
 import {useEffect, useState} from "react";
-import {getComments} from "../Comment/CommentService";
+import {commentOnPost, getComments} from "../Comment/CommentService";
 import {Comment} from "../Comment/CommentType";
-import {StyledButton, StyledButtonSmall} from "../Pages/LoginPage";
+import {StyledButton, StyledButtonSmall, StyledInput} from "../Pages/LoginPage";
 import {useAppSelector} from "../hooks";
 import {selectActiveUser} from "../User/LoggedInUserSlice";
+import { v4 as uuidv4 } from 'uuid';
 
 
 const StyledPost = styled.div`
@@ -111,11 +112,18 @@ const StyledNoCommentsContainer = styled.div`
   margin: 10px 0;
 `;
 
+const StyledCommentForm = styled.form`
+  margin: 5px 5px 5px auto;
+`;
+
 function PostComponent({post}: { post: Post }) {
     const activeUser = useAppSelector(selectActiveUser);
     const [comments, setComments] = useState<Comment[]>([]);
     const postDate = dateFormatter(post.edited ? post.editedDate : post.createdDate);
     const [showComments, setShowComments] = useState(false);
+    const [commentContent, setCommentContent] = useState("");
+    const [reloadComponent, setReloadComponent] = useState(true);
+    const [showCommentForm, setShowCommentForm] = useState(false);
 
     useEffect(() => {
         async function fetchComments(postId: string) {
@@ -123,9 +131,28 @@ function PostComponent({post}: { post: Post }) {
             setComments(postComments);
         }
 
-        fetchComments(post.id).then();
+        if (reloadComponent) {
+            fetchComments(post.id).then();
+            setReloadComponent(false)
+        }
 
-    }, [post.id]);
+    }, [post.id, reloadComponent]);
+
+    const handleCommentFormSubmit = async (event: React.FormEvent) => {
+        event.preventDefault();
+        const commentId = uuidv4();
+        const newComment: Comment = {
+            id: commentId,
+            postId: post.id,
+            author: activeUser.username,
+            content: commentContent,
+            likes: 0
+        }
+        await commentOnPost(newComment, post.id).then();
+        setReloadComponent(true);
+        setShowCommentForm(false);
+        setCommentContent("");
+    }
 
     return (
         <>
@@ -165,9 +192,18 @@ function PostComponent({post}: { post: Post }) {
                     {comments.length > 0 ? comments.map((comment) => (
                         <CommentComponent key={comment.id} comment={comment}/>
                     )) : <StyledNoCommentsContainer>No comments yet...</StyledNoCommentsContainer>}
-                    {activeUser !== null ? <StyledButtonSmall margin={"0 10px 0 auto"}>Comment</StyledButtonSmall> :
+                    {activeUser !== null ?
+                        <>
+                        <StyledButtonSmall margin={"0 10px 0 auto"} onClick={() => setShowCommentForm(true)}>Comment</StyledButtonSmall>
+                            {showCommentForm &&
+                                <StyledCommentForm onSubmit={handleCommentFormSubmit}>
+                                    <StyledInput type="text" value={commentContent} onChange={(e) => setCommentContent(e.target.value)} />
+                                    <StyledButtonSmall type="submit">Save</StyledButtonSmall>
+                                    <StyledButtonSmall margin={"0 5px 0 15px"} onClick={() => setShowCommentForm(false)}>Cancel</StyledButtonSmall>
+                                </StyledCommentForm>
+                            }
+                        </>:
                         <StyledNoCommentsContainer>Sign in to comment</StyledNoCommentsContainer>}
-                    
                 </StyledCommentsContainer>
             }
         </>

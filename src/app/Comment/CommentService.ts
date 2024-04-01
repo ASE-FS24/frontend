@@ -33,7 +33,7 @@ const mockComments = [
     }
 ]
 
-export function createComment(comment: Comment, postId: string): Promise<Comment> {
+export function commentOnPost(comment: Comment, postId: string): Promise<Comment> {
     return fetch(baseurl + "comments/posts/" + postId, {
         method: 'POST',
         headers: {
