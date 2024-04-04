@@ -99,3 +99,55 @@ export function getUserByUsername(username: string): Promise<User> {
             })
         });
 }
+
+export async function updateUser(user: User, endpoint: string = "users"): Promise<User | null> {
+    try {
+        const response = await fetch(baseurl + endpoint + `/id/${user.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        });
+
+        if (!response.ok) {
+            // If the response is not successful, throw an error
+            throw new Error(`Failed to edit user: ${response.statusText}`);
+        }
+
+        // Return the edited user data
+        return await response.json();
+    } catch (error) {
+        // Handle errors gracefully
+        console.error(`Error editing user: ${error}`);
+        console.log("Mock user created:");
+        console.log(JSON.stringify(user));
+        return null;
+    }
+}
+
+
+export async function updateProfilePic(userId: string, profilePicture: File, endpoint: string = "users"): Promise<string | null> {
+    try {
+        const formData = new FormData();
+        formData.append('profilePicture', profilePicture);
+
+        const response = await fetch(baseurl + endpoint + `/${userId}/profilePicture`, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            // If the response is not successful, throw an error
+            throw new Error(`Failed to upload profile picture: ${response.statusText}`);
+        }
+
+        // Return the response text
+        return await response.text();
+    } catch (error) {
+        // Handle errors gracefully
+        console.error(`Error uploading profile picture: ${error}`);
+        return null;
+    }
+}
+
