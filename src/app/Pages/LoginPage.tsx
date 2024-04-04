@@ -80,6 +80,12 @@ export const StyledButton = styled.button<{ margin?: string, disabled?: boolean 
   }
 `;
 
+export const StyledButtonSmall = styled(StyledButton)`
+  font-size: 1rem;
+  width: 100px;
+  height: 30px;
+`;
+
 export const StyledError = styled.p`
   color: #ff0000;
 `;
