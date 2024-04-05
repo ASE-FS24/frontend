@@ -68,7 +68,7 @@ function Header() {
                     <MessageSVG style={{color: "#ffffff", width: "45px", height: "45px"}}/>
                 </StyledIconContainer>
                 {activeUser !== null ?
-                    <StyledIconContainer>
+                    <StyledIconContainer onClick={() => navigate("/profile")}>
                         <UserSVG style={{color: "#ffffff", width: "45px", height: "45px"}}/>
                     </StyledIconContainer> :
                     <StyledLoginBtn onClick={() => navigate("/login")}>Login</StyledLoginBtn>}

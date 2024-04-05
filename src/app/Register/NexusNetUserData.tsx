@@ -3,7 +3,7 @@ import {StyledButton, StyledInput} from "../Pages/LoginPage";
 import styled from "styled-components";
 
 
-const StyledTextArea = styled.textarea`
+export const StyledTextArea = styled.textarea`
   font-size: 1.25rem;
   padding: 5px;
   border-radius: 15px;
@@ -11,7 +11,7 @@ const StyledTextArea = styled.textarea`
   box-shadow: -5px -5px 10px 2px rgba(0,0,0,.8);
 `;
 
-const StyledSelect = styled.select`
+export const StyledSelect = styled.select`
   font-size: 1.5rem;
   padding: 5px;
   margin: 15px;

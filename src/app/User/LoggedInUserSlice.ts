@@ -18,8 +18,8 @@ export const loggedInUserSlice = createSlice({
     reducers: {
         setLoggedInUser: (state, action) => {
             const newUser = action.payload;
-            createUser(newUser);
-            state.value = {...action.payload};
+            createUser(newUser).then();
+            state.value = newUser;
         }
     },
     extraReducers(builder) {
