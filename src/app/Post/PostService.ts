@@ -1,4 +1,4 @@
-import {Post} from "./PostType";
+import {NewPost, Post} from "./PostType";
 
 const baseurl = process.env.REACT_APP_POST_BASEURL;
 
@@ -73,7 +73,8 @@ export function getAllPosts(): Promise<Post[]> {
     return fetch(baseurl + "posts")
         .then(response => {
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                console.log(response)
+                throw new Error(`HTTP error! status: ${response.statusText}`);
             }
             return response.json();
         })
@@ -90,7 +91,7 @@ export function getAllPosts(): Promise<Post[]> {
         })
 }
 
-export function createNewPost(post: Post): Promise<Post> {
+export function createNewPost(post: NewPost): Promise<NewPost> {
     return fetch(baseurl + "posts/", {
         method: 'POST',
         headers: {
@@ -100,7 +101,8 @@ export function createNewPost(post: Post): Promise<Post> {
     })
         .then(response => {
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                console.log(response)
+                throw new Error(`HTTP error! status: ${response}`);
             }
             return response.json();
         })
@@ -126,6 +128,7 @@ export function likePost(postId: string, userId: string): Promise<Post> {
     })
         .then(response => {
             if (!response.ok) {
+                console.log(response)
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             return response.json();

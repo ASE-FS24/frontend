@@ -1,6 +1,6 @@
 import {createAsyncThunk, createSlice,} from '@reduxjs/toolkit';
 import {createNewPost, getAllPosts} from "./PostService";
-import {Post} from "./PostType";
+import {NewPost, Post} from "./PostType";
 
 interface IPostState {
     entities: any[];
@@ -18,7 +18,7 @@ export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
     return data
 })
 
-export const createPost = createAsyncThunk('posts/createPost', async (newPost: Post) => {
+export const createPost = createAsyncThunk('posts/createPost', async (newPost: NewPost) => {
     await createNewPost(newPost);
     return newPost;
 })
@@ -65,3 +65,5 @@ export const selectAllPosts = (state: RootState) => {
 }
 export const selectPostsById = (state: RootState, id: number) =>
     state.posts.entities.find((post) => post.id === id);
+
+export const selectPostState = (state: RootState) => state.posts.status;

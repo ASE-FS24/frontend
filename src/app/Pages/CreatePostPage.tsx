@@ -4,13 +4,11 @@ import Header from "./Header";
 import {useEffect, useId, useState} from "react";
 import {useAppDispatch, useAppSelector} from "../hooks";
 import {selectActiveUser, setLoggedInUser} from "../User/LoggedInUserSlice";
-import {Post} from "../Post/PostType";
-import {useDispatch} from "react-redux";
+import {NewPost, Post} from "../Post/PostType";
 import {createPost} from "../Post/PostSlice";
 import {useNavigate} from "react-router-dom";
 import {StyledSelect, StyledTextArea} from "../Register/NexusNetUserData";
 import {ReactComponent as XSVG} from "../../static/images/x.svg";
-import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -52,7 +50,6 @@ const StyledHashtag = styled.div`
 
 export default function CreatePost() {
     const activeUser = useAppSelector(selectActiveUser);
-    const postId = uuidv4();
     const [type, setType] = useState("");
     const [title, setTitle] = useState("");
     const [shortDescription, setShortDescription] = useState("");
@@ -81,20 +78,14 @@ export default function CreatePost() {
     function newPost(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         const date = new Date();
-        const newP: Post = {
-            id: postId,
-            author: activeUser.username,
+        const newP: NewPost = {
+            authorId: activeUser.id,
             type: type,
             status: "NEW",
             title: title,
             shortDescription: shortDescription,
             description: description,
             image: "",
-            createdDate: date.toString(),
-            edited: false,
-            editedDate: "",
-            comments: [],
-            likes: 0,
             hashtags: hashtags
         }
         dispatch(createPost(newP));

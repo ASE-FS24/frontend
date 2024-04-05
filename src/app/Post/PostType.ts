@@ -16,3 +16,14 @@ export interface Post {
     likes: number;
     hashtags: Array<string>
 }
+
+export interface NewPost {
+    authorId: string;
+    type: string;
+    status: string;
+    title: string;
+    shortDescription?: string;
+    description: string;
+    image?: string;
+    hashtags: Array<string>
+}
