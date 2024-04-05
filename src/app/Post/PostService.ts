@@ -70,7 +70,7 @@ const mockPosts = [
 ]
 
 export function getAllPosts(): Promise<Post[]> {
-    return fetch(baseurl + "posts/all/")
+    return fetch(baseurl + "posts")
         .then(response => response.json())
         .then(data => {
             return data
@@ -87,7 +87,7 @@ export function getAllPosts(): Promise<Post[]> {
 
 export function createNewPost(post: Post): Promise<Post> {
     return fetch(baseurl + "posts/", {
-        method: 'PUT',
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },

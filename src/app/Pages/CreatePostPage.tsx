@@ -2,11 +2,11 @@ import styled from "styled-components";
 import {StyledButton, StyledError, StyledForm, StyledInput, StyledLoginContainer} from "./LoginPage";
 import Header from "./Header";
 import {useEffect, useId, useState} from "react";
-import {useAppSelector} from "../hooks";
+import {useAppDispatch, useAppSelector} from "../hooks";
 import {selectActiveUser, setLoggedInUser} from "../User/LoggedInUserSlice";
 import {Post} from "../Post/PostType";
 import {useDispatch} from "react-redux";
-import {newPost} from "../Post/PostSlice";
+import {createPost} from "../Post/PostSlice";
 import {useNavigate} from "react-router-dom";
 import {StyledSelect, StyledTextArea} from "../Register/NexusNetUserData";
 import {ReactComponent as XSVG} from "../../static/images/x.svg";
@@ -62,7 +62,7 @@ export default function CreatePost() {
     const [disabled, setDisabled] = useState(true);
 
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -78,7 +78,8 @@ export default function CreatePost() {
     }, [type, title, description])
 
 
-    function createPost() {
+    function newPost(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
         const date = new Date();
         const newP: Post = {
             id: postId,
@@ -96,14 +97,17 @@ export default function CreatePost() {
             likes: 0,
             hashtags: hashtags
         }
-        dispatch(newPost(newP));
-        navigate("/");
+        dispatch(createPost(newP));
+        console.log(newP);
+        // navigate("/");
     }
 
     const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Tab") {
             e.preventDefault();
-            setHashtags([...hashtags, hashtag])
+            if (!hashtags.includes(hashtag)) {
+                setHashtags([...hashtags, hashtag])
+            }
             setHashtag("");
         }
     }
@@ -118,14 +122,14 @@ export default function CreatePost() {
             <Header/>
             <StyledCreatePostContainer>
                 <StyledPageTitle>Create Post</StyledPageTitle>
-                <StyledForm onSubmit={() => createPost()}>
+                <StyledForm onSubmit={newPost}>
                     <StyledInput id="title"
                                  type="text"
                                  placeholder="Title"
                                  value={title}
                                  onChange={(event) => setTitle(event.target.value)}/>
-                    <StyledSelect id="type" name="type" onChange={(event) => setType(event.target.value)}>
-                        <option label="Select type" value="" selected disabled hidden></option>
+                    <StyledSelect id="type" name="type" defaultValue={"Select type"} onChange={(event) => setType(event.target.value)}>
+                        <option label="Select type" value="" hidden ></option>
                         <option label="Post" value="Post"></option>
                         <option label="Project" value="Project"></option>
                     </StyledSelect>
@@ -142,7 +146,7 @@ export default function CreatePost() {
                                     onChange={(event) => setDescription(event.target.value)}/>
                     <StyledHashtagsContainer>
                         {hashtags.map((h) => (
-                            <StyledHashtag>#{h}
+                            <StyledHashtag key={hashtag}>#{h}
                                 <XSVG onClick={() => removeHashtag(h)} style={{color: "#ffffff", width: "20px", height: "20px"}}/>
                             </StyledHashtag>
                         ))}

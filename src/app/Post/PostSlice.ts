@@ -18,16 +18,15 @@ export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
     return data
 })
 
+export const createPost = createAsyncThunk('posts/createPost', async (newPost: Post) => {
+    await createNewPost(newPost);
+    return newPost;
+})
+
 export const postsSlice = createSlice({
     name: 'posts',
     initialState,
-    reducers: {
-        newPost: (state, action) => {
-            const newPost = action.payload;
-            createNewPost(newPost).then();
-            state.entities = [...state.entities, newPost];
-        }
-    },
+    reducers: {},
     extraReducers(builder) {
         builder
             .addCase(fetchPosts.pending, (state) => {
@@ -40,6 +39,9 @@ export const postsSlice = createSlice({
             .addCase(fetchPosts.rejected, (state) => {
                 state.status = 'failed';
             })
+            .addCase(createPost.fulfilled, (state, {payload}) => {
+                state.entities = [...state.entities, payload];
+            })
     }
 })
 
@@ -48,8 +50,6 @@ export default postsSlice.reducer
 interface RootState {
     posts: ReturnType<typeof postsSlice.reducer>;
 }
-
-export const {newPost} = postsSlice.actions
 
 // export const selectAllPosts = (state: RootState) => state.posts.entities;
 function compareCreationDate(post1: Post, post2: Post) {
