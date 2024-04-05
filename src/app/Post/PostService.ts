@@ -71,7 +71,12 @@ const mockPosts = [
 
 export function getAllPosts(): Promise<Post[]> {
     return fetch(baseurl + "posts")
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             return data
         })
@@ -93,7 +98,12 @@ export function createNewPost(post: Post): Promise<Post> {
         },
         body: JSON.stringify(post)
     })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             return post
         })
@@ -114,7 +124,12 @@ export function likePost(postId: string, userId: string): Promise<Post> {
             'Content-Type': 'application/json'
         }
     })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             return data
         })
