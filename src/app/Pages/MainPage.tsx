@@ -227,7 +227,7 @@ function Home() {
                 </StyledMenuContainer>
                 <StyledContentContainer>
                     <StyledToolbarContainer>
-                        <StyledToolRowContainer>
+                        {/* <StyledToolRowContainer>
                             {allFilter ? <FilterSVG style={{color: "#000000", width: "35px", height: "35px"}}/> :
                                 <FilterActiveSVG style={{color: "#000000", width: "35px", height: "35px"}}/>}
                             <StyledFilterButton selected={allFilter} onClick={() => {
@@ -255,7 +255,7 @@ function Home() {
                                 {likeSort ? <SortUpSVG style={{color: "#ffffff", width: "30px", height: "30px"}}/> :
                                     <SortDownSVG style={{color: "#ffffff", width: "30px", height: "30px"}}/>}
                             </StyledFilterIconContainer>
-                        </StyledToolRowContainer>
+                        </StyledToolRowContainer> */}
                         <StyledToolRowContainer>
                             <StyledSearchContainer>
                                 <StyledSearchInput id="search"
