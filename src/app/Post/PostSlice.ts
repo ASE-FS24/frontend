@@ -1,6 +1,9 @@
 import {createAsyncThunk, createSlice,} from '@reduxjs/toolkit';
 import {createNewPost, getAllPosts} from "./PostService";
 import {Post} from "./PostType";
+import {createUser} from "../User/UserService";
+import {loggedInUserSlice} from "../User/LoggedInUserSlice";
+
 
 interface IPostState {
     entities: any[];

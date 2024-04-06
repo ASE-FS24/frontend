@@ -96,6 +96,16 @@ const StyledSearchInput = styled.input`
   &::-ms-input-placeholder { /* Edge 12 -18 */
     color: #ffffff;
   }
+  padding-top: 15px;
+  background: rgb(255, 255, 255, 0.5);
+`;
+
+const StyledFiltersContainer = styled.div`
+  height: 40px;
+  max-width: 100%;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
 `;
 
 const StyledFilterIconContainer = styled.div`
@@ -178,6 +188,7 @@ function Home() {
         setLikeSort(!likeSort)
     }
 
+
     const onEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             e.preventDefault()
@@ -200,6 +211,7 @@ function Home() {
             setPosts(filteredPosts);
         }
     }
+
 
     return (
         <>
@@ -266,6 +278,35 @@ function Home() {
 
                         </StyledToolRowContainer>
                     </StyledToolbarContainer>
+                    <StyledFiltersContainer>
+                        {allFilter ? <FilterSVG style={{color: "#000000", width: "35px", height: "35px"}}/> :
+                            <FilterActiveSVG style={{color: "#000000", width: "35px", height: "35px"}}/>}
+                        <StyledFilterButton selected={allFilter} onClick={() => {
+                            setAllFilter(true)
+                            setPostFilter(false);
+                            setProjectFilter(false);
+                        }
+                        }>All</StyledFilterButton>
+                        <StyledFilterButton selected={projectFilter} onClick={() => {
+                            setProjectFilter(true)
+                            setPostFilter(false);
+                            setAllFilter(false);
+                        }
+                        }>Projects</StyledFilterButton>
+                        <StyledFilterButton selected={postFilter} onClick={() => {
+                            setPostFilter(true)
+                            setProjectFilter(false);
+                            setAllFilter(false);
+                        }
+                        }>Posts</StyledFilterButton>
+                        <StyledFilterIconContainer onClick={() => sortPosts()} style={{marginLeft: "auto"}}>
+                            <LikeSVG style={{color: "#000000", width: "45px", height: "45px"}}/>
+                        </StyledFilterIconContainer>
+                        <StyledFilterIconContainer>
+                            {likeSort ? <SortUpSVG style={{color: "#ffffff", width: "30px", height: "30px"}}/> :
+                                <SortDownSVG style={{color: "#ffffff", width: "30px", height: "30px"}}/>}
+                        </StyledFilterIconContainer>
+                    </StyledFiltersContainer>
                     <StyledPosts>
                         {posts && posts.map((post) => (
                             <Post key={post.id} post={post}/>
