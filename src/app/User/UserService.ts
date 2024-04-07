@@ -146,6 +146,26 @@ export async function updateUser(user: User, endpoint: string = "users"): Promis
     }
 }
 
+export async function getProfilePic(userId: string, endpoint: string = "users"): Promise<string | null> {
+    try {
+        const response = await fetch(baseurl + endpoint + `/${userId}/profilePicture`, {
+            method: 'GET',
+        });
+
+        if (!response.ok) {
+            // If the response is not successful, throw an error
+            throw new Error(`Failed to retrieve profile picture: ${response.statusText}`);
+        }
+
+        // Return the response text (URL of the profile picture)
+        return await response.text();
+    } catch (error) {
+        // Handle errors gracefully
+        console.error(`Error retrieving profile picture: ${error}`);
+        return null;
+    }
+}
+
 
 export async function updateProfilePic(userId: string, profilePicture: File, endpoint: string = "users"): Promise<string | null> {
     try {

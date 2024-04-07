@@ -2,8 +2,8 @@ import { User } from "./UserType";
 import styled from "styled-components";
 import { ReactComponent as ProfileSVG } from "../../static/images/profile.svg";
 import { ReactComponent as EditIcon } from "../../static/images/edit_pen.svg"; // Assuming you have an edit icon
-import React, { useState, useRef } from 'react';
-import { updateUser, updateProfilePic } from "../User/UserService";
+import React, { useState, useRef, useEffect } from 'react';
+import { updateUser, updateProfilePic, getProfilePic } from "../User/UserService";
 
 const ProfilePicImage = styled.img`
   width: 100%;
@@ -167,6 +167,7 @@ export function UserComponent({ user }: { user: User }) {
   const [editableField, setEditableField] = useState<string | null>(null);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [editedUser, setEditedUser] = useState<User>({ ...user });
+  const [profilePic, setProfilePic] = useState<string | null>(null);
 
 
   const handleEdit = (fieldName: string) => {
@@ -222,14 +223,32 @@ export function UserComponent({ user }: { user: User }) {
     }
   };
 
+  useEffect(() => {
+    const fetchProfilePic = async () => {
+      try {
+        const picUrl = await getProfilePic(user.id); // Assuming user.id is the user's ID
+        setProfilePic(picUrl);
+      } catch (error) {
+        console.error('Error fetching profile picture:', error);
+        // Handle error if necessary
+      }
+    };
+    fetchProfilePic();
+  }, [user.id]); // Run effect when user.id changes
+
   return (
     <StyledUserContainer>
-      <ProfileIconContainer>
-          {user.id && user.profilePicture && <ProfilePicImage src={user.profilePicture} alt="Profile" />}
-          <UploadOverlay onMouseEnter={handleProfilePicUpload}>
-              <UploadText>Upload Picture</UploadText>
-              <InputFile type="file" ref={fileInputRef} onChange={handlePhotoUpload} />
-          </UploadOverlay>
+     <ProfileIconContainer>
+        {profilePic ? (
+          <ProfilePicImage src={profilePic} alt="Profile" />
+        ) : (
+          // Render a placeholder image or text if profilePic is not available
+          <ProfileSVG />
+        )}
+        <UploadOverlay onMouseEnter={handleProfilePicUpload}>
+          <UploadText>Upload Picture</UploadText>
+          <InputFile type="file" ref={fileInputRef} onChange={handlePhotoUpload} />
+        </UploadOverlay>
       </ProfileIconContainer>
       <UserInfoWrapper>
         {/* Username row */}
