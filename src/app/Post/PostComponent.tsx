@@ -77,6 +77,7 @@ const StyledInteractionsContainer = styled.div`
   position: relative;
 `;
 
+
 export const StyledIconContainer = styled.div<{ last?: string; }>`
   display: flex;
   align-items: center;

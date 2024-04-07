@@ -139,4 +139,5 @@ export function likePost(postId: string, userId: string): Promise<Post> {
         .catch(error => {
             console.log(error);
         })
+
 }

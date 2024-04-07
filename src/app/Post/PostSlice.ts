@@ -2,6 +2,7 @@ import {createAsyncThunk, createSlice,} from '@reduxjs/toolkit';
 import {createNewPost, getAllPosts} from "./PostService";
 import {NewPost, Post} from "./PostType";
 
+
 interface IPostState {
     entities: any[];
     status: string;

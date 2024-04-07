@@ -42,6 +42,8 @@ WORKDIR /app
 # Copy package.json and package-lock.json files to the working directory
 COPY ./package.json ./
 
+# #  COPY ./frontend/package.json ./
+
 # Install TypeScript globally
 RUN npm install -g typescript
 
@@ -54,6 +56,8 @@ RUN npm install
 
 # # Copy the rest of the application code
 COPY . .
+
+# #  COPY ./frontend .
 
 # # Build TypeScript files
 RUN npm run build
