@@ -59,8 +59,8 @@ export function NexusNetSubPage(props: AppProps) {
                          value={props.university}
                          placeholder="Your university*"
                    onChange={(event) => props.setUniversity(event.target.value)}/>
-            <StyledSelect id="degreeProgram" name="degreeProgram" onChange={(event) => props.setDegreeProgram(event.target.value)}>
-                <option label="Select your degree program" value="" selected disabled hidden></option>
+            <StyledSelect id="degreeProgram" name="degreeProgram" defaultValue={"Select your degree program"} onChange={(event) => props.setDegreeProgram(event.target.value)}>
+                <option label="Select your degree program" value="" hidden></option>
                 <option label="Bachelors" value="Bachelors"></option>
                 <option label="Masters" value="Masters"></option>
                 <option label="PhD" value="PhD"></option>

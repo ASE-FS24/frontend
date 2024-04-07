@@ -121,7 +121,7 @@ const StyledCommentForm = styled.form`
 function PostComponent({post}: { post: Post }) {
     const activeUser = useAppSelector(selectActiveUser);
     const [comments, setComments] = useState<Comment[]>([]);
-    const postDate = dateFormatter(post.edited ? post.editedDate : post.createdDate);
+    const postDate = dateFormatter(post.edited ? post.editedDateTime : post.createdDateTime);
     const [showComments, setShowComments] = useState(false);
     const [commentContent, setCommentContent] = useState("");
     const [reloadComponent, setReloadComponent] = useState(true);
@@ -146,7 +146,7 @@ function PostComponent({post}: { post: Post }) {
         const newComment: Comment = {
             id: commentId,
             postId: post.id,
-            author: activeUser.username,
+            authorId: activeUser.username,
             content: commentContent,
             likes: 0
         }
@@ -167,7 +167,7 @@ function PostComponent({post}: { post: Post }) {
                                 <ProjectSVG style={{width: "30px", height: "30px", color: "#ff0000"}}/>}
                             {post.type}
                         </StyledPostType>
-                        <StyledPostAuthor>{post.author} - {postDate}</StyledPostAuthor>
+                        <StyledPostAuthor>{post.authorId} - {postDate}</StyledPostAuthor>
                     </StyledPostHeader>
                     <StyledPostTitle>{post.title}</StyledPostTitle>
                     <StyledPostDescription>{post.description}</StyledPostDescription>

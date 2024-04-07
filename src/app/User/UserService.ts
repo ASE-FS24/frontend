@@ -37,8 +37,13 @@ const mockUsers = [
 
 
 export function getAllUsers(): Promise<User[]> {
-    return fetch(baseurl + "users/all/")
-        .then(response => response.json())
+    return fetch(baseurl + "users/")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             return data
         })
@@ -60,7 +65,12 @@ export function createUser(user: User) {
         },
         body: JSON.stringify(user)
     })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .catch(error => {
             console.log(error)
             console.log("Mock user created:");
@@ -70,7 +80,12 @@ export function createUser(user: User) {
 
 export function getUser(userId: string): Promise<User> {
     return fetch(baseurl + "users/" + userId)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             return data
         })
@@ -86,7 +101,12 @@ export function getUser(userId: string): Promise<User> {
 
 export function getUserByUsername(username: string): Promise<User> {
     return fetch(baseurl + "users/username/" + username)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             return data
         })

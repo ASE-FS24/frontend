@@ -1,8 +1,6 @@
 import {createAsyncThunk, createSlice,} from '@reduxjs/toolkit';
 import {createNewPost, getAllPosts} from "./PostService";
-import {Post} from "./PostType";
-import {createUser} from "../User/UserService";
-import {loggedInUserSlice} from "../User/LoggedInUserSlice";
+import {NewPost, Post} from "./PostType";
 
 
 interface IPostState {
@@ -17,20 +15,18 @@ const initialState: IPostState = {
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
 
     const data = await getAllPosts();
-    console.log(data);
     return data
+})
+
+export const createPost = createAsyncThunk('posts/createPost', async (newPost: NewPost) => {
+    await createNewPost(newPost);
+    return newPost;
 })
 
 export const postsSlice = createSlice({
     name: 'posts',
     initialState,
-    reducers: {
-        newPost: (state, action) => {
-            const newPost = action.payload;
-            createNewPost(newPost).then();
-            state.entities = [...state.entities, newPost];
-        }
-    },
+    reducers: {},
     extraReducers(builder) {
         builder
             .addCase(fetchPosts.pending, (state) => {
@@ -43,6 +39,9 @@ export const postsSlice = createSlice({
             .addCase(fetchPosts.rejected, (state) => {
                 state.status = 'failed';
             })
+            .addCase(createPost.fulfilled, (state, {payload}) => {
+                state.entities = [...state.entities, payload];
+            })
     }
 })
 
@@ -52,12 +51,10 @@ interface RootState {
     posts: ReturnType<typeof postsSlice.reducer>;
 }
 
-export const {newPost} = postsSlice.actions
-
 // export const selectAllPosts = (state: RootState) => state.posts.entities;
 function compareCreationDate(post1: Post, post2: Post) {
-    const date1 = post1.edited ? post1.editedDate : post1.createdDate;
-    const date2 = post2.edited ? post2.editedDate : post2.createdDate;
+    const date1 = post1.edited ? post1.editedDateTime : post1.createdDateTime;
+    const date2 = post2.edited ? post2.editedDateTime : post2.createdDateTime;
     const d1 = new Date(Date.parse(date1));
     const d2 = new Date(Date.parse(date2));
     return d1.getTime() - d2.getTime();
@@ -68,3 +65,5 @@ export const selectAllPosts = (state: RootState) => {
 }
 export const selectPostsById = (state: RootState, id: number) =>
     state.posts.entities.find((post) => post.id === id);
+
+export const selectPostState = (state: RootState) => state.posts.status;

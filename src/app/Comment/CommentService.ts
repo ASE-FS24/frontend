@@ -7,28 +7,28 @@ const mockComments = [
     {
         id: "ae14b32e-9418-4be6-bebf-b56903d40573",
         postId: "ae14b32e-9418-4be6-bebf-b56903d40576",
-        author: "mockuser1",
+        authorId: "mockuser1",
         content: "The best comment in the world! Awesome text and some more awesome text.",
         likes: 5
     },
     {
         id: "ae14b32e-9418-4be6-bebf-b56903d40574",
         postId: "ae14b32e-9418-4be6-bebf-b56903d40574",
-        author: "mockuser2",
+        authorId: "mockuser2",
         content: "The best comment 2 in the world! Awesome text and some more awesome text.",
         likes: 0
     },
     {
         id: "ae14b32e-9418-4be6-bebf-b56903d40575",
         postId: "ae14b32e-9418-4be6-bebf-b56903d40573",
-        author: "mockuser1",
+        authorId: "mockuser1",
         content: "The best comment 3 in the world! Awesome text and some more awesome text.",
         likes: 3
     },
     {
         id: "ae14b32e-9418-4be6-bebf-b56903d40576",
         postId: "ae14b32e-9418-4be6-bebf-b56903d40573",
-        author: "mockuser5",
+        authorId: "DG11",
         content: "The best comment 4 in the world! Awesome text and some more awesome text.",
         likes: 50
     }

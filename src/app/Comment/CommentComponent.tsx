@@ -51,7 +51,7 @@ function CommentComponent({ comment }: { comment: Comment }) {
         <StyledComment>
             <StyledCommentContent>{comment.content}</StyledCommentContent>
             <StyledCommentAuthor>Author</StyledCommentAuthor>
-            <StyledLikeContainer onClick={() => activeUser && likeComment(comment.id, activeUser.id)}>
+            <StyledLikeContainer onClick={() => activeUser && likeComment(comment.id, activeUser.username)}>
                 <LikeSVG style={{color: "#E72950"}}/>
             </StyledLikeContainer>
             <StyledLikesCount>
