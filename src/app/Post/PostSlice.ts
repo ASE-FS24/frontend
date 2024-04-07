@@ -53,8 +53,8 @@ interface RootState {
 
 // export const selectAllPosts = (state: RootState) => state.posts.entities;
 function compareCreationDate(post1: Post, post2: Post) {
-    const date1 = post1.edited ? post1.editedDate : post1.createdDate;
-    const date2 = post2.edited ? post2.editedDate : post2.createdDate;
+    const date1 = post1.edited ? post1.editedDateTime : post1.createdDateTime;
+    const date2 = post2.edited ? post2.editedDateTime : post2.createdDateTime;
     const d1 = new Date(Date.parse(date1));
     const d2 = new Date(Date.parse(date2));
     return d1.getTime() - d2.getTime();
