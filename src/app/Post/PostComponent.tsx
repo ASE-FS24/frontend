@@ -166,7 +166,7 @@ function PostComponent({post}: { post: Post }) {
                                 <ProjectSVG style={{width: "30px", height: "30px", color: "#ff0000"}}/>}
                             {post.type}
                         </StyledPostType>
-                        <StyledPostAuthor>{post.author} - {postDate}</StyledPostAuthor>
+                        <StyledPostAuthor>{post.authorId} - {postDate}</StyledPostAuthor>
                     </StyledPostHeader>
                     <StyledPostTitle>{post.title}</StyledPostTitle>
                     <StyledPostDescription>{post.description}</StyledPostDescription>

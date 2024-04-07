@@ -77,9 +77,8 @@ export default function CreatePost() {
 
     function newPost(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        const date = new Date();
         const newP: NewPost = {
-            authorId: activeUser.id,
+            authorId: activeUser.username,
             type: type,
             status: "NEW",
             title: title,

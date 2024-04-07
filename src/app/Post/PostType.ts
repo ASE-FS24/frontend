@@ -2,7 +2,7 @@ import {Comment} from "../Comment/CommentType";
 
 export interface Post {
     id: string;
-    author: string;
+    authorId: string;
     type: string;
     status: string;
     title: string;

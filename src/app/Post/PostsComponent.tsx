@@ -127,11 +127,11 @@ export function PostsComponent() {
     function searchPosts() {
         if (searchValue.length > 1) {
             const filteredPosts = allPosts.filter((p) =>  {
-                const { title, type, author, description, hashtags} = p;
+                const { title, type, authorId, description, hashtags} = p;
                 return (
                     title.toLowerCase().includes(searchValue.toLowerCase()) ||
                     type.toLowerCase().includes(searchValue.toLowerCase()) ||
-                    author.toLowerCase().includes(searchValue.toLowerCase()) ||
+                    authorId.toLowerCase().includes(searchValue.toLowerCase()) ||
                     description.toLowerCase().includes(searchValue.toLowerCase()) ||
                     hashtags.some((tag: string) => tag.toLowerCase().includes(searchValue.toLowerCase()))
                 );
