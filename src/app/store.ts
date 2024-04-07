@@ -5,23 +5,22 @@ import usersReducer from './User/UserSlice'
 import postsReducer from './Post/PostSlice'
 import loggedInUserReducer from './User/LoggedInUserSlice'
 
-const persistConfig = {
-    key: 'root',
+const loggedInUserPersistConfig = {
+    key: 'loggedInUser',
     storage,
 }
 
+const persistedLoggedInUserReducer = persistReducer(loggedInUserPersistConfig, loggedInUserReducer);
+
 const rootReducer = combineReducers({
     users: usersReducer,
-    loggedInUser: loggedInUserReducer,
+    loggedInUser: persistedLoggedInUserReducer,
     posts: postsReducer,
 });
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
-
 export const store = configureStore({
-    reducer: persistedReducer
+    reducer: rootReducer
 })
-
 
 export const persistor = persistStore(store);
 export type RootState = ReturnType<typeof store.getState>

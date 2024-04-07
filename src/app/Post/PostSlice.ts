@@ -14,7 +14,6 @@ const initialState: IPostState = {
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
 
     const data = await getAllPosts();
-    console.log(data);
     return data
 })
 

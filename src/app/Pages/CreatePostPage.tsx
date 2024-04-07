@@ -90,7 +90,7 @@ export default function CreatePost() {
         }
         dispatch(createPost(newP));
         console.log(newP);
-        // navigate("/");
+        navigate("/");
     }
 
     const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -112,6 +112,7 @@ export default function CreatePost() {
         <>
             <Header/>
             <StyledCreatePostContainer>
+                <StyledButton onClick={() => navigate("/")}>Back</StyledButton>
                 <StyledPageTitle>Create Post</StyledPageTitle>
                 <StyledForm onSubmit={newPost}>
                     <StyledInput id="title"

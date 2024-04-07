@@ -98,10 +98,10 @@ export function PostsComponent() {
 
     useEffect(() => {
         if (projectFilter) {
-            const filteredPosts = allPosts.filter((p) => p.type === "Project");
+            const filteredPosts = allPosts.filter((p) => p.type === "PROJECT");
             setPosts(filteredPosts);
         } else if (postFilter) {
-            const filteredPosts = allPosts.filter((p) => p.type === "Post");
+            const filteredPosts = allPosts.filter((p) => p.type === "POST");
             setPosts(filteredPosts);
         } else if (allFilter) {
             setPosts(allPosts);

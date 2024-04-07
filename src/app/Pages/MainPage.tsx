@@ -1,10 +1,12 @@
 import styled, {css} from "styled-components";
 import {useAppSelector} from "../hooks";
-import {selectPostState} from "../Post/PostSlice";
+import {fetchPosts, selectPostState} from "../Post/PostSlice";
 import Header from "./Header";
 import {selectActiveUser} from "../User/LoggedInUserSlice";
 import {useNavigate} from "react-router-dom";
 import {PostsComponent} from "../Post/PostsComponent";
+import {store} from "../store";
+import {useEffect} from "react";
 
 
 const StyledMainPage = styled.div`
@@ -69,6 +71,10 @@ function Home() {
     const activeUser = useAppSelector(selectActiveUser);
     const navigate = useNavigate();
     const postState = useAppSelector(selectPostState);
+
+    useEffect(() => {
+        store.dispatch(fetchPosts());
+    }, [])
 
     return (
         <>
