@@ -121,8 +121,8 @@ export default function CreatePost() {
                                  onChange={(event) => setTitle(event.target.value)}/>
                     <StyledSelect id="type" name="type" defaultValue={"Select type"} onChange={(event) => setType(event.target.value)}>
                         <option label="Select type" value="" hidden ></option>
-                        <option label="Post" value="Post"></option>
-                        <option label="Project" value="Project"></option>
+                        <option label="Post" value="POST"></option>
+                        <option label="Project" value="PROJECT"></option>
                     </StyledSelect>
                     <StyledInput id="shortDescription"
                                  type="text"
