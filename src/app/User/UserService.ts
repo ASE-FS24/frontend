@@ -37,8 +37,13 @@ const mockUsers = [
 
 
 export function getAllUsers(): Promise<User[]> {
-    return fetch(baseurl + "users/all/")
-        .then(response => response.json())
+    return fetch(baseurl + "users/")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             return data
         })
@@ -60,7 +65,12 @@ export function createUser(user: User) {
         },
         body: JSON.stringify(user)
     })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .catch(error => {
             console.log(error)
             console.log("Mock user created:");
@@ -70,7 +80,12 @@ export function createUser(user: User) {
 
 export function getUser(userId: string): Promise<User> {
     return fetch(baseurl + "users/" + userId)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             return data
         })
@@ -86,7 +101,12 @@ export function getUser(userId: string): Promise<User> {
 
 export function getUserByUsername(username: string): Promise<User> {
     return fetch(baseurl + "users/username/" + username)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             return data
         })
@@ -98,4 +118,75 @@ export function getUserByUsername(username: string): Promise<User> {
                 }, 1000)
             })
         });
+}
+
+export async function updateUser(user: User, endpoint: string = "users"): Promise<User | null> {
+    try {
+        const response = await fetch(baseurl + endpoint + `/id/${user.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        });
+
+        if (!response.ok) {
+            // If the response is not successful, throw an error
+            throw new Error(`Failed to edit user: ${response.statusText}`);
+        }
+
+        // Return the edited user data
+        return await response.json();
+    } catch (error) {
+        // Handle errors gracefully
+        console.error(`Error editing user: ${error}`);
+        console.log("Mock user created:");
+        console.log(JSON.stringify(user));
+        return null;
+    }
+}
+
+export async function getProfilePic(userId: string, endpoint: string = "users"): Promise<string | null> {
+    try {
+        const response = await fetch(baseurl + endpoint + `/${userId}/profilePicture`, {
+            method: 'GET',
+        });
+
+        if (!response.ok) {
+            // If the response is not successful, throw an error
+            throw new Error(`Failed to retrieve profile picture: ${response.statusText}`);
+        }
+
+        // Return the response text (URL of the profile picture)
+        return await response.text();
+    } catch (error) {
+        // Handle errors gracefully
+        console.error(`Error retrieving profile picture: ${error}`);
+        return null;
+    }
+}
+
+
+export async function updateProfilePic(userId: string, profilePicture: File, endpoint: string = "users"): Promise<string | null> {
+    try {
+        const formData = new FormData();
+        formData.append('profilePicture', profilePicture);
+
+        const response = await fetch(baseurl + endpoint + `/${userId}/profilePicture`, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            // If the response is not successful, throw an error
+            throw new Error(`Failed to upload profile picture: ${response.statusText}`);
+        }
+
+        // Return the response text
+        return await response.text();
+    } catch (error) {
+        // Handle errors gracefully
+        console.error(`Error uploading profile picture: ${error}`);
+        return null;
+    }
 }

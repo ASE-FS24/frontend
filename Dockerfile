@@ -40,7 +40,9 @@ RUN pip3 install localstack
 WORKDIR /app
 
 # Copy package.json and package-lock.json files to the working directory
-COPY ./frontend/package.json ./
+COPY ./package.json ./
+
+# #  COPY ./frontend/package.json ./
 
 # Install TypeScript globally
 RUN npm install -g typescript
@@ -53,7 +55,9 @@ RUN ls
 RUN npm install
 
 # # Copy the rest of the application code
-COPY ./frontend .
+COPY . .
+
+# #  COPY ./frontend .
 
 # # Build TypeScript files
 RUN npm run build
