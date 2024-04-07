@@ -120,7 +120,7 @@ const StyledCommentForm = styled.form`
 function PostComponent({post}: { post: Post }) {
     const activeUser = useAppSelector(selectActiveUser);
     const [comments, setComments] = useState<Comment[]>([]);
-    const postDate = dateFormatter(post.edited ? post.editedDate : post.createdDate);
+    const postDate = dateFormatter(post.edited ? post.editedDateTime : post.createdDateTime);
     const [showComments, setShowComments] = useState(false);
     const [commentContent, setCommentContent] = useState("");
     const [reloadComponent, setReloadComponent] = useState(true);

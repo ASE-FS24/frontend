@@ -1,5 +1,6 @@
 
 export function dateFormatter(dateTime) {
+    console.log(dateTime)
     const year = dateTime[0];
     const month = dateTime[1];
     const day = dateTime[2];

@@ -9,9 +9,9 @@ export interface Post {
     shortDescription?: string;
     description: string;
     image?: string;
-    createdDate: string;
+    createdDateTime: string;
     edited: boolean;
-    editedDate: string;
+    editedDateTime: string;
     comments: Array<Comment>
     likes: number;
     hashtags: Array<string>
