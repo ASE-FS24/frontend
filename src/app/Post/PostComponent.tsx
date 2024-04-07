@@ -146,7 +146,7 @@ function PostComponent({post}: { post: Post }) {
         const newComment: Comment = {
             id: commentId,
             postId: post.id,
-            author: activeUser.username,
+            authorId: activeUser.username,
             content: commentContent,
             likes: 0
         }

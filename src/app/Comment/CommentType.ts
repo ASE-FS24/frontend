@@ -3,7 +3,7 @@ import {User} from "../User/UserType";
 export interface Comment {
     id: string;
     postId: string;
-    author: User;
+    authorId: User;
     content: string;
     likes: number;
 }
