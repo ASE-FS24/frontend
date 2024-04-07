@@ -170,4 +170,3 @@ export async function updateProfilePic(userId: string, profilePicture: File, end
         return null;
     }
 }
-
