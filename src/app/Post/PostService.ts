@@ -92,7 +92,7 @@ export function getAllPosts(): Promise<Post[]> {
 }
 
 export function createNewPost(post: NewPost): Promise<NewPost> {
-    return fetch(baseurl + "posts/", {
+    return fetch(baseurl + "posts", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
