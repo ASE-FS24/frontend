@@ -7,6 +7,7 @@ import Login from "./app/Pages/LoginPage";
 import ProfilePage from "./app/Pages/ProfilePage";
 import styled from "styled-components";
 import CreatePost from "./app/Pages/CreatePostPage";
+import MyNetwork from "./app/Pages/MyNetwork";
 
 const StyledMain = styled.main`
   background: center no-repeat url("/background.jpg");
@@ -25,6 +26,7 @@ function App() {
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/profile" element={<ProfilePage/>}/>
                     <Route path="/post/create" element={<CreatePost/>}/>
+                    <Route path="network" element={<MyNetwork/>}/>
                 </Routes>
             </StyledMain>
         </BrowserRouter>
