@@ -20,7 +20,10 @@ export const loggedInUserSlice = createSlice({
             const newUser = action.payload;
             createUser(newUser).then();
             state.value = newUser;
-        }
+        },
+        logOut: (state) => {
+            state.value = null;
+        },
     },
     extraReducers(builder) {
         builder.addCase(getLoggedInUserThunk.fulfilled, (state, {payload}) => {
@@ -29,7 +32,7 @@ export const loggedInUserSlice = createSlice({
     }
 })
 
-export const {setLoggedInUser} = loggedInUserSlice.actions
+export const {setLoggedInUser, logOut} = loggedInUserSlice.actions
 
 export default loggedInUserSlice.reducer
 

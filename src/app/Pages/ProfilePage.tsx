@@ -1,9 +1,10 @@
-import { useAppSelector } from "../hooks";
+import {useAppDispatch, useAppSelector} from "../hooks";
 import styled from "styled-components";
-import { selectActiveUser } from "../User/LoggedInUserSlice";
+import {logOut, selectActiveUser} from "../User/LoggedInUserSlice";
 import UserComponent from "../User/UserComponent";
-import { signOut } from "../Util/auth";
-import { useNavigate } from "react-router-dom";
+import {signOut} from "../Util/auth";
+import {useNavigate} from "react-router-dom";
+import Header from "./Header";
 
 
 const StyledProfileContainer = styled.div`
@@ -12,7 +13,6 @@ const StyledProfileContainer = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin-top: 20px;
 `;
 
 const ProfileHeading = styled.h2`
@@ -40,22 +40,27 @@ const SignOutButton = styled.button`
 `;
 
 function ProfilePage() {
-  const navigate = useNavigate(); // Get the navigate function from React Router
+    const navigate = useNavigate(); // Get the navigate function from React Router
 
-  const activeUser = useAppSelector(selectActiveUser);
+    const activeUser = useAppSelector(selectActiveUser);
+    const dispatch = useAppDispatch();
 
-  const handleSignOut = () => {
-    signOut(); // Perform signout action
-    navigate("/login"); // Redirect to login page after signout
-  };
+    const handleSignOut = () => {
+        signOut(); // Perform signout action
+        dispatch(logOut())
+        navigate("/login"); // Redirect to login page after signout
+    };
 
-  return (
-    <StyledProfileContainer>
-      <SignOutButton onClick={handleSignOut}>Sign out</SignOutButton>
-      <ProfileHeading>Welcome {activeUser && activeUser.name}</ProfileHeading>
-      {activeUser && <UserComponent user={activeUser} />}
-    </StyledProfileContainer>
-  );
+    return (
+        <>
+            <Header/>
+            <StyledProfileContainer>
+                <SignOutButton onClick={handleSignOut}>Sign out</SignOutButton>
+                <ProfileHeading>Welcome {activeUser && activeUser.username}</ProfileHeading>
+                {activeUser && <UserComponent user={activeUser}/>}
+            </StyledProfileContainer>
+        </>
+    );
 }
 
 export default ProfilePage;

@@ -88,6 +88,11 @@ export const StyledButtonSmall = styled(StyledButton)`
 
 export const StyledError = styled.p`
   color: #ff0000;
+  background-color: #00000080;
+  font-style: italic;
+  font-size: 1.5rem;
+  width: fit-content;
+  margin: 10px auto;
 `;
 
 const StyledForgotPassword = styled.div`

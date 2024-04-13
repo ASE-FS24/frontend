@@ -80,7 +80,7 @@ export default function Register() {
             bio: bio,
             degreeProgram: degreeProgram,
             birthday: birthday,
-            profilePicture: "profile.svg",
+            profilePicture: "",
             followedUsers: []
         }
         dispatch(setLoggedInUser(newUser));
