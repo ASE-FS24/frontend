@@ -3,7 +3,7 @@ import {ForceGraph2D} from 'react-force-graph';
 import styled from "styled-components";
 import {useAppSelector} from "../hooks";
 import {selectActiveUser} from "../User/LoggedInUserSlice";
-import {FollowerData, getFollowers} from "../User/UserService";
+import {FollowerData, getFollowers, getNetwork} from "../User/UserService";
 import Header from "./Header";
 import ConnectionComponent from "../User/ConnectionComponent";
 
@@ -33,13 +33,20 @@ const StyledNetworkTitle = styled.div`
 function MyNetwork() {
     const user = useAppSelector(selectActiveUser);
     const [data, setData] = useState<FollowerData | null>(null);
+    const [followers, setFollowers] = useState<{ id: string, username: string, profilePictureUrl: string }[]>([]);
 
     useEffect(() => {
         getFollowers(user.id).then((response) => {
             console.log(data)
-            setData(response);
+            setFollowers(response);
         });
     }, [user]);
+
+    useEffect(() => {
+        getNetwork().then((response) => {
+            setData(response);
+        });
+    }, []);
 
     if (!data) {
         return null; // or some loading state
@@ -92,8 +99,12 @@ function MyNetwork() {
                 </StyledNetworkContainer>
                 <StyledNetworkContainer2>
                     <StyledNetworkTitle>My Network</StyledNetworkTitle>
-                    <ConnectionComponent id={"test"} username={"Test"} profilePictureUrl={"..."} />
-                    <ConnectionComponent id={"test2"} username={"Test2"} profilePictureUrl={"..."} />
+                    {followers.map((follower) => {
+                        return (
+                            <ConnectionComponent id={follower.id} username={follower.username}
+                                                 profilePictureUrl={follower.profilePictureUrl}/>
+                        )
+                    })}
                 </StyledNetworkContainer2>
             </StyledMainNetworkContainer>
         </>

@@ -191,7 +191,7 @@ export async function updateProfilePic(userId: string, profilePicture: File, end
     }
 }
 
-const followerMockData = {
+const networkMockData = {
     nodes: [
         {id: '0c83f09a-1c14-4e54-b7aa-48041fda6103', name: 'DGERGELY123', val: 10},
         {id: 'id2', name: 'name2', val: 10},
@@ -218,14 +218,20 @@ const followerMockData = {
     ]
 };
 
+const followerMockData = [
+    {id: "testId1", username: "Test1", profilePictureUrl: ""},
+    {id: "testId2", username: "Test2", profilePictureUrl: ""},
+    {id: "testId3", username: "Test3", profilePictureUrl: ""}
+]
+
 export interface FollowerData {
     nodes: { id: string; name: string; val: number; }[];
     links: { source: string; target: string; }[];
 }
 
-export async function getFollowers(useId: string): Promise<FollowerData> {
+export async function getNetwork(): Promise<FollowerData> {
     try {
-        const response = await fetch(baseurl + `users/${useId}/followers`, {
+        const response = await fetch(baseurl + `users/network`, {
             method: 'GET'
         });
 
@@ -241,7 +247,7 @@ export async function getFollowers(useId: string): Promise<FollowerData> {
         console.error(`Error retrieving followers: ${error}`);
         return new Promise((resolve) => {
             setTimeout(() => {
-                const nodesMap = followerMockData.links.reduce((acc, link) => {
+                const nodesMap = networkMockData.links.reduce((acc, link) => {
                     [link.source, link.target].forEach(id => {
                         acc.has(id) ? acc.get(id)!.val += 1 : acc.set(id, {id, name: id, val: 1});
                     });
@@ -249,9 +255,33 @@ export async function getFollowers(useId: string): Promise<FollowerData> {
                 }, new Map<string, { id: string, name: string, val: number }>())
                 const nodes = Array.from(nodesMap.values());
 
-                const data = {nodes: nodes, links: followerMockData.links}
+                const data = {nodes: nodes, links: networkMockData.links}
 
                 resolve(data);
+            }, 1000)
+        });
+    }
+}
+
+export async function getFollowers(userId: string): Promise<{id: string, username: string, profilePictureUrl: string}[]> {
+    try {
+        const response = await fetch(baseurl + `users/${userId}/followers`, {
+            method: 'GET'
+        });
+
+        if (!response.ok) {
+            // If the response is not successful, throw an error
+            throw new Error(`Failed to retrieve followers: ${response.statusText}`);
+        }
+
+        // Return the response text
+        return await response.json();
+    } catch (error) {
+        // Handle errors gracefully
+        console.error(`Error retrieving followers: ${error}`);
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(followerMockData);
             }, 1000)
         });
     }
