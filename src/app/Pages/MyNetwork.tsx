@@ -4,11 +4,30 @@ import styled from "styled-components";
 import {useAppSelector} from "../hooks";
 import {selectActiveUser} from "../User/LoggedInUserSlice";
 import {FollowerData, getFollowers} from "../User/UserService";
+import Header from "./Header";
+import ConnectionComponent from "../User/ConnectionComponent";
+
+const StyledMainNetworkContainer = styled.div`
+  display: flex;
+`;
 
 const StyledNetworkContainer = styled.div`
   width: 50vw;
-  height: 100vh;
+  height: calc(100vh - 70px);
   background: rgb(255, 255, 255, 0.5);
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+`;
+
+const StyledNetworkContainer2 = styled(StyledNetworkContainer)`
+  background: rgb(255, 255, 255, 0.2);
+`;
+
+const StyledNetworkTitle = styled.div`
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 10px auto;
 `;
 
 function MyNetwork() {
@@ -38,36 +57,46 @@ function MyNetwork() {
 
     const connectedNodes = getConnectedNodes(data.links, user.id);
 
-
     return (
-        <StyledNetworkContainer>
-            <ForceGraph2D
-                width={window.innerWidth / 2}
-                height={window.innerHeight}
-                graphData={data}
-                nodeCanvasObject={(node, ctx, globalScale) => {
-                    // Draw the circle
-                    ctx.beginPath();
-                    if (node.x !== undefined && node.y !== undefined) {
-                        ctx.arc(node.x, node.y, (node.val / 2) * globalScale, 0, 2 * Math.PI, false);
-                    }
-                    ctx.fillStyle = (user.id === node.id || connectedNodes.includes(node.id)) ? '#FFC000' : 'blue';
-                    ctx.fill();
+        <>
+            <Header/>
+            <StyledMainNetworkContainer>
+                <StyledNetworkContainer>
+                    <StyledNetworkTitle>The NexusNet network</StyledNetworkTitle>
+                    <ForceGraph2D
+                        width={window.innerWidth / 2}
+                        height={window.innerHeight - 130}
+                        graphData={data}
+                        nodeCanvasObject={(node, ctx, globalScale) => {
+                            // Draw the circle
+                            ctx.beginPath();
+                            if (node.x !== undefined && node.y !== undefined) {
+                                ctx.arc(node.x, node.y, (node.val) * globalScale, 0, 2 * Math.PI, false);
+                            }
+                            ctx.fillStyle = (user.id === node.id || connectedNodes.includes(node.id)) ? '#FFC000' : 'blue';
+                            ctx.fill();
 
-                    // Draw the label
-                    const label = node.name;
-                    const fontSize = (node.val / 2) * globalScale;
-                    ctx.font = `${fontSize}px Sans-Serif`;
-                    ctx.fillStyle = 'black';
-                    if (node.x !== undefined && node.y !== undefined) {
-                        ctx.fillText(label, (node.x - (node.val * 2)), (node.y + (node.val * 2)));
-                    }
-                }}
-                nodeRelSize={5}
-                enablePanInteraction={false}
-                linkDirectionalParticles="value"
-            />
-        </StyledNetworkContainer>
+                            // Draw the label
+                            const label = node.name;
+                            const fontSize = (node.val / 2) * globalScale;
+                            ctx.font = `${fontSize}px Sans-Serif`;
+                            ctx.fillStyle = 'black';
+                            if (node.x !== undefined && node.y !== undefined) {
+                                ctx.fillText(label, (node.x - (node.val * 2)), (node.y + (node.val * 2)));
+                            }
+                        }}
+                        nodeRelSize={5}
+                        enablePanInteraction={false}
+                        linkDirectionalParticles="value"
+                    />
+                </StyledNetworkContainer>
+                <StyledNetworkContainer2>
+                    <StyledNetworkTitle>My Network</StyledNetworkTitle>
+                    <ConnectionComponent id={"test"} username={"Test"} profilePictureUrl={"..."} />
+                    <ConnectionComponent id={"test2"} username={"Test2"} profilePictureUrl={"..."} />
+                </StyledNetworkContainer2>
+            </StyledMainNetworkContainer>
+        </>
     );
 }
 
