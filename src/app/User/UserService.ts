@@ -1,42 +1,74 @@
-import {User} from "./UserType";
+import {FollowUser, User, UserSummary} from "./UserType";
 
 const baseurl = process.env.REACT_APP_USER_BASEURL;
 
 const mockUser = {
     id: "ae14b32e-9418-4be6-bebf-b56903d40578",
-    email: "user2@mock.com",
-    firstName: "User2",
-    lastName: "Mock",
     username: "mockuser2",
-    motto: "I'm the second best mock user out there",
-    university: "UZH",
-    bio: "This is my crazy bio 2",
-    degreeProgram: 'Masters',
-    birthday: "-",
-    profilePicture: "",
-    followedUsers: []
+    profilePicture: ""
 }
 
 const mockUsers = [
     {
         id: "ae14b32e-9418-4be6-bebf-b56903d40577",
-        email: "gleinad11@gmail.com",
-        firstName: "User1",
-        lastName: "Mock",
         username: "mockuser1",
-        motto: "I'm the best mock user out there",
-        university: "UZH",
-        bio: "This is my crazy bio",
-        degreeProgram: 'Masters',
-        birthday: "-",
         profilePicture: "",
-        followedUsers: ["MockUser2"]
+    },
+    {
+        id: "ae14b32e-9418-4be6-bebf-b56903d40578",
+        username: "mockuser2",
+        profilePicture: "",
+    },
+    {
+        id: "ae14b32e-9418-4be6-bebf-b56903d40579",
+        username: "mockuser3",
+        profilePicture: "",
+    },
+    {
+        id: "ae14b32e-9418-4be6-bebf-b56903d40580",
+        username: "mockuser4",
+        profilePicture: "",
+    },
+    {
+        id: "ae14b32e-9418-4be6-bebf-b56903d40581",
+        username: "mockuser5",
+        profilePicture: "",
+    },
+    {
+        id: "ae14b32e-9418-4be6-bebf-b56903d40582",
+        username: "mockuser6",
+        profilePicture: "",
+    },
+    {
+        id: "ae14b32e-9418-4be6-bebf-b56903d40583",
+        username: "mockuser7",
+        profilePicture: "",
+    },
+    {
+        id: "ae14b32e-9418-4be6-bebf-b56903d40584",
+        username: "mockuser8",
+        profilePicture: "",
+    },
+    {
+        id: "ae14b32e-9418-4be6-bebf-b56903d40585",
+        username: "mockuser9",
+        profilePicture: "",
+    },
+    {
+        id: "ae14b32e-9418-4be6-bebf-b56903d40586",
+        username: "mockuser10",
+        profilePicture: "",
+    },
+    {
+        id: "ae14b32e-9418-4be6-bebf-b56903d40587",
+        username: "mockuser11",
+        profilePicture: "",
     },
     mockUser
 ]
 
 
-export function getAllUsers(): Promise<User[]> {
+export function getAllUsers(): Promise<UserSummary[]> {
     return fetch(baseurl + "users/")
         .then(response => {
             if (!response.ok) {
@@ -229,12 +261,7 @@ const followerMockData = [
     {id: "testId8", username: "Test8", profilePictureUrl: ""}
 ]
 
-export interface FollowerData {
-    nodes: { id: string; name: string; val: number; }[];
-    links: { source: string; target: string; }[];
-}
-
-export async function getNetwork(): Promise<FollowerData> {
+export async function getNetwork(): Promise<FollowUser[]> {
     try {
         const response = await fetch(baseurl + `users/network`, {
             method: 'GET'
@@ -252,17 +279,7 @@ export async function getNetwork(): Promise<FollowerData> {
         console.error(`Error retrieving followers: ${error}`);
         return new Promise((resolve) => {
             setTimeout(() => {
-                const nodesMap = networkMockData.links.reduce((acc, link) => {
-                    [link.source, link.target].forEach(id => {
-                        acc.has(id) ? acc.get(id)!.val += 1 : acc.set(id, {id, name: id, val: 1});
-                    });
-                    return acc
-                }, new Map<string, { id: string, name: string, val: number }>())
-                const nodes = Array.from(nodesMap.values());
-
-                const data = {nodes: nodes, links: networkMockData.links}
-
-                resolve(data);
+                resolve(networkMockData.links);
             }, 1000)
         });
     }

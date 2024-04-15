@@ -3,25 +3,26 @@ import {ForceGraph2D} from 'react-force-graph';
 import styled from "styled-components";
 import {useAppSelector} from "../hooks";
 import {selectActiveUser} from "../User/LoggedInUserSlice";
-import {FollowerData, getFollowers, getNetwork} from "../User/UserService";
+import {getFollowers} from "../User/UserService";
 import Header from "./Header";
 import ConnectionComponent from "../User/ConnectionComponent";
+import {selectAllUsers, selectNetwork, selectNetworkStatus} from "../User/UserSlice";
+import {StyledSearchInput} from "../Post/PostsComponent";
+import Loading from "./LoadingComponent";
+import {FollowerData} from "../User/UserType";
 
 const StyledMainNetworkContainer = styled.div`
   display: flex;
+  justify-content: space-between;
 `;
 
 const StyledNetworkContainer = styled.div`
-  width: 50vw;
+  width: 49.5vw;
   height: calc(100vh - 70px);
   background: rgb(255, 255, 255, 0.5);
   padding-top: 10px;
   display: flex;
   flex-direction: column;
-`;
-
-const StyledNetworkContainer2 = styled(StyledNetworkContainer)`
-  background: rgb(255, 255, 255, 0.2);
 `;
 
 const StyledNetworkTitle = styled.div`
@@ -40,55 +41,67 @@ const ConnectionsContainer = styled.div`
 `;
 
 const SearchConnectionsContainer = styled.div`
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
   height: 40vw;
 `;
 
 function MyNetwork() {
+    const allUsers = useAppSelector(selectAllUsers);
     const user = useAppSelector(selectActiveUser);
-    const [data, setData] = useState<FollowerData | null>(null);
+    const data = useAppSelector(selectNetwork);
+    const networkStatus = useAppSelector(selectNetworkStatus);
+    const [filteredUsers, setFilteredUsers] = useState(allUsers);
     const [followers, setFollowers] = useState<{ id: string, username: string, profilePictureUrl: string }[]>([]);
+    const [searchValue, setSearchValue] = useState<string>('');
+    const [connectedNodes, setConnectedNodes] = useState<string[]>([]);
+    const [graphDataCopy , setGraphDataCopy] = useState<FollowerData>();
 
     useEffect(() => {
         getFollowers(user.id).then((response) => {
-            console.log(data)
             setFollowers(response);
         });
-    }, [user]);
+    }, [user, data]);
 
     useEffect(() => {
-        getNetwork().then((response) => {
-            setData(response);
-        });
-    }, []);
+       setFilteredUsers(allUsers);
+    }, [allUsers]);
 
-    if (!data) {
-        return null; // or some loading state
-    }
-    const getConnectedNodes = (links: { source: string, target: string }[], userId: string) => {
-        return links.reduce((acc: string[], link) => {
-            if (link.source === userId) {
+    useEffect(() => {
+        setGraphDataCopy({
+            nodes: data.nodes.map(node => ({...node})),
+            links: data.links.map(link => ({...link}))
+        })
+        const cNodes = data.links.reduce((acc: string[], link) => {
+            if (link.source === user.id) {
                 acc.push(link.target);
-            } else if (link.target === userId) {
+            } else if (link.target === user.id) {
                 acc.push(link.source);
             }
             return acc;
         }, []);
-    };
+        setConnectedNodes(cNodes);
+    }, [data, user.id])
 
-    const connectedNodes = getConnectedNodes(data.links, user.id);
+    const onEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            setFilteredUsers(allUsers.filter((user) => user.username.includes(searchValue)));
+        }
+    }
 
+    console.log(filteredUsers)
     return (
         <>
             <Header/>
             <StyledMainNetworkContainer>
                 <StyledNetworkContainer>
                     <StyledNetworkTitle>The NexusNet network</StyledNetworkTitle>
+                    {networkStatus === 'loading' ? <Loading /> :
                     <ForceGraph2D
                         width={window.innerWidth / 2}
                         height={window.innerHeight - 130}
-                        graphData={data}
+                        graphData={graphDataCopy}
                         nodeCanvasObject={(node, ctx, globalScale) => {
                             // Draw the circle
                             ctx.beginPath();
@@ -110,24 +123,34 @@ function MyNetwork() {
                         nodeRelSize={5}
                         enablePanInteraction={false}
                         linkDirectionalParticles="value"
-                    />
+                    />}
                 </StyledNetworkContainer>
-                <StyledNetworkContainer2>
+                <StyledNetworkContainer>
                     <StyledNetworkTitle>My Network</StyledNetworkTitle>
                     <SearchConnectionsContainer>
                         <StyledNetworkTitle>Find a friend</StyledNetworkTitle>
-
+                        <StyledSearchInput
+                            id="search"
+                            value={searchValue}
+                            placeholder="Search..."
+                            onChange={(event) => setSearchValue(event.target.value)}
+                            onKeyDown={onEnter}></StyledSearchInput>
+                        {filteredUsers.length > 0 && filteredUsers.map((user) => {
+                            return (
+                                <div key={user.id}>{user.username}</div>
+                            )
+                        })}
                     </SearchConnectionsContainer>
                     <StyledNetworkTitle>Friends</StyledNetworkTitle>
                     <ConnectionsContainer>
                         {followers.map((follower) => {
                             return (
-                                <ConnectionComponent id={follower.id} username={follower.username}
+                                <ConnectionComponent key={follower.id} id={follower.id} username={follower.username}
                                                      profilePictureUrl={follower.profilePictureUrl}/>
                             )
                         })}
                     </ConnectionsContainer>
-                </StyledNetworkContainer2>
+                </StyledNetworkContainer>
             </StyledMainNetworkContainer>
         </>
     );

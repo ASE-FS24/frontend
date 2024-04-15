@@ -44,7 +44,7 @@ const StyledSearchContainer = styled.div`
   margin-right: auto;
 `;
 
-const StyledSearchInput = styled.input`
+export const StyledSearchInput = styled.input`
   font-size: 1rem;
   background-color: rgba(0, 0, 0, 0.3);
   border-radius: 15px;
