@@ -2,7 +2,7 @@ import styled from "styled-components";
 import {UserSummary} from "./UserType";
 
 
-const StyledConnection = styled.div`
+const StyledUserSummaryContainer = styled.div`
   display: flex;
   flex-direction: row;
   color: white;
@@ -15,24 +15,24 @@ const StyledConnection = styled.div`
         cursor: pointer;
       box-shadow: 2px 2px 10px 2px rgba(0,0,0,.8);
     }
-  width: calc(50% - 30px);
+  width: calc(33% - 30px);
 `;
 
 const StyledProfilePicture = styled.div<{ url?: string }>`
   border-radius: 50%;
-  width: 75px;
-  height: 75px;
+  width: 50px;
+  height: 50px;
   margin: auto 10px;
   background: url(${props => props.url ? props.url : process.env.PUBLIC_URL + '/profile.svg'}) center/cover no-repeat;
 `;
 
-function ConnectionComponent({connection}: { connection: UserSummary }) {
+function UserSummaryComponent({user}: {user: UserSummary}) {
     return (
-        <StyledConnection>
+        <StyledUserSummaryContainer>
             <StyledProfilePicture></StyledProfilePicture>
-            <h1>{connection.username}</h1>
-        </StyledConnection>
+            <h3>{user.username}</h3>
+        </StyledUserSummaryContainer>
     );
 }
 
-export default ConnectionComponent;
+export default UserSummaryComponent;

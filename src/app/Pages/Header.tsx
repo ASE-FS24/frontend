@@ -20,6 +20,10 @@ const StyledHeaderContainer = styled.div`
 
 const StyledLogo = styled.img`
   width: 200px;
+  
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const StyledIconsContainer = styled.div`
@@ -61,7 +65,7 @@ function Header() {
         <StyledHeaderContainer>
             <StyledLogo src="/logo.png" onClick={() => navigate("/")}/>
             <StyledIconsContainer>
-                <StyledIconContainer>
+                <StyledIconContainer onClick={() => navigate("/network")}>
                     <NetworkSVG style={{color: "#ffffff", width: "45px", height: "45px"}}/>
                 </StyledIconContainer>
                 <StyledIconContainer>

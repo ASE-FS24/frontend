@@ -17,7 +17,7 @@ export interface User {
 
 export interface UserSummary {
     id: string;
-    email: string;
+    username: string;
     profilePicture: string;
 }
 

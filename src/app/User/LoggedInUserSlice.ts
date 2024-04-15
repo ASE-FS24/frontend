@@ -1,15 +1,24 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {createUser, getUser, getUserByUsername} from "./UserService";
+import {createUser, getConnections, getUser, getUserByUsername} from "./UserService";
 
 interface IUserState {
     value: any;
+    connections: any[];
 }
+
 const initialState: IUserState = {
     value: null,
+    connections: []
 };
 
-export const getLoggedInUserThunk = createAsyncThunk('users/getLoggedInUser', async (username: string) => {
-        return await getUserByUsername(username);
+export const getLoggedInUserThunk = createAsyncThunk('users/getLoggedInUser', async (username: string, thunkAPI) => {
+    const loggedInUser = await getUserByUsername(username);
+    thunkAPI.dispatch(fetchConnections(loggedInUser.id));
+    return loggedInUser;
+});
+
+export const fetchConnections = createAsyncThunk('users/getConnections', async (userId: string) => {
+    return await getConnections(userId);
 });
 
 export const loggedInUserSlice = createSlice({
@@ -26,9 +35,13 @@ export const loggedInUserSlice = createSlice({
         },
     },
     extraReducers(builder) {
-        builder.addCase(getLoggedInUserThunk.fulfilled, (state, {payload}) => {
-            state.value = payload;
-        })
+        builder
+            .addCase(getLoggedInUserThunk.fulfilled, (state, {payload}) => {
+                state.value = payload;
+            })
+            .addCase(fetchConnections.fulfilled, (state, {payload}) => {
+                state.connections = payload;
+            })
     }
 })
 
@@ -41,3 +54,5 @@ interface RootState {
 }
 
 export const selectActiveUser = (state: RootState) => state.loggedInUser.value;
+
+export const selectConnections = (state: RootState) => state.loggedInUser.connections;
