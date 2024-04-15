@@ -28,6 +28,21 @@ const StyledNetworkTitle = styled.div`
   font-size: 2rem;
   font-weight: bold;
   margin: 10px auto;
+  width: 100%;
+  text-align: center;
+`;
+
+const ConnectionsContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  max-height: 40vh;
+  overflow: auto;
+`;
+
+const SearchConnectionsContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+  height: 40vw;
 `;
 
 function MyNetwork() {
@@ -99,12 +114,19 @@ function MyNetwork() {
                 </StyledNetworkContainer>
                 <StyledNetworkContainer2>
                     <StyledNetworkTitle>My Network</StyledNetworkTitle>
-                    {followers.map((follower) => {
-                        return (
-                            <ConnectionComponent id={follower.id} username={follower.username}
-                                                 profilePictureUrl={follower.profilePictureUrl}/>
-                        )
-                    })}
+                    <SearchConnectionsContainer>
+                        <StyledNetworkTitle>Find a friend</StyledNetworkTitle>
+
+                    </SearchConnectionsContainer>
+                    <StyledNetworkTitle>Friends</StyledNetworkTitle>
+                    <ConnectionsContainer>
+                        {followers.map((follower) => {
+                            return (
+                                <ConnectionComponent id={follower.id} username={follower.username}
+                                                     profilePictureUrl={follower.profilePictureUrl}/>
+                            )
+                        })}
+                    </ConnectionsContainer>
                 </StyledNetworkContainer2>
             </StyledMainNetworkContainer>
         </>

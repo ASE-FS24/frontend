@@ -192,18 +192,18 @@ export async function updateProfilePic(userId: string, profilePicture: File, end
 }
 
 const networkMockData = {
-    nodes: [
-        {id: '0c83f09a-1c14-4e54-b7aa-48041fda6103', name: 'DGERGELY123', val: 10},
-        {id: 'id2', name: 'name2', val: 10},
-        {id: 'id3', name: 'name3', val: 5},
-        {id: 'id4', name: 'name4', val: 7},
-        {id: 'id5', name: 'name5', val: 3},
-        {id: 'id6', name: 'name6', val: 9},
-        {id: 'id7', name: 'name7', val: 2},
-        {id: 'id8', name: 'name8', val: 8},
-        {id: 'id9', name: 'name9', val: 6},
-        {id: 'id10', name: 'name10', val: 4}
-    ],
+    // nodes: [
+    //     {id: '0c83f09a-1c14-4e54-b7aa-48041fda6103', name: 'DGERGELY123', val: 10},
+    //     {id: 'id2', name: 'name2', val: 10},
+    //     {id: 'id3', name: 'name3', val: 5},
+    //     {id: 'id4', name: 'name4', val: 7},
+    //     {id: 'id5', name: 'name5', val: 3},
+    //     {id: 'id6', name: 'name6', val: 9},
+    //     {id: 'id7', name: 'name7', val: 2},
+    //     {id: 'id8', name: 'name8', val: 8},
+    //     {id: 'id9', name: 'name9', val: 6},
+    //     {id: 'id10', name: 'name10', val: 4}
+    // ],
     links: [
         {source: '0c83f09a-1c14-4e54-b7aa-48041fda6103', target: 'id2'},
         {source: 'id2', target: 'id3'},
@@ -221,7 +221,12 @@ const networkMockData = {
 const followerMockData = [
     {id: "testId1", username: "Test1", profilePictureUrl: ""},
     {id: "testId2", username: "Test2", profilePictureUrl: ""},
-    {id: "testId3", username: "Test3", profilePictureUrl: ""}
+    {id: "testId3", username: "Test3", profilePictureUrl: ""},
+    {id: "testId4", username: "Test4", profilePictureUrl: ""},
+    {id: "testId5", username: "Test5", profilePictureUrl: ""},
+    {id: "testId6", username: "Test6", profilePictureUrl: ""},
+    {id: "testId7", username: "Test7", profilePictureUrl: ""},
+    {id: "testId8", username: "Test8", profilePictureUrl: ""}
 ]
 
 export interface FollowerData {

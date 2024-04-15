@@ -14,6 +14,7 @@ const StyledConnection = styled.div`
         cursor: pointer;
       box-shadow: 2px 2px 10px 2px rgba(0,0,0,.8);
     }
+  width: calc(50% - 30px);
 `;
 
 const StyledProfilePicture = styled.div<{ url?: string }>`
