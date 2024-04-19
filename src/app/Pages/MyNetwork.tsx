@@ -50,6 +50,7 @@ const SearchConnectionsContainer = styled.div`
   background: rgb(0, 0, 0, 0.2);
   margin-top: 10px;
   padding: 5px;
+  align-content: space-between;
 `;
 
 function MyNetwork() {

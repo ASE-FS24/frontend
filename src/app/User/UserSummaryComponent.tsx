@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import {UserSummary} from "./UserType";
 import {ReactComponent as FollowSVG} from "../../static/images/person-plus-fill.svg";
+import {useAppSelector} from "../hooks";
+import {selectActiveUser} from "./LoggedInUserSlice";
+import {followUser} from "./UserService";
 
 
 const StyledUserSummaryContainer = styled.div`
@@ -18,6 +21,7 @@ const StyledUserSummaryContainer = styled.div`
   }
 
   width: calc(33% - 30px);
+  min-width: 240px;
 `;
 
 const StyledProfilePicture = styled.div<{ url?: string }>`
@@ -43,11 +47,12 @@ export const StyledSVGContainer = styled.div`
 `;
 
 function UserSummaryComponent({user}: { user: UserSummary }) {
+    const loggedInUser = useAppSelector(selectActiveUser);
     return (
         <StyledUserSummaryContainer>
             <StyledProfilePicture></StyledProfilePicture>
             <h3>{user.username}</h3>
-            <StyledSVGContainer>
+            <StyledSVGContainer onClick={() => followUser(loggedInUser.id, user.id)}>
                 <FollowSVG style={{width: "35px", height: "35px"}}/>
             </StyledSVGContainer>
         </StyledUserSummaryContainer>
