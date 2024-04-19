@@ -12,10 +12,12 @@ import {useEffect, useState} from "react";
 import {commentOnPost, getComments} from "../Comment/CommentService";
 import {Comment} from "../Comment/CommentType";
 import {StyledButton, StyledButtonSmall, StyledInput} from "../Pages/LoginPage";
-import {useAppSelector} from "../hooks";
+import {useAppDispatch, useAppSelector} from "../hooks";
 import {selectActiveUser} from "../User/LoggedInUserSlice";
 import { v4 as uuidv4 } from 'uuid';
 import {likePost} from "./PostService";
+import {useDispatch} from "react-redux";
+import {fetchPost, selectPostsById} from "./PostSlice";
 
 
 const StyledPost = styled.div`
@@ -118,22 +120,26 @@ const StyledCommentForm = styled.form`
   margin: 5px 5px 5px auto;
 `;
 
-function PostComponent({post}: { post: Post }) {
+function PostComponent({postId}: { postId: string }) {
     const activeUser = useAppSelector(selectActiveUser);
+    const post = useAppSelector(state => selectPostsById(state, postId));
     const [comments, setComments] = useState<Comment[]>([]);
     const postDate = dateFormatter(post.edited ? post.editedDateTime : post.createdDateTime);
     const [showComments, setShowComments] = useState(false);
     const [commentContent, setCommentContent] = useState("");
     const [reloadComponent, setReloadComponent] = useState(true);
     const [showCommentForm, setShowCommentForm] = useState(false);
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         async function fetchComments(postId: string) {
             const postComments = await getComments(postId);
+            console.log(postComments);
             setComments(postComments);
         }
 
         if (reloadComponent) {
+            dispatch(fetchPost(post.id));
             fetchComments(post.id).then();
             setReloadComponent(false)
         }
@@ -148,12 +154,20 @@ function PostComponent({post}: { post: Post }) {
             postId: post.id,
             authorId: activeUser.username,
             content: commentContent,
-            likes: 0
+            likeNumber: 0,
+            createdAt: ""
         }
         await commentOnPost(newComment, post.id).then();
         setReloadComponent(true);
         setShowCommentForm(false);
         setCommentContent("");
+    }
+
+    function like() {
+        if (activeUser) {
+            likePost(post.id, activeUser.username).then();
+            setReloadComponent(true);
+        }
     }
 
     return (
@@ -173,7 +187,7 @@ function PostComponent({post}: { post: Post }) {
                     <StyledPostDescription>{post.description}</StyledPostDescription>
                 </StyledPostContent>
                 <StyledInteractionsContainer>
-                    <StyledIconContainer onClick={() => activeUser && likePost(post.id, activeUser.id)}>
+                    <StyledIconContainer onClick={like}>
                         <LikeSVG style={{color: "#E72950", width: "45px", height: "45px"}}/>
                     </StyledIconContainer>
                     <StyledIconContainer onClick={() => setShowComments(!showComments)}>
@@ -185,14 +199,14 @@ function PostComponent({post}: { post: Post }) {
                     <StyledIconContainer last={"auto"}>
                         <ReportSVG style={{width: "45px", height: "45px"}}/>
                     </StyledIconContainer>
-                    <StyledLikes>{post.likes}</StyledLikes>
+                    <StyledLikes>{post.likeNumber}</StyledLikes>
                 </StyledInteractionsContainer>
 
             </StyledPost>
             {showComments &&
                 <StyledCommentsContainer>
                     {comments.length > 0 ? comments.map((comment) => (
-                        <CommentComponent key={comment.id} comment={comment}/>
+                        <CommentComponent key={comment.id} comment={comment} setReloadComponent={setReloadComponent}/>
                     )) : <StyledNoCommentsContainer>No comments yet...</StyledNoCommentsContainer>}
                     {activeUser !== null ?
                         <>

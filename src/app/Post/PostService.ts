@@ -107,7 +107,7 @@ export function createNewPost(post: NewPost): Promise<NewPost> {
             return response.json();
         })
         .then(data => {
-            return post
+            return data
         })
         .catch(error => {
             console.log(error);
@@ -116,6 +116,24 @@ export function createNewPost(post: NewPost): Promise<NewPost> {
                     resolve(post);
                 }, 1000); // Simulate a 1 second delay
             });
+        })
+}
+
+export function getPost(postId: string): Promise<Post> {
+    console.log("fetching post with id: " + postId)
+    return fetch(baseurl + "posts/" + postId)
+        .then(response => {
+            if (!response.ok) {
+                console.log(response)
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            return data
+        })
+        .catch(error => {
+            console.log(error);
         })
 }
 

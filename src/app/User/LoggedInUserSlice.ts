@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {createUser, getConnections, getUser, getUserByUsername} from "./UserService";
+import {createUser, getFollows, getUser, getUserByUsername} from "./UserService";
 
 interface IUserState {
     value: any;
@@ -13,12 +13,12 @@ const initialState: IUserState = {
 
 export const getLoggedInUserThunk = createAsyncThunk('users/getLoggedInUser', async (username: string, thunkAPI) => {
     const loggedInUser = await getUserByUsername(username);
-    thunkAPI.dispatch(fetchConnections(loggedInUser.id));
+    thunkAPI.dispatch(fetchFollows(loggedInUser.id));
     return loggedInUser;
 });
 
-export const fetchConnections = createAsyncThunk('users/getConnections', async (userId: string) => {
-    return await getConnections(userId);
+export const fetchFollows = createAsyncThunk('users/getConnections', async (userId: string) => {
+    return await getFollows(userId);
 });
 
 export const loggedInUserSlice = createSlice({
@@ -39,7 +39,7 @@ export const loggedInUserSlice = createSlice({
             .addCase(getLoggedInUserThunk.fulfilled, (state, {payload}) => {
                 state.value = payload;
             })
-            .addCase(fetchConnections.fulfilled, (state, {payload}) => {
+            .addCase(fetchFollows.fulfilled, (state, {payload}) => {
                 state.connections = payload;
             })
     }

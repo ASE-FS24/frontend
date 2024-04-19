@@ -1,5 +1,5 @@
-import {createAsyncThunk, createSlice,} from '@reduxjs/toolkit';
-import {createNewPost, getAllPosts} from "./PostService";
+import {createAsyncThunk, createSelector, createSlice,} from '@reduxjs/toolkit';
+import {createNewPost, getAllPosts, getPost} from "./PostService";
 import {NewPost, Post} from "./PostType";
 
 
@@ -13,15 +13,16 @@ const initialState: IPostState = {
 };
 
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
-
-    const data = await getAllPosts();
-    return data
+    return await getAllPosts()
 })
 
 export const createPost = createAsyncThunk('posts/createPost', async (newPost: NewPost) => {
-    await createNewPost(newPost);
-    return newPost;
+    return await createNewPost(newPost);
 })
+
+export const fetchPost = createAsyncThunk('posts/fetchPost', async (id: string) => {
+    return await getPost(id);
+});
 
 export const postsSlice = createSlice({
     name: 'posts',
@@ -42,6 +43,14 @@ export const postsSlice = createSlice({
             .addCase(createPost.fulfilled, (state, {payload}) => {
                 state.entities = [...state.entities, payload];
             })
+            .addCase(fetchPost.fulfilled, (state, {payload}) => {
+                const index = state.entities.findIndex((post) => post.id === payload.id);
+                if (index !== -1) {
+                    state.entities[index] = payload;
+                } else {
+                    state.entities = [...state.entities, payload];
+                }
+            })
     }
 })
 
@@ -59,11 +68,14 @@ function compareCreationDate(post1: Post, post2: Post) {
     const d2 = new Date(Date.parse(date2));
     return d1.getTime() - d2.getTime();
 }
+export const selectPostsById = (state: RootState, id: string): Post =>
+    state.posts.entities.find((post: Post) => post.id === id);
 
-export const selectAllPosts = (state: RootState) => {
-    return [...state.posts.entities].sort(compareCreationDate);
-}
-export const selectPostsById = (state: RootState, id: number) =>
-    state.posts.entities.find((post) => post.id === id);
+export const selectPostsState = (state: RootState) => state.posts.status;
 
-export const selectPostState = (state: RootState) => state.posts.status;
+const selectPostsEntities = (state: RootState) => state.posts.entities;
+
+export const selectAllPosts = createSelector(
+    [selectPostsEntities],
+    (postsEntities) => [...postsEntities].sort(compareCreationDate)
+);

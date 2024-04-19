@@ -6,6 +6,7 @@ import {StyledIconContainer} from "../Post/PostComponent";
 import {likeComment} from "./CommentService";
 import {useAppSelector} from "../hooks";
 import {selectActiveUser} from "../User/LoggedInUserSlice";
+import {dateFormatter} from "../Util/util";
 
 
 const StyledComment = styled.div`
@@ -22,13 +23,15 @@ const StyledComment = styled.div`
 const StyledCommentContent = styled.div`
   color: #000000;
   padding: 5px;
-  
+
 `;
 
 const StyledCommentAuthor = styled.div`
   color: #000000;
   margin-left: auto;
   padding: 5px;
+  font-style: italic;
+  font-size: 0.75rem;
 `;
 
 const StyledLikeContainer = styled.div`
@@ -45,17 +48,29 @@ const StyledLikesCount = styled.div`
   color: #000000;
 `;
 
-function CommentComponent({ comment }: { comment: Comment }) {
+type CommentComponentProps = {
+    comment: Comment;
+    setReloadComponent: (value: boolean | ((prevState: boolean) => boolean)) => void;
+};
+
+function CommentComponent({comment, setReloadComponent}: CommentComponentProps) {
     const activeUser = useAppSelector(selectActiveUser);
-    return(
+
+    function like() {
+        if (activeUser) {
+            likeComment(comment.id, activeUser.username).then();
+            setReloadComponent(true);
+        }
+    }
+    return (
         <StyledComment>
             <StyledCommentContent>{comment.content}</StyledCommentContent>
-            <StyledCommentAuthor>Author</StyledCommentAuthor>
-            <StyledLikeContainer onClick={() => activeUser && likeComment(comment.id, activeUser.username)}>
+            <StyledCommentAuthor>{comment.authorId} - {dateFormatter(comment.createdAt)}</StyledCommentAuthor>
+            <StyledLikeContainer onClick={like}>
                 <LikeSVG style={{color: "#E72950"}}/>
             </StyledLikeContainer>
             <StyledLikesCount>
-                {comment.likes}
+                {comment.likeNumber}
             </StyledLikesCount>
         </StyledComment>
     )

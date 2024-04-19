@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import {UserSummary} from "./UserType";
+import {ReactComponent as FollowSVG} from "../../static/images/person-plus-fill.svg";
 
 
 const StyledUserSummaryContainer = styled.div`
@@ -9,12 +10,13 @@ const StyledUserSummaryContainer = styled.div`
   background-color: #282c34;
   padding: 5px;
   margin: 10px;
-  box-shadow: 5px 5px 10px 2px rgba(0,0,0,.8);
-  
-    &:hover {
-        cursor: pointer;
-      box-shadow: 2px 2px 10px 2px rgba(0,0,0,.8);
-    }
+  box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, .8);
+
+  &:hover {
+    cursor: pointer;
+    box-shadow: 2px 2px 10px 2px rgba(0, 0, 0, .8);
+  }
+
   width: calc(33% - 30px);
 `;
 
@@ -26,11 +28,28 @@ const StyledProfilePicture = styled.div<{ url?: string }>`
   background: url(${props => props.url ? props.url : process.env.PUBLIC_URL + '/profile.svg'}) center/cover no-repeat;
 `;
 
-function UserSummaryComponent({user}: {user: UserSummary}) {
+export const StyledSVGContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  height: fit-content;
+  margin: auto 10px auto auto;
+
+  &:hover {
+    cursor: pointer;
+    color: #00f8cf;
+  }
+`;
+
+function UserSummaryComponent({user}: { user: UserSummary }) {
     return (
         <StyledUserSummaryContainer>
             <StyledProfilePicture></StyledProfilePicture>
             <h3>{user.username}</h3>
+            <StyledSVGContainer>
+                <FollowSVG style={{width: "35px", height: "35px"}}/>
+            </StyledSVGContainer>
         </StyledUserSummaryContainer>
     );
 }

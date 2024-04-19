@@ -1,6 +1,6 @@
 import styled, {css} from "styled-components";
 import {useAppSelector} from "../hooks";
-import {fetchPosts, selectPostState} from "../Post/PostSlice";
+import {fetchPosts, selectPostsState} from "../Post/PostSlice";
 import Header from "./Header";
 import {selectActiveUser} from "../User/LoggedInUserSlice";
 import {useNavigate} from "react-router-dom";
@@ -70,7 +70,7 @@ export const StyledFilterButton = styled.button<{ selected: boolean }>`
 function Home() {
     const activeUser = useAppSelector(selectActiveUser);
     const navigate = useNavigate();
-    const postState = useAppSelector(selectPostState);
+    const postState = useAppSelector(selectPostsState);
 
     useEffect(() => {
         store.dispatch(fetchPosts());

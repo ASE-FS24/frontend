@@ -196,7 +196,7 @@ export function PostsComponent() {
             </StyledToolbarContainer>
             <StyledPosts>
                 {posts && posts.map((post) => (
-                    <Post key={post.id} post={post}/>
+                    <Post key={post.id} postId={post.id}/>
                 ))}
             </StyledPosts>
         </StyledContentContainer>

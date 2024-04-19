@@ -2,14 +2,15 @@ import React, {useEffect, useState} from 'react';
 import {ForceGraph2D} from 'react-force-graph';
 import styled from "styled-components";
 import {useAppSelector} from "../hooks";
-import {selectActiveUser, selectConnections} from "../User/LoggedInUserSlice";
+import {fetchFollows, selectActiveUser, selectConnections} from "../User/LoggedInUserSlice";
 import Header from "./Header";
 import ConnectionComponent from "../User/ConnectionComponent";
-import {selectAllUsers, selectNetwork, selectNetworkStatus} from "../User/UserSlice";
+import {fetchNetwork, selectAllUsers, selectNetwork, selectNetworkStatus} from "../User/UserSlice";
 import {StyledSearchInput} from "../Post/PostsComponent";
 import Loading from "./LoadingComponent";
 import {FollowerData, UserSummary} from "../User/UserType";
 import UserSummaryComponent from "../User/UserSummaryComponent";
+import {store} from "../store";
 
 const StyledMainNetworkContainer = styled.div`
   display: flex;
@@ -39,6 +40,7 @@ const ConnectionsContainer = styled.div`
   overflow: auto;
   border: 1px solid white;
   margin: 10px 5px;
+  padding: 5px;
 `;
 
 const SearchConnectionsContainer = styled.div`
@@ -47,6 +49,7 @@ const SearchConnectionsContainer = styled.div`
   height: calc(50% - 40px);
   background: rgb(0, 0, 0, 0.2);
   margin-top: 10px;
+  padding: 5px;
 `;
 
 function MyNetwork() {
@@ -65,6 +68,10 @@ function MyNetwork() {
     useEffect(() => {
         setFilteredUsers(allUsers);
     }, [allUsers]);
+
+    useEffect(() => {
+        store.dispatch(fetchFollows(user.id));
+    }, [user])
 
     useEffect(() => {
         setGraphDataCopy({

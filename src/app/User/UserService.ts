@@ -69,7 +69,7 @@ const mockUsers = [
 
 
 export function getAllUsers(): Promise<UserSummary[]> {
-    return fetch(baseurl + "users/")
+    return fetch(baseurl + "users")
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -249,7 +249,7 @@ const followerMockData: UserSummary[] = [
 
 export async function getNetwork(): Promise<FollowUser[]> {
     try {
-        const response = await fetch(baseurl + `users/network`, {
+        const response = await fetch(baseurl + `users/follows`, {
             method: 'GET'
         });
 
@@ -271,9 +271,9 @@ export async function getNetwork(): Promise<FollowUser[]> {
     }
 }
 
-export async function getConnections(userId: string): Promise<UserSummary[]> {
+export async function getFollows(userId: string): Promise<UserSummary[]> {
     try {
-        const response = await fetch(baseurl + `users/${userId}/followers`, {
+        const response = await fetch(baseurl + `users/${userId}/follows`, {
             method: 'GET'
         });
 
@@ -293,4 +293,32 @@ export async function getConnections(userId: string): Promise<UserSummary[]> {
             }, 1000)
         });
     }
+}
+
+export function followUser(userId: string, followId: string) {
+    return fetch(baseurl + `users/${userId}/follows/${followId}`, {
+        method: 'POST'
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
+
+export function unfollowUser(userId: string, followId: string) {
+    return fetch(baseurl + `users/${userId}/follows/${followId}`, {
+        method: 'DELETE'
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        });
 }
