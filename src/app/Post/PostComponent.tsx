@@ -93,8 +93,8 @@ export const StyledIconContainer = styled.div<{ last?: string; }>`
 
 const StyledLikes = styled.div`
   position: absolute;
-  top: 8px;
-  right: 30px;
+  top: 15px;
+  right: 10px;
   font-size: 1.5rem;
 
   &:hover {
@@ -134,7 +134,6 @@ function PostComponent({postId}: { postId: string }) {
     useEffect(() => {
         async function fetchComments(postId: string) {
             const postComments = await getComments(postId);
-            console.log(postComments);
             setComments(postComments);
         }
 

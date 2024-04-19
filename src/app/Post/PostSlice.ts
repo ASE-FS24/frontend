@@ -45,10 +45,9 @@ export const postsSlice = createSlice({
             })
             .addCase(fetchPost.fulfilled, (state, {payload}) => {
                 const index = state.entities.findIndex((post) => post.id === payload.id);
+                console.log("index " + index);
                 if (index !== -1) {
                     state.entities[index] = payload;
-                } else {
-                    state.entities = [...state.entities, payload];
                 }
             })
     }

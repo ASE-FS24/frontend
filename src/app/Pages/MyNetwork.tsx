@@ -59,7 +59,7 @@ function MyNetwork() {
     const connections = useAppSelector(selectConnections);
     const data = useAppSelector(selectNetwork);
     const networkStatus = useAppSelector(selectNetworkStatus);
-    const [filteredUsers, setFilteredUsers] = useState(allUsers);
+    const [filteredUsers, setFilteredUsers] = useState(allUsers.filter(u => u.id !== user.id));
     const [filteredConnections, setFilteredConnections] = useState<UserSummary[]>(connections);
     const [searchFindFriendValue, setSearchFindFriendValue] = useState<string>('');
     const [searchFindConnectionValue, setSearchFindConnectionValue] = useState<string>('');
@@ -67,7 +67,7 @@ function MyNetwork() {
     const [graphDataCopy, setGraphDataCopy] = useState<FollowerData>();
 
     useEffect(() => {
-        setFilteredUsers(allUsers);
+        setFilteredUsers(allUsers.filter(u => u.id !== user.id));
     }, [allUsers]);
 
     useEffect(() => {
@@ -93,7 +93,7 @@ function MyNetwork() {
     const onEnterFindFriend = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             event.preventDefault();
-            setFilteredUsers(allUsers.filter((user) => user.username.includes(searchFindFriendValue)));
+            setFilteredUsers(allUsers.filter((u) => u.username.includes(searchFindFriendValue) && u.id !== user.id));
         }
     }
 
@@ -104,7 +104,6 @@ function MyNetwork() {
         }
     }
 
-    console.log(filteredUsers)
     return (
         <>
             <Header/>
