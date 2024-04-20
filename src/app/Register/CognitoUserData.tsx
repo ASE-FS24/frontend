@@ -24,6 +24,7 @@ export function CognitoSubPage(props: AppProps) {
                          value={props.username}
                          onChange={(event) => props.setUsername(event.target.value)}/>
             <StyledInput id="password"
+                         type="password"
                          placeholder="Password"
                          value={props.password}
                          onChange={(event) => props.setPassword(event.target.value)}/>

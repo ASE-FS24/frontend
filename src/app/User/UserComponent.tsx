@@ -1,9 +1,9 @@
-import { User } from "./UserType";
+import {User} from "./UserType";
 import styled from "styled-components";
-import { ReactComponent as ProfileSVG } from "../../static/images/profile.svg";
-import { ReactComponent as EditIcon } from "../../static/images/edit_pen.svg"; // Assuming you have an edit icon
-import React, { useState, useRef, useEffect } from 'react';
-import { updateUser, updateProfilePic, getProfilePic } from "../User/UserService";
+import {ReactComponent as ProfileSVG} from "../../static/images/profile.svg";
+import {ReactComponent as EditIcon} from "../../static/images/edit_pen.svg"; // Assuming you have an edit icon
+import React, {useState, useRef, useEffect} from 'react';
+import {updateUser, updateProfilePic, getProfilePic} from "./UserService";
 
 const ProfilePicImage = styled.img`
   width: 100%;
@@ -35,11 +35,13 @@ const UploadText = styled.p`
 `;
 
 const ProfileIconContainer = styled.div`
-  width: 100px;
+  width: 130px;
   height: 100px;
-  margin-right: 40px;
+  margin-right: 20px;
   position: relative;
   cursor: pointer;
+  border-radius: 50%;
+  background-color: #ffffff20;
 
   &:hover > ${ProfilePicImage} {
     opacity: 0.8;
@@ -162,191 +164,186 @@ const SaveButton = styled.button`
 `;
 
 
-export function UserComponent({ user }: { user: User }) {
+export function UserComponent({user}: { user: User }) {
 
-  const [editableField, setEditableField] = useState<string | null>(null);
-  const [photoUrl, setPhotoUrl] = useState<string | null>(null);
-  const [editedUser, setEditedUser] = useState<User>({ ...user });
-  const [profilePic, setProfilePic] = useState<string | null>(null);
-
-
-  const handleEdit = (fieldName: string) => {
-    setEditableField(fieldName);
-  };
-
-  // Ref for file input
-  const fileInputRef = useRef<HTMLInputElement>(null);
+    const [editableField, setEditableField] = useState<string | null>(null);
+    const [photoUrl, setPhotoUrl] = useState<string | null>(null);
+    const [editedUser, setEditedUser] = useState<User>({...user});
+    const [profilePic, setProfilePic] = useState<string | null>(null);
 
 
-  // Define handlePhotoUpload function to handle file uploads
-  const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-        const result = await updateProfilePic(user.id, file);
-        if (result) {
-            console.log("Profile picture uploaded successfully:", result);
-            // Update UI accordingly if needed
-        } else {
-            console.log("Failed to upload profile picture");
-            // Handle error if needed
-        }
-    }
-  };
-
-  // Function to handle profile picture upload
-  const handleProfilePicUpload = () => {
-    fileInputRef.current?.click(); // Trigger file input
-  };
-    
-  // Function to handle changes in input fields
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setEditedUser((prevUser) => ({
-      ...prevUser,
-      [name]: value,
-    }));
-  };
-
-  // Function to handle save
-  const handleSave = async () => {
-    try {
-      // Call updateUser function to update user data
-      const updatedUser = await updateUser(editedUser);
-      if (updatedUser) {
-        console.log("User updated successfully:", updatedUser);
-        setEditableField(null); // Reset editableField state
-      } else {
-        console.log("Failed to update user");
-      }
-    } catch (error) {
-      console.error("Error updating user:", error);
-    }
-  };
-
-  useEffect(() => {
-    const fetchProfilePic = async () => {
-      try {
-        const picUrl = await getProfilePic(user.id); // Assuming user.id is the user's ID
-        setProfilePic(picUrl);
-      } catch (error) {
-        console.error('Error fetching profile picture:', error);
-        // Handle error if necessary
-      }
+    const handleEdit = (fieldName: string) => {
+        setEditableField(fieldName);
     };
-    fetchProfilePic();
-  }, [user.id]); // Run effect when user.id changes
 
-  return (
-    <StyledUserContainer>
-     <ProfileIconContainer>
-        {profilePic ? (
-          <ProfilePicImage src={profilePic} alt="Profile" />
-        ) : (
-          // Render a placeholder image or text if profilePic is not available
-          <ProfileSVG />
-        )}
-        <UploadOverlay onMouseEnter={handleProfilePicUpload}>
-          <UploadText>Upload Picture</UploadText>
-          <InputFile type="file" ref={fileInputRef} onChange={handlePhotoUpload} />
-        </UploadOverlay>
-      </ProfileIconContainer>
-      <UserInfoWrapper>
-        {/* Username row */}
-        <UserInfoRow>
-          <FieldBox>Username</FieldBox>
-          <Separator />
-          {/* Conditionally render input field or plain text */}
-          {editableField === 'username' ? (
-            <input type="text" name="username" value={editedUser.username} onChange={handleInputChange} />
-          ) : (
-            <UserInfoText>{editedUser.username}</UserInfoText>
-          )}
-          <EditButton onClick={() => handleEdit('username')} />
-        </UserInfoRow>
+    // Ref for file input
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
-        {/* Name row */}
-        <UserInfoRow>
-          <FieldBox>First Name</FieldBox>
-          <Separator />
-          {editableField === 'firstName' ? (
-            <input
-              type="text"
-              name="firstName"
-              value={editedUser.firstName}
-              onChange={handleInputChange}
-            />
-          ) : (
-            <UserInfoText>{editedUser.firstName}</UserInfoText>
-          )}
-          <EditButton onClick={() => handleEdit('firstName')} />
+    // Define handlePhotoUpload function to handle file uploads
+    const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            const result = await updateProfilePic(user.id, file);
+            if (result) {
+                console.log("Profile picture uploaded successfully:", result);
+                // Update UI accordingly if needed
+            } else {
+                console.log("Failed to upload profile picture");
+                // Handle error if needed
+            }
+        }
+    };
 
-          {/* Last Name */}
-          <Separator />
-          {editableField === 'lastName' ? (
-            <input
-              type="text"
-              name="lastName"
-              value={editedUser.lastName}
-              onChange={handleInputChange}
-            />
-          ) : (
-            <UserInfoText>{editedUser.lastName}</UserInfoText>
-          )}
-          <EditButton onClick={() => handleEdit('lastName')} />
-        </UserInfoRow>
+    // Function to handle profile picture upload
+    const handleProfilePicUpload = () => {
+        fileInputRef.current?.click(); // Trigger file input
+    };
 
-        {/* Email row */}
-        <UserInfoRow>
-          <FieldBox>Email</FieldBox>
-          <Separator />
-          {editableField === 'email' ? (
-            <input type="text" name="email" value={editedUser.email} onChange={handleInputChange} />
-          ) : (
-            <UserInfoText>{editedUser.email}</UserInfoText>
-          )}
-          <EditButton onClick={() => handleEdit('email')} />
-        </UserInfoRow>
+    // Function to handle changes in input fields
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const {name, value} = event.target;
+        setEditedUser((prevUser) => ({
+            ...prevUser,
+            [name]: value,
+        }));
+    };
 
-        {/* University row */}
-        <UserInfoRow>
-          <FieldBox>University</FieldBox>
-          <Separator />
-          {editableField === 'university' ? (
-            <input type="text" name="university" value={editedUser.university} onChange={handleInputChange} />
-          ) : (
-            <UserInfoText>{editedUser.university}</UserInfoText>
-          )}
-          <EditButton onClick={() => handleEdit('university')} />
-        </UserInfoRow>
+    // Function to handle save
+    const handleSave = async () => {
+        try {
+            // Call updateUser function to update user data
+            const updatedUser = await updateUser(editedUser);
+            if (updatedUser) {
+                console.log("User updated successfully:", updatedUser);
+                setEditableField(null); // Reset editableField state
+            } else {
+                console.log("Failed to update user");
+            }
+        } catch (error) {
+            console.error("Error updating user:", error);
+        }
+    };
 
-        {/* Motto row */}
-        <UserInfoRow>
-          <FieldBox>Motto</FieldBox>
-          <Separator />
-          {editableField === 'motto' ? (
-            <input type="text" name="motto" value={editedUser.motto} onChange={handleInputChange} />
-          ) : (
-            <UserInfoText>{editedUser.motto}</UserInfoText>
-          )}
-          <EditButton onClick={() => handleEdit('motto')} />
-        </UserInfoRow>
+    useEffect(() => {
+        const fetchProfilePic = async () => {
+            try {
+                const picUrl = await getProfilePic(user.id); // Assuming user.id is the user's ID
+                setProfilePic(picUrl);
+            } catch (error) {
+                console.error('Error fetching profile picture:', error);
+                // Handle error if necessary
+            }
+        };
+        fetchProfilePic();
+    }, [user.id]); // Run effect when user.id changes
 
-        {/* Bio row */}
-        <UserInfoRow>
-          <FieldBox>Bio</FieldBox>
-          <Separator />
-          {editableField === 'bio' ? (
-            <input type="text" name="bio" value={editedUser.bio} onChange={handleInputChange} />
-          ) : (
-            <UserInfoText>{editedUser.bio}</UserInfoText>
-          )}
-          <EditButton onClick={() => handleEdit('bio')} />
-        </UserInfoRow>
-      </UserInfoWrapper>
-      {/* Save button */}
-      {editableField && <SaveButton onClick={handleSave}>Save</SaveButton>}
-    </StyledUserContainer>
-  );
+    return (
+        <StyledUserContainer>
+            <ProfileIconContainer>
+                {profilePic ? (
+                    <ProfilePicImage src={profilePic} alt="Profile"/>
+                ) : (
+                    // Render a placeholder image or text if profilePic is not available
+                    <ProfileSVG/>
+                )}
+                <UploadOverlay onMouseEnter={handleProfilePicUpload}>
+                    <UploadText>Upload Picture</UploadText>
+                    <InputFile type="file" ref={fileInputRef} onChange={handlePhotoUpload}/>
+                </UploadOverlay>
+            </ProfileIconContainer>
+            <UserInfoWrapper>
+                {/* Username row */}
+                <UserInfoRow>
+                    <FieldBox>Username</FieldBox>
+                    <Separator/>
+                    {/* Conditionally render input field or plain text */}
+                    <UserInfoText>{editedUser.username}</UserInfoText>
+                </UserInfoRow>
+
+                {/* Name row */}
+                <UserInfoRow>
+                    <FieldBox>Full Name</FieldBox>
+                    <Separator/>
+                    {editableField === 'firstName' ? (
+                        <input
+                            type="text"
+                            name="firstName"
+                            value={editedUser.firstName}
+                            onChange={handleInputChange}
+                        />
+                    ) : (
+                        <UserInfoText>{editedUser.firstName}</UserInfoText>
+                    )}
+                    <EditButton onClick={() => handleEdit('firstName')}/>
+
+                    {/* Last Name */}
+                    <Separator/>
+                    {editableField === 'lastName' ? (
+                        <input
+                            type="text"
+                            name="lastName"
+                            value={editedUser.lastName}
+                            onChange={handleInputChange}
+                        />
+                    ) : (
+                        <UserInfoText>{editedUser.lastName}</UserInfoText>
+                    )}
+                    <EditButton onClick={() => handleEdit('lastName')}/>
+                </UserInfoRow>
+
+                {/* Email row */}
+                <UserInfoRow>
+                    <FieldBox>Email</FieldBox>
+                    <Separator/>
+                    {editableField === 'email' ? (
+                        <input type="text" name="email" value={editedUser.email} onChange={handleInputChange}/>
+                    ) : (
+                        <UserInfoText>{editedUser.email}</UserInfoText>
+                    )}
+                    <EditButton onClick={() => handleEdit('email')}/>
+                </UserInfoRow>
+
+                {/* University row */}
+                <UserInfoRow>
+                    <FieldBox>University</FieldBox>
+                    <Separator/>
+                    {editableField === 'university' ? (
+                        <input type="text" name="university" value={editedUser.university}
+                               onChange={handleInputChange}/>
+                    ) : (
+                        <UserInfoText>{editedUser.university}</UserInfoText>
+                    )}
+                    <EditButton onClick={() => handleEdit('university')}/>
+                </UserInfoRow>
+
+                {/* Motto row */}
+                <UserInfoRow>
+                    <FieldBox>Motto</FieldBox>
+                    <Separator/>
+                    {editableField === 'motto' ? (
+                        <input type="text" name="motto" value={editedUser.motto} onChange={handleInputChange}/>
+                    ) : (
+                        <UserInfoText>{editedUser.motto}</UserInfoText>
+                    )}
+                    <EditButton onClick={() => handleEdit('motto')}/>
+                </UserInfoRow>
+
+                {/* Bio row */}
+                <UserInfoRow>
+                    <FieldBox>Bio</FieldBox>
+                    <Separator/>
+                    {editableField === 'bio' ? (
+                        <input type="text" name="bio" value={editedUser.bio} onChange={handleInputChange}/>
+                    ) : (
+                        <UserInfoText>{editedUser.bio}</UserInfoText>
+                    )}
+                    <EditButton onClick={() => handleEdit('bio')}/>
+                </UserInfoRow>
+            </UserInfoWrapper>
+            {/* Save button */}
+            {editableField && <SaveButton onClick={handleSave}>Save</SaveButton>}
+        </StyledUserContainer>
+    );
 }
 
 export default UserComponent;
