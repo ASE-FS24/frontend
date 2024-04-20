@@ -39,6 +39,10 @@ const StyledLikeContainer = styled.div`
   left: -3px;
   bottom: -12px;
   scale: 0.75;
+  
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const StyledLikesCount = styled.div`
@@ -58,15 +62,14 @@ function CommentComponent({comment, setReloadComponent}: CommentComponentProps) 
 
     function like() {
         if (activeUser) {
-            likeComment(comment.id, activeUser.username).then();
-            setReloadComponent(true);
+            likeComment(comment.id, activeUser.username).then(() => setReloadComponent(true));
         }
     }
     return (
         <StyledComment>
             <StyledCommentContent>{comment.content}</StyledCommentContent>
             <StyledCommentAuthor>{comment.authorId} - {dateFormatter(comment.createdAt)}</StyledCommentAuthor>
-            <StyledLikeContainer onClick={like}>
+            <StyledLikeContainer onClick={like} title="Like">
                 <LikeSVG style={{color: "#E72950"}}/>
             </StyledLikeContainer>
             <StyledLikesCount>

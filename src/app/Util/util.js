@@ -1,4 +1,3 @@
-
 export function dateFormatter(dateTime) {
     try {
         const year = dateTime[0];
@@ -12,4 +11,14 @@ export function dateFormatter(dateTime) {
         console.error(error);
         return '';
     }
+}
+
+export function stringToDate(parts) {
+    const year = parts[0];
+    const month = parts[1];
+    const day = parts[2];
+    const hour = parts[3];
+    const minute = parts[4];
+    const second = parts[5] || 0;
+    return new Date(year, month, day, hour, minute, second);
 }

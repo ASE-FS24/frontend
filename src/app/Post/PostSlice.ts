@@ -1,6 +1,7 @@
 import {createAsyncThunk, createSelector, createSlice,} from '@reduxjs/toolkit';
 import {createNewPost, getAllPosts, getPost} from "./PostService";
 import {NewPost, Post} from "./PostType";
+import {stringToDate} from "../Util/util";
 
 
 interface IPostState {
@@ -45,7 +46,6 @@ export const postsSlice = createSlice({
             })
             .addCase(fetchPost.fulfilled, (state, {payload}) => {
                 const index = state.entities.findIndex((post) => post.id === payload.id);
-                console.log("index " + index);
                 if (index !== -1) {
                     state.entities[index] = payload;
                 }
@@ -63,9 +63,9 @@ interface RootState {
 function compareCreationDate(post1: Post, post2: Post) {
     const date1 = post1.edited ? post1.editedDateTime : post1.createdDateTime;
     const date2 = post2.edited ? post2.editedDateTime : post2.createdDateTime;
-    const d1 = new Date(Date.parse(date1));
-    const d2 = new Date(Date.parse(date2));
-    return d1.getTime() - d2.getTime();
+    const d1 = stringToDate(date1);
+    const d2 = stringToDate(date2);
+    return d2.getTime() - d1.getTime();
 }
 export const selectPostsById = (state: RootState, id: string): Post =>
     state.posts.entities.find((post: Post) => post.id === id);

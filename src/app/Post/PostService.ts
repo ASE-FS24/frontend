@@ -120,7 +120,6 @@ export function createNewPost(post: NewPost): Promise<NewPost> {
 }
 
 export function getPost(postId: string): Promise<Post> {
-    console.log("fetching post with id: " + postId)
     return fetch(baseurl + "posts/" + postId)
         .then(response => {
             if (!response.ok) {
@@ -137,7 +136,7 @@ export function getPost(postId: string): Promise<Post> {
         })
 }
 
-export function likePost(postId: string, userId: string): Promise<Post> {
+export function likePost(postId: string, userId: string): Promise<void | Response> {
     return fetch(baseurl + "likes/post/" + postId + "?userId=" + userId, {
         method: 'POST',
         headers: {
@@ -149,10 +148,7 @@ export function likePost(postId: string, userId: string): Promise<Post> {
                 console.log(response)
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            return response.json();
-        })
-        .then(data => {
-            return data
+            return response;
         })
         .catch(error => {
             console.log(error);

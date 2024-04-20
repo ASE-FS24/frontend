@@ -1,22 +1,20 @@
 import styled from "styled-components";
-import {Post} from "./PostType";
 import {ReactComponent as LikeSVG} from "../../static/images/heart.svg";
 import {ReactComponent as FireSVG} from "../../static/images/fire.svg";
 import {ReactComponent as ShareSVG} from "../../static/images/share.svg";
 import {ReactComponent as ReportSVG} from "../../static/images/report.svg";
 import {ReactComponent as ProjectSVG} from "../../static/images/project.svg";
 import {ReactComponent as PostSVG} from "../../static/images/camera.svg";
-import {dateFormatter} from "../Util/util";
+import {dateFormatter, stringToDate} from "../Util/util";
 import CommentComponent from "../Comment/CommentComponent";
 import {useEffect, useState} from "react";
 import {commentOnPost, getComments} from "../Comment/CommentService";
 import {Comment} from "../Comment/CommentType";
-import {StyledButton, StyledButtonSmall, StyledInput} from "../Pages/LoginPage";
+import {StyledButtonSmall, StyledInput} from "../Pages/LoginPage";
 import {useAppDispatch, useAppSelector} from "../hooks";
 import {selectActiveUser} from "../User/LoggedInUserSlice";
 import { v4 as uuidv4 } from 'uuid';
 import {likePost} from "./PostService";
-import {useDispatch} from "react-redux";
 import {fetchPost, selectPostsById} from "./PostSlice";
 
 
@@ -93,14 +91,9 @@ export const StyledIconContainer = styled.div<{ last?: string; }>`
 
 const StyledLikes = styled.div`
   position: absolute;
-  top: 15px;
-  right: 10px;
-  font-size: 1.5rem;
-
-  &:hover {
-    cursor: pointer;
-    scale: 1.025;
-  }
+  top: 18px;
+  right: 8px;
+  font-size: 1.25rem;
 `;
 
 const StyledCommentsContainer = styled.div`
@@ -128,12 +121,16 @@ function PostComponent({postId}: { postId: string }) {
     const [showComments, setShowComments] = useState(false);
     const [commentContent, setCommentContent] = useState("");
     const [reloadComponent, setReloadComponent] = useState(true);
-    const [showCommentForm, setShowCommentForm] = useState(false);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
         async function fetchComments(postId: string) {
             const postComments = await getComments(postId);
+            postComments.sort((a, b) => {
+                const d1 = stringToDate(a.createdAt);
+                const d2 = stringToDate(b.createdAt);
+                return d1.getTime() - d2.getTime();
+            });
             setComments(postComments);
         }
 
@@ -158,14 +155,12 @@ function PostComponent({postId}: { postId: string }) {
         }
         await commentOnPost(newComment, post.id).then();
         setReloadComponent(true);
-        setShowCommentForm(false);
         setCommentContent("");
     }
 
     function like() {
         if (activeUser) {
-            likePost(post.id, activeUser.username).then();
-            setReloadComponent(true);
+            likePost(post.id, activeUser.username).then(() => setReloadComponent(true));
         }
     }
 
@@ -174,8 +169,8 @@ function PostComponent({postId}: { postId: string }) {
             <StyledPost>
                 <StyledPostContent>
                     <StyledPostHeader>
-                        <StyledPostType color={post.type === "Post" ? "#00aaff" : "#ff0000"}>
-                            {post.type === "Post" ?
+                        <StyledPostType color={post.type === "POST" ? "#00aaff" : "#ff0000"}>
+                            {post.type === "POST" ?
                                 <PostSVG style={{width: "30px", height: "30px", color: "#00aaff"}}/> :
                                 <ProjectSVG style={{width: "30px", height: "30px", color: "#ff0000"}}/>}
                             {post.type}
@@ -186,16 +181,16 @@ function PostComponent({postId}: { postId: string }) {
                     <StyledPostDescription>{post.description}</StyledPostDescription>
                 </StyledPostContent>
                 <StyledInteractionsContainer>
-                    <StyledIconContainer onClick={like}>
+                    <StyledIconContainer onClick={like} title="Like">
                         <LikeSVG style={{color: "#E72950", width: "45px", height: "45px"}}/>
                     </StyledIconContainer>
-                    <StyledIconContainer onClick={() => setShowComments(!showComments)}>
+                    <StyledIconContainer onClick={() => setShowComments(!showComments)} title="Comments">
                         <FireSVG style={{width: "45px", height: "45px"}}/>
                     </StyledIconContainer>
-                    <StyledIconContainer>
+                    <StyledIconContainer title="Share - not implemented yet">
                         <ShareSVG style={{width: "45px", height: "45px"}}/>
                     </StyledIconContainer>
-                    <StyledIconContainer last={"auto"}>
+                    <StyledIconContainer last={"auto"} title="Report - not implemented yet">
                         <ReportSVG style={{width: "45px", height: "45px"}}/>
                     </StyledIconContainer>
                     <StyledLikes>{post.likeNumber}</StyledLikes>
@@ -208,16 +203,10 @@ function PostComponent({postId}: { postId: string }) {
                         <CommentComponent key={comment.id} comment={comment} setReloadComponent={setReloadComponent}/>
                     )) : <StyledNoCommentsContainer>No comments yet...</StyledNoCommentsContainer>}
                     {activeUser !== null ?
-                        <>
-                        <StyledButtonSmall margin={"0 10px 0 auto"} onClick={() => setShowCommentForm(true)}>Comment</StyledButtonSmall>
-                            {showCommentForm &&
                                 <StyledCommentForm onSubmit={handleCommentFormSubmit}>
                                     <StyledInput type="text" value={commentContent} onChange={(e) => setCommentContent(e.target.value)} />
-                                    <StyledButtonSmall type="submit">Save</StyledButtonSmall>
-                                    <StyledButtonSmall margin={"0 5px 0 15px"} onClick={() => setShowCommentForm(false)}>Cancel</StyledButtonSmall>
-                                </StyledCommentForm>
-                            }
-                        </>:
+                                    <StyledButtonSmall type="submit">Comment</StyledButtonSmall>
+                                </StyledCommentForm> :
                         <StyledNoCommentsContainer>Sign in to comment</StyledNoCommentsContainer>}
                 </StyledCommentsContainer>
             }
