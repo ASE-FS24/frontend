@@ -18,7 +18,7 @@ export interface User {
 export interface UserSummary {
     id: string;
     username: string;
-    profilePicture: string;
+    profilePicture: string | null;
 }
 
 export interface FollowUser {

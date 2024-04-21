@@ -1,10 +1,12 @@
 import {createAsyncThunk, createSelector, createSlice,} from '@reduxjs/toolkit';
 import {getAllUsers, getNetwork} from "./UserService";
-import {FollowUser} from "./UserType";
+import { UserSummary} from "./UserType";
+import {loggedInUserSlice, selectActiveUser} from "./LoggedInUserSlice";
+import {useSelector} from "react-redux";
 
 interface IUserState {
     entities: any[];
-    network: FollowUser[];
+    network: UserSummary[][];
     status: string;
     networkStatus: string;
 }
@@ -51,21 +53,47 @@ export const usersSlice = createSlice({
     }
 })
 
+function findUsernameById(network: UserSummary[][], userId: string) {
+    for (let i = 0; i < network.length; i++) {
+        for (let j = 0; j < network[i].length; j++) {
+            if (network[i][j].id === userId) {
+                return network[i][j].username;
+            }
+        }
+    }
+    return "";
+}
+
+
 export const selectNetwork = createSelector(
     // Input selector
     (state: RootState) => state.users.network,
+    (state: RootState) => selectActiveUser(state),
 
     // Result function
-    (network) => {
-        const nodesMap = network.reduce((acc, link) => {
-            [link.source, link.target].forEach(id => {
-                acc.has(id) ? acc.get(id)!.val += 1 : acc.set(id, {id, name: id, val: 1});
+    (network, loggedInUser: ReturnType<typeof selectActiveUser>) => {
+        // Create counts object and links array
+        const { counts, links } = network.reduce((acc, [source, target]) => {
+            acc.counts[source.id] = (acc.counts[source.id] || 0) + 1;
+            acc.counts[target.id] = (acc.counts[target.id] || 0) + 1;
+            acc.links.push({
+                source: source.id,
+                target: target.id
             });
             return acc;
-        }, new Map<string, { id: string, name: string, val: number }>());
-        const nodes = Array.from(nodesMap.values());
+        }, { counts: {} as Record<string, number>, links: [] as Array<{ source: string, target: string }> });
 
-        return {nodes: nodes, links: network};
+        // Create nodes array
+        const nodes = Object.entries(counts).map(([id, val]) => {
+            const user = network.find(([source, target]) => source.id === id || target.id === id);
+            return {
+                id,
+                name: user ? findUsernameById(network, id) : "",
+                val
+            };
+        });
+        console.log({ nodes, links })
+        return { nodes, links };
     }
 );
 
@@ -75,6 +103,7 @@ export default usersSlice.reducer
 
 interface RootState {
     users: ReturnType<typeof usersSlice.reducer>;
+    loggedInUser: ReturnType<typeof loggedInUserSlice.reducer>;
 }
 
 export const selectAllUsers = (state: RootState) => state.users.entities;

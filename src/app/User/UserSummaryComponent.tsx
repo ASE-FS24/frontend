@@ -52,7 +52,9 @@ function UserSummaryComponent({user}: { user: UserSummary }) {
         <StyledUserSummaryContainer>
             <StyledProfilePicture></StyledProfilePicture>
             <h3>{user.username}</h3>
-            <StyledSVGContainer onClick={() => followUser(loggedInUser.id, user.id)}>
+            <StyledSVGContainer onClick={() => {
+                followUser(loggedInUser.id, user.id).then(() => window.location.reload());
+            }}>
                 <FollowSVG style={{width: "35px", height: "35px"}}/>
             </StyledSVGContainer>
         </StyledUserSummaryContainer>

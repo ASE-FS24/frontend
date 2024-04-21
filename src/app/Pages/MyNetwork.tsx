@@ -5,7 +5,7 @@ import {useAppSelector} from "../hooks";
 import {fetchFollows, selectActiveUser, selectConnections} from "../User/LoggedInUserSlice";
 import Header from "./Header";
 import ConnectionComponent from "../User/ConnectionComponent";
-import {fetchNetwork, selectAllUsers, selectNetwork, selectNetworkStatus} from "../User/UserSlice";
+import {selectAllUsers, selectNetwork, selectNetworkStatus} from "../User/UserSlice";
 import {StyledSearchInput} from "../Post/PostsComponent";
 import Loading from "./LoadingComponent";
 import {FollowerData, UserSummary} from "../User/UserType";
@@ -56,8 +56,8 @@ const SearchConnectionsContainer = styled.div`
 function MyNetwork() {
     const allUsers = useAppSelector(selectAllUsers);
     const user = useAppSelector(selectActiveUser);
-    const connections = useAppSelector(selectConnections);
     const data = useAppSelector(selectNetwork);
+    const connections = useAppSelector(selectConnections);
     const networkStatus = useAppSelector(selectNetworkStatus);
     const [filteredUsers, setFilteredUsers] = useState(allUsers.filter(u => u.id !== user.id));
     const [filteredConnections, setFilteredConnections] = useState<UserSummary[]>(connections);
@@ -67,8 +67,9 @@ function MyNetwork() {
     const [graphDataCopy, setGraphDataCopy] = useState<FollowerData>();
 
     useEffect(() => {
-        setFilteredUsers(allUsers.filter(u => u.id !== user.id));
-    }, [allUsers]);
+        const usersNotConnections = allUsers.filter(u => !connections.map(c => c.id).includes(u.id) && u.username !== user.username);
+        setFilteredUsers(usersNotConnections);
+    }, [allUsers, connections]);
 
     useEffect(() => {
         store.dispatch(fetchFollows(user.id));

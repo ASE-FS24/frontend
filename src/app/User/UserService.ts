@@ -247,7 +247,34 @@ const followerMockData: UserSummary[] = [
     {id: "testId8", username: "Test8", profilePicture: ""}
 ]
 
-export async function getNetwork(): Promise<FollowUser[]> {
+const networkMockData2: UserSummary[][] = [
+    [
+        {
+            "id": "ae14b32e-9418-4be6-bebf-b56903d40511",
+            "username": "DGERGELY11",
+            "profilePicture": null
+        },
+        {
+            "id": "ae14b32e-9418-4be6-bebf-b56903d40513",
+            "username": "DGERGELY13",
+            "profilePicture": null
+        }
+    ],
+    [
+        {
+            "id": "ae14b32e-9418-4be6-bebf-b56903d40511",
+            "username": "DGERGELY11",
+            "profilePicture": null
+        },
+        {
+            "id": "ae14b32e-9418-4be6-bebf-b56903d40512",
+            "username": "DGERGELY12",
+            "profilePicture": null
+        }
+    ]
+]
+
+export async function getNetwork(): Promise<UserSummary[][]> {
     try {
         const response = await fetch(baseurl + `users/follows`, {
             method: 'GET'
@@ -265,7 +292,7 @@ export async function getNetwork(): Promise<FollowUser[]> {
         console.error(`Error retrieving followers: ${error}`);
         return new Promise((resolve) => {
             setTimeout(() => {
-                resolve(networkMockData);
+                resolve(networkMockData2);
             }, 1000)
         });
     }
@@ -311,7 +338,7 @@ export function followUser(userId: string, followId: string) {
 
 export function unfollowUser(userId: string, followId: string) {
     return fetch(baseurl + `users/${userId}/follows/${followId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
     })
         .then(response => {
             if (!response.ok) {
