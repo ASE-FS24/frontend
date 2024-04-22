@@ -1,15 +1,16 @@
 import styled from "styled-components";
-import {UserSummary} from "./UserType";
-import {followUser, unfollowUser} from "./UserService";
-import {StyledSVGContainer} from "./UserSummaryComponent";
+import {User, UserSummary} from "./UserType";
+import {followUser, getUser, unfollowUser} from "./UserService";
+import {StyledSVGContainer, StyledUserDetailsContainer, StyledUserSummary} from "./UserSummaryComponent";
 import {useAppSelector} from "../hooks";
-import {selectActiveUser} from "./LoggedInUserSlice";
+import {fetchFollows, selectActiveUser} from "./LoggedInUserSlice";
 import {ReactComponent as UnfollowSVG} from "../../static/images/person-dash-fill.svg";
+import {useState} from "react";
 
 
 const StyledConnection = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   color: white;
   background-color: #282c34;
   padding: 5px;
@@ -22,6 +23,7 @@ const StyledConnection = styled.div`
   }
 
   width: calc(50% - 30px);
+  height: fit-content;
 `;
 
 const StyledProfilePicture = styled.div<{ url?: string }>`
@@ -33,16 +35,41 @@ const StyledProfilePicture = styled.div<{ url?: string }>`
 `;
 
 function ConnectionComponent({connection}: { connection: UserSummary }) {
+    const [expand, setExpand] = useState<boolean>(false);
+    const [completeUser, setCompleteUser] = useState<User | null>(null);
     const loggedInUser = useAppSelector(selectActiveUser);
+
+    function reloadData() {
+        fetchFollows(loggedInUser.id);
+        setTimeout(() => window.location.reload(), 1000);
+    }
+
+    async function getUserData() {
+        if (completeUser === null) {
+            const compUser = await getUser(connection.id);
+            setCompleteUser(compUser);
+        }
+        setExpand(!expand);
+    }
+
     return (
-        <StyledConnection>
-            <StyledProfilePicture></StyledProfilePicture>
-            <h3>{connection.username}</h3>
-            <StyledSVGContainer onClick={() => {
-                unfollowUser(loggedInUser.id, connection.id).then(() => setTimeout(() => window.location.reload(), 1000))
-            }}>
-                <UnfollowSVG style={{width: "35px", height: "35px"}}/>
-            </StyledSVGContainer>
+        <StyledConnection onClick={getUserData}>
+            <StyledUserSummary>
+                <StyledProfilePicture></StyledProfilePicture>
+                <h3>{connection.username}</h3>
+                <StyledSVGContainer onClick={(event) => {
+                    event.stopPropagation();
+                    unfollowUser(loggedInUser.id, connection.id).then(() => reloadData());
+                }}>
+                    <UnfollowSVG style={{width: "35px", height: "35px"}}/>
+                </StyledSVGContainer>
+            </StyledUserSummary>
+            {expand && completeUser && <StyledUserDetailsContainer>
+                <p>{completeUser?.firstName} {completeUser?.lastName}</p>
+                <p>{completeUser?.email}</p>
+                <p>University: {completeUser?.university}</p>
+                <p>Bio: {completeUser?.bio}</p>
+            </StyledUserDetailsContainer>}
         </StyledConnection>
     );
 }

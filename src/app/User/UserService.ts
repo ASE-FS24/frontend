@@ -111,7 +111,7 @@ export function createUser(user: User) {
 }
 
 export function getUser(userId: string): Promise<User> {
-    return fetch(baseurl + "users/" + userId)
+    return fetch(baseurl + "users/id/" + userId)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
