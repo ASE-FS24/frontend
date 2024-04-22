@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {ForceGraph2D} from 'react-force-graph';
+import React, {useEffect, useRef, useState} from 'react';
+import ForceGraph2D, {LinkObject, NodeObject} from "react-force-graph-2d";
 import styled from "styled-components";
 import {useAppSelector} from "../hooks";
 import {fetchFollows, selectActiveUser, selectConnections} from "../User/LoggedInUserSlice";
@@ -11,6 +11,7 @@ import Loading from "./LoadingComponent";
 import {FollowerData, UserSummary} from "../User/UserType";
 import UserSummaryComponent from "../User/UserSummaryComponent";
 import {store} from "../store";
+import { ForceGraphMethods } from "react-force-graph-2d";
 
 const StyledMainNetworkContainer = styled.div`
   display: flex;
@@ -69,6 +70,7 @@ function MyNetwork() {
     useEffect(() => {
         const usersNotConnections = allUsers.filter(u => !connections.map(c => c.id).includes(u.id) && u.username !== user.username);
         setFilteredUsers(usersNotConnections);
+        setFilteredConnections(connections);
     }, [allUsers, connections]);
 
     useEffect(() => {
@@ -105,6 +107,13 @@ function MyNetwork() {
         }
     }
 
+    const graphRef = useRef<ForceGraphMethods>();
+    const handleEngineStop = () => {
+        if (graphRef.current) {
+            graphRef.current.zoomToFit(400); // Zoom to fit smaller dimension
+        }
+    };
+
     return (
         <>
             <Header/>
@@ -113,30 +122,36 @@ function MyNetwork() {
                     <StyledNetworkTitle>The NexusNet network</StyledNetworkTitle>
                     {networkStatus === 'loading' ? <Loading/> :
                         <ForceGraph2D
-                            width={window.innerWidth / 2}
+                            ref={graphRef}
+                            width={window.innerWidth / 2 - 10}
                             height={window.innerHeight - 130}
                             graphData={graphDataCopy}
                             nodeCanvasObject={(node, ctx, globalScale) => {
                                 // Draw the circle
                                 ctx.beginPath();
                                 if (node.x !== undefined && node.y !== undefined) {
-                                    ctx.arc(node.x, node.y, (node.val) * globalScale, 0, 2 * Math.PI, false);
+                                    ctx.arc(node.x, node.y, (1 + (node.val / 5)) * globalScale, 0, 2 * Math.PI, false);
                                 }
-                                ctx.fillStyle = (user.id === node.id || connectedNodes.includes(node.id)) ? '#FFC000' : 'blue';
+                                ctx.fillStyle = (user.id === node.id || connectedNodes.includes(String(node.id))) ? '#FFC000' : 'blue';
                                 ctx.fill();
 
                                 // Draw the label
                                 const label = node.name;
-                                const fontSize = (node.val / 2) * globalScale;
+                                const fontSize = ((1 + (node.val / 5)) / 2) * globalScale;
                                 ctx.font = `${fontSize}px Sans-Serif`;
                                 ctx.fillStyle = 'black';
                                 if (node.x !== undefined && node.y !== undefined) {
                                     ctx.fillText(label, (node.x - (node.val * 2)), (node.y + (node.val * 2)));
                                 }
                             }}
-                            nodeRelSize={5}
+                            nodeRelSize={1}
                             enablePanInteraction={false}
                             linkDirectionalParticles="value"
+                            linkWidth={5}
+                            cooldownTicks={10}
+                            linkDirectionalParticleWidth={"value"}
+                            onEngineStop={handleEngineStop}
+                            enablePointerInteraction={false}
                         />}
                 </StyledNetworkContainer>
                 <StyledNetworkContainer>

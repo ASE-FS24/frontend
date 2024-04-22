@@ -68,10 +68,11 @@ function findUsernameById(network: UserSummary[][], userId: string) {
 export const selectNetwork = createSelector(
     // Input selector
     (state: RootState) => state.users.network,
+    (state: RootState) => state.users.entities,
     (state: RootState) => selectActiveUser(state),
 
     // Result function
-    (network, loggedInUser: ReturnType<typeof selectActiveUser>) => {
+    (network, entities) => {
         // Create counts object and links array
         const { counts, links } = network.reduce((acc, [source, target]) => {
             acc.counts[source.id] = (acc.counts[source.id] || 0) + 1;
@@ -92,6 +93,15 @@ export const selectNetwork = createSelector(
                 val
             };
         });
+        entities.forEach((entity) => {
+            if (!nodes.find((node) => node.id === entity.id)) {
+                nodes.push({
+                    id: entity.id,
+                    name: entity.username,
+                    val: 1
+                })
+            }
+        })
         console.log({ nodes, links })
         return { nodes, links };
     }

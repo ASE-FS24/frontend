@@ -39,7 +39,7 @@ function ConnectionComponent({connection}: { connection: UserSummary }) {
             <StyledProfilePicture></StyledProfilePicture>
             <h3>{connection.username}</h3>
             <StyledSVGContainer onClick={() => {
-                unfollowUser(loggedInUser.id, connection.id).then(() => window.location.reload())
+                unfollowUser(loggedInUser.id, connection.id).then(() => setTimeout(() => window.location.reload(), 1000))
             }}>
                 <UnfollowSVG style={{width: "35px", height: "35px"}}/>
             </StyledSVGContainer>
