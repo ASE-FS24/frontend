@@ -1,43 +1,75 @@
-import {User} from "./UserType";
+import {FollowUser, User, UserSummary} from "./UserType";
 
 const baseurl = process.env.REACT_APP_USER_BASEURL;
 
 const mockUser = {
-    id: "ae14b32e-9418-4be6-bebf-b56903d40578",
-    email: "user2@mock.com",
-    firstName: "User2",
-    lastName: "Mock",
-    username: "mockuser2",
-    motto: "I'm the second best mock user out there",
-    university: "UZH",
-    bio: "This is my crazy bio 2",
-    degreeProgram: 'Masters',
-    birthday: "-",
-    profilePicture: "",
-    followedUsers: []
+    id: "be14b32e-9418-4be6-bebf-b56903d40578",
+    username: "mockuser12",
+    profilePicture: ""
 }
 
 const mockUsers = [
     {
         id: "ae14b32e-9418-4be6-bebf-b56903d40577",
-        email: "gleinad11@gmail.com",
-        firstName: "User1",
-        lastName: "Mock",
         username: "mockuser1",
-        motto: "I'm the best mock user out there",
-        university: "UZH",
-        bio: "This is my crazy bio",
-        degreeProgram: 'Masters',
-        birthday: "-",
         profilePicture: "",
-        followedUsers: ["MockUser2"]
+    },
+    {
+        id: "ae14b32e-9418-4be6-bebf-b56903d40578",
+        username: "mockuser2",
+        profilePicture: "",
+    },
+    {
+        id: "ae14b32e-9418-4be6-bebf-b56903d40579",
+        username: "mockuser3",
+        profilePicture: "",
+    },
+    {
+        id: "ae14b32e-9418-4be6-bebf-b56903d40580",
+        username: "mockuser4",
+        profilePicture: "",
+    },
+    {
+        id: "ae14b32e-9418-4be6-bebf-b56903d40581",
+        username: "mockuser5",
+        profilePicture: "",
+    },
+    {
+        id: "ae14b32e-9418-4be6-bebf-b56903d40582",
+        username: "mockuser6",
+        profilePicture: "",
+    },
+    {
+        id: "ae14b32e-9418-4be6-bebf-b56903d40583",
+        username: "mockuser7",
+        profilePicture: "",
+    },
+    {
+        id: "ae14b32e-9418-4be6-bebf-b56903d40584",
+        username: "mockuser8",
+        profilePicture: "",
+    },
+    {
+        id: "ae14b32e-9418-4be6-bebf-b56903d40585",
+        username: "mockuser9",
+        profilePicture: "",
+    },
+    {
+        id: "ae14b32e-9418-4be6-bebf-b56903d40586",
+        username: "mockuser10",
+        profilePicture: "",
+    },
+    {
+        id: "ae14b32e-9418-4be6-bebf-b56903d40587",
+        username: "mockuser11",
+        profilePicture: "",
     },
     mockUser
 ]
 
 
-export function getAllUsers(): Promise<User[]> {
-    return fetch(baseurl + "users/")
+export function getAllUsers(): Promise<UserSummary[]> {
+    return fetch(baseurl + "users")
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -79,7 +111,7 @@ export function createUser(user: User) {
 }
 
 export function getUser(userId: string): Promise<User> {
-    return fetch(baseurl + "users/" + userId)
+    return fetch(baseurl + "users/id/" + userId)
         .then(response => {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -189,4 +221,131 @@ export async function updateProfilePic(userId: string, profilePicture: File, end
         console.error(`Error uploading profile picture: ${error}`);
         return null;
     }
+}
+
+const networkMockData = [
+    {source: '0c83f09a-1c14-4e54-b7aa-48041fda6103', target: 'id2'},
+    {source: 'id2', target: 'id3'},
+    {source: 'id2', target: 'id4'},
+    {source: 'id3', target: 'id5'},
+    {source: 'id3', target: 'id6'},
+    {source: 'id6', target: 'id7'},
+    {source: '0c83f09a-1c14-4e54-b7aa-48041fda6103', target: 'id8'},
+    {source: 'id9', target: 'id9'},
+    {source: 'id9', target: 'id10'},
+    {source: '0c83f09a-1c14-4e54-b7aa-48041fda6103', target: 'id3'}
+]
+
+const followerMockData: UserSummary[] = [
+    {id: "testId1", username: "Test1", profilePicture: ""},
+    {id: "testId2", username: "Test2", profilePicture: ""},
+    {id: "testId3", username: "Test3", profilePicture: ""},
+    {id: "testId4", username: "Test4", profilePicture: ""},
+    {id: "testId5", username: "Test5", profilePicture: ""},
+    {id: "testId6", username: "Test6", profilePicture: ""},
+    {id: "testId7", username: "Test7", profilePicture: ""},
+    {id: "testId8", username: "Test8", profilePicture: ""}
+]
+
+const networkMockData2: UserSummary[][] = [
+    [
+        {
+            "id": "ae14b32e-9418-4be6-bebf-b56903d40511",
+            "username": "DGERGELY11",
+            "profilePicture": null
+        },
+        {
+            "id": "ae14b32e-9418-4be6-bebf-b56903d40513",
+            "username": "DGERGELY13",
+            "profilePicture": null
+        }
+    ],
+    [
+        {
+            "id": "ae14b32e-9418-4be6-bebf-b56903d40511",
+            "username": "DGERGELY11",
+            "profilePicture": null
+        },
+        {
+            "id": "ae14b32e-9418-4be6-bebf-b56903d40512",
+            "username": "DGERGELY12",
+            "profilePicture": null
+        }
+    ]
+]
+
+export async function getNetwork(): Promise<UserSummary[][]> {
+    try {
+        const response = await fetch(baseurl + `users/follows`, {
+            method: 'GET'
+        });
+
+        if (!response.ok) {
+            // If the response is not successful, throw an error
+            throw new Error(`Failed to retrieve followers: ${response.statusText}`);
+        }
+
+        // Return the response text
+        return await response.json();
+    } catch (error) {
+        // Handle errors gracefully
+        console.error(`Error retrieving followers: ${error}`);
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(networkMockData2);
+            }, 1000)
+        });
+    }
+}
+
+export async function getFollows(userId: string): Promise<UserSummary[]> {
+    try {
+        const response = await fetch(baseurl + `users/${userId}/follows`, {
+            method: 'GET'
+        });
+
+        if (!response.ok) {
+            // If the response is not successful, throw an error
+            throw new Error(`Failed to retrieve followers: ${response.statusText}`);
+        }
+
+        // Return the response text
+        return await response.json();
+    } catch (error) {
+        // Handle errors gracefully
+        console.error(`Error retrieving followers: ${error}`);
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(followerMockData);
+            }, 1000)
+        });
+    }
+}
+
+export function followUser(userId: string, followId: string) {
+    return fetch(baseurl + `users/${userId}/follows/${followId}`, {
+        method: 'POST'
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        });
+}
+
+export function unfollowUser(userId: string, followId: string) {
+    return fetch(baseurl + `users/${userId}/follows/${followId}`, {
+        method: 'DELETE',
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        });
 }
