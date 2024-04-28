@@ -73,17 +73,14 @@ export function getComments(postId: string): Promise<Comment[]> {
         })
 }
 
-export function likeComment(commentId: string, userId: string): Promise<Post> {
+export function likeComment(commentId: string, userId: string): Promise<any | Response> {
     return fetch(baseurl + "likes/comment/" + commentId + "?userId=" + userId, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         }
     })
-        .then(response => response.json())
-        .then(data => {
-            return data
-        })
+        .then(response => response)
         .catch(error => {
             console.log(error);
         })

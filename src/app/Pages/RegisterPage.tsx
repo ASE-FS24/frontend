@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 import {signUp} from "../Util/auth";
 import {CognitoSubPage} from "../Register/CognitoUserData";
 import {NexusNetSubPage} from "../Register/NexusNetUserData";
@@ -31,7 +31,6 @@ export default function Register() {
     const [birthday, setBirthday] = useState("");
 
     const [error, setError] = useState("");
-    const [success, setSuccess] = useState(false);
     const [page, setPage] = useState(1);
 
     const dispatch = useDispatch();
@@ -39,6 +38,7 @@ export default function Register() {
     const [disabled1, setDisabled1] = useState(true);
     const [disabled2, setDisabled2] = useState(true);
 
+    const [isSubmitted, setIsSubmitted] = useState(false);
 
     useEffect(() => {
         setDisabled1(
@@ -61,35 +61,38 @@ export default function Register() {
         setError("")
 
         try {
-            await signUp(username, email, password)
-            setSuccess(true)
+            await signUp(username, email, password);
+            setIsSubmitted(true);
         } catch (err: any) {
             console.log(err)
             setError(err.message)
         }
     }
-    if (success) {
-        const newUser = {
-            id: userId,
-            email: email,
-            firstName: firstName,
-            lastName: lastName,
-            username: username,
-            motto: motto,
-            university: university,
-            bio: bio,
-            degreeProgram: degreeProgram,
-            birthday: birthday,
-            profilePicture: "profile.svg",
-            followedUsers: []
+
+    useEffect(() => {
+        if (isSubmitted) {
+            const newUser = {
+                id: userId,
+                email: email,
+                firstName: firstName,
+                lastName: lastName,
+                username: username,
+                motto: motto,
+                university: university,
+                bio: bio,
+                degreeProgram: degreeProgram,
+                birthday: birthday,
+                profilePicture: "",
+                followedUsers: []
+            }
+            dispatch(setLoggedInUser(newUser));
+            navigate(`/confirm-sign-up?username=${username}`);
         }
-        dispatch(setLoggedInUser(newUser));
-        navigate(`/confirm-sign-up?username=${username}`);
-    }
+    }, [isSubmitted]);
 
     return (
         <StyledLoginContainer>
-            <StyledLogoContainer  onClick={() => navigate("/")} margin={"0"}>
+            <StyledLogoContainer onClick={() => navigate("/")} margin={"0"}>
                 <StyledLogo src="/logo.png"/>
                 <StyledSlogan>Sign up to create</StyledSlogan>
             </StyledLogoContainer>

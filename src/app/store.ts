@@ -19,7 +19,12 @@ const rootReducer = combineReducers({
 });
 
 export const store = configureStore({
-    reducer: rootReducer
+    reducer: rootReducer,
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+        serializableCheck: {
+            ignoredActions: ['persist/PERSIST'],
+        },
+    }),
 })
 
 export const persistor = persistStore(store);

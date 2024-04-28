@@ -1,15 +1,24 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {createUser, getUser, getUserByUsername} from "./UserService";
+import {createUser, getFollows, getUser, getUserByUsername} from "./UserService";
 
 interface IUserState {
     value: any;
+    connections: any[];
 }
+
 const initialState: IUserState = {
     value: null,
+    connections: []
 };
 
-export const getLoggedInUserThunk = createAsyncThunk('users/getLoggedInUser', async (username: string) => {
-        return await getUserByUsername(username);
+export const getLoggedInUserThunk = createAsyncThunk('users/getLoggedInUser', async (username: string, thunkAPI) => {
+    const loggedInUser = await getUserByUsername(username);
+    thunkAPI.dispatch(fetchFollows(loggedInUser.id));
+    return loggedInUser;
+});
+
+export const fetchFollows = createAsyncThunk('users/getConnections', async (userId: string) => {
+    return await getFollows(userId);
 });
 
 export const loggedInUserSlice = createSlice({
@@ -20,16 +29,23 @@ export const loggedInUserSlice = createSlice({
             const newUser = action.payload;
             createUser(newUser).then();
             state.value = newUser;
-        }
+        },
+        logOut: (state) => {
+            state.value = null;
+        },
     },
     extraReducers(builder) {
-        builder.addCase(getLoggedInUserThunk.fulfilled, (state, {payload}) => {
-            state.value = payload;
-        })
+        builder
+            .addCase(getLoggedInUserThunk.fulfilled, (state, {payload}) => {
+                state.value = payload;
+            })
+            .addCase(fetchFollows.fulfilled, (state, {payload}) => {
+                state.connections = payload;
+            })
     }
 })
 
-export const {setLoggedInUser} = loggedInUserSlice.actions
+export const {setLoggedInUser, logOut} = loggedInUserSlice.actions
 
 export default loggedInUserSlice.reducer
 
@@ -38,3 +54,5 @@ interface RootState {
 }
 
 export const selectActiveUser = (state: RootState) => state.loggedInUser.value;
+
+export const selectConnections = (state: RootState) => state.loggedInUser.connections;

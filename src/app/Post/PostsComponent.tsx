@@ -44,7 +44,7 @@ const StyledSearchContainer = styled.div`
   margin-right: auto;
 `;
 
-const StyledSearchInput = styled.input`
+export const StyledSearchInput = styled.input`
   font-size: 1rem;
   background-color: rgba(0, 0, 0, 0.3);
   border-radius: 15px;
@@ -82,6 +82,15 @@ const StyledPosts = styled.div`
   max-height: 85vh;
   overflow: auto;
   padding: 15px 0 15px 0;
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 `;
 
 
@@ -196,7 +205,7 @@ export function PostsComponent() {
             </StyledToolbarContainer>
             <StyledPosts>
                 {posts && posts.map((post) => (
-                    <Post key={post.id} post={post}/>
+                    <Post key={post.id} postId={post.id}/>
                 ))}
             </StyledPosts>
         </StyledContentContainer>

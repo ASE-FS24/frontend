@@ -1,9 +1,8 @@
-import {User} from "../User/UserType";
-
 export interface Comment {
     id: string;
     postId: string;
-    authorId: User;
+    authorId: string;
     content: string;
-    likes: number;
+    likeNumber: number;
+    createdAt: string;
 }

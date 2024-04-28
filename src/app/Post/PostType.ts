@@ -13,7 +13,7 @@ export interface Post {
     edited: boolean;
     editedDateTime: string;
     comments: Array<Comment>
-    likes: number;
+    likeNumber: number;
     hashtags: Array<string>
 }
 
