@@ -8,12 +8,14 @@ import {Post, PostUpdate} from "../Post/PostType";
 import {useNavigate, useParams} from "react-router-dom";
 import {StyledSelect, StyledTextArea} from "../Register/NexusNetUserData";
 import {ReactComponent as XSVG} from "../../static/images/x.svg";
-import {getPost, updatePost} from "../Post/PostService";
+import {deletePost, getPost, updatePost} from "../Post/PostService";
 import {StyledCreatePostContainer, StyledHashtag, StyledHashtagsContainer, StyledPageTitle} from "./CreatePostPage";
-
+import {StyledFilterButton} from "./MainPage";
+import {Modal} from "./PopupMsgComponent";
 
 export default function EditPost() {
     const activeUser = useAppSelector(selectActiveUser);
+    const [modal, setModal] = useState<boolean>(false);
     const {postId} = useParams<{ postId: string }>();
     const [post, setPost] = useState<Post | null>(null);
     const [type, setType] = useState("");
@@ -93,7 +95,8 @@ export default function EditPost() {
     }
 
     return (
-        <>
+        <>  {modal && post !== null && <Modal setModal={setModal} action={() => deletePost(post.id)}
+                                              text={`Are you sure you want to delete the post?`}/>}
             <Header/>
             <StyledCreatePostContainer>
                 <StyledButton onClick={() => navigate("/")}>Back</StyledButton>
@@ -136,6 +139,10 @@ export default function EditPost() {
                                  onKeyDown={onKeyDown}/>
 
                     <StyledButton disabled={disabled} type={"submit"}>Update</StyledButton>
+                    <StyledFilterButton selected={false} onClick={(event) => {
+                        event.preventDefault();
+                        setModal(true)
+                    }}>Delete</StyledFilterButton>
                 </StyledForm>
             </StyledCreatePostContainer>
         </>
