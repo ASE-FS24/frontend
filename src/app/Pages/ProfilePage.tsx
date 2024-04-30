@@ -5,6 +5,11 @@ import UserComponent from "../User/UserComponent";
 import {signOut} from "../Util/auth";
 import {useNavigate} from "react-router-dom";
 import Header from "./Header";
+import {useEffect, useState} from "react";
+import {Post as PostType} from "../Post/PostType";
+import Post from "../Post/PostComponent";
+import {getPostsOfUser} from "../Post/PostService";
+import {StyledFilterButton} from "./MainPage";
 
 
 const StyledProfileContainer = styled.div`
@@ -13,6 +18,7 @@ const StyledProfileContainer = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  max-height: calc(50vh - 84px);
 `;
 
 const ProfileHeading = styled.h2`
@@ -39,11 +45,34 @@ const SignOutButton = styled.button`
   }
 `;
 
+const StyledMyPostsContainer = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  width: 50%;
+  flex-direction: column;
+  margin: 20px auto;
+  background: rgb(255, 255, 255, 0.5);
+  text-align: center;
+  padding: 20px;
+  overflow: auto;
+  max-height: calc(50vh - 40px);
+`;
+
 function ProfilePage() {
     const navigate = useNavigate(); // Get the navigate function from React Router
+    const [myPosts, setMyPosts] = useState<PostType[]>([]);
 
     const activeUser = useAppSelector(selectActiveUser);
     const dispatch = useAppDispatch();
+
+    useEffect( () => {
+        const fetchPosts = async () => {
+            const mPs = await getPostsOfUser(activeUser.username);
+            setMyPosts(mPs);
+        };
+
+        fetchPosts().then();
+    }, [])
 
     const handleSignOut = () => {
         signOut(); // Perform signout action
@@ -59,6 +88,13 @@ function ProfilePage() {
                 <ProfileHeading>Welcome {activeUser && activeUser.username}</ProfileHeading>
                 {activeUser && <UserComponent user={activeUser}/>}
             </StyledProfileContainer>
+            <StyledMyPostsContainer>
+                <h2>My Posts</h2>
+                {myPosts.length > 0 ? myPosts.map((post) => (
+                    <Post key={post.id} postId={post.id}/>
+                )) : <div>No posts yet, create one!</div>}
+                <StyledFilterButton selected={false} onClick={() => navigate("/post/create")}>New Post</StyledFilterButton>
+            </StyledMyPostsContainer>
         </>
     );
 }

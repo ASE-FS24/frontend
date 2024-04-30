@@ -84,7 +84,8 @@ function Home() {
                     {activeUser !== null ?
                         <>
                             <StyledMenuButton onClick={() => navigate("/post/create")}>New Post</StyledMenuButton>
-                            <StyledMenuButton>Connections</StyledMenuButton>
+                            <StyledMenuButton onClick={() => navigate("/chat")}>My Chats</StyledMenuButton>
+                            <StyledMenuButton onClick={() => navigate("/network")}>Connections</StyledMenuButton>
                         </> :
                         <></>}
                 </StyledMenuContainer>

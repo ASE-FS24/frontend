@@ -155,3 +155,20 @@ export function likePost(postId: string, userId: string): Promise<void | Respons
         })
 
 }
+
+export function getPostsOfUser(userId: string): Promise<Post[]> {
+    return fetch(baseurl + "posts/user/" + userId)
+        .then(response => {
+            if (!response.ok) {
+                console.log(response)
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            return data
+        })
+        .catch(error => {
+            console.log(error);
+        })
+}
