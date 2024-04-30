@@ -10,6 +10,7 @@ import {ReactComponent as SortUpSVG} from "../../static/images/sort-up.svg";
 import {ReactComponent as LikeSVG} from "../../static/images/heart.svg";
 import {ReactComponent as SearchSVG} from "../../static/images/search.svg";
 import Post from "../Post/PostComponent";
+import {selectActiveUser} from "../User/LoggedInUserSlice";
 
 
 const StyledContentContainer = styled.div`
@@ -96,6 +97,7 @@ const StyledPosts = styled.div`
 
 export function PostsComponent() {
     const allPosts = useAppSelector(selectAllPosts);
+    const loggedInUser = useAppSelector(selectActiveUser);
     const [posts, setPosts] = useState(allPosts);
     const [projectFilter, setProjectFilter] = useState(false);
     const [postFilter, setPostFilter] = useState(false);
@@ -205,7 +207,7 @@ export function PostsComponent() {
             </StyledToolbarContainer>
             <StyledPosts>
                 {posts && posts.map((post) => (
-                    <Post key={post.id} postId={post.id}/>
+                    <Post key={post.id} postId={post.id} edit={post.authorId === loggedInUser.username}/>
                 ))}
             </StyledPosts>
         </StyledContentContainer>

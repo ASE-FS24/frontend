@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import {ReactComponent as LikeSVG} from "../../static/images/heart.svg";
 import {ReactComponent as FireSVG} from "../../static/images/fire.svg";
-import {ReactComponent as ShareSVG} from "../../static/images/share.svg";
 import {ReactComponent as ReportSVG} from "../../static/images/report.svg";
 import {ReactComponent as ProjectSVG} from "../../static/images/project.svg";
 import {ReactComponent as PostSVG} from "../../static/images/camera.svg";
@@ -16,6 +15,8 @@ import {selectActiveUser} from "../User/LoggedInUserSlice";
 import { v4 as uuidv4 } from 'uuid';
 import {likePost} from "./PostService";
 import {fetchPost, selectPostsById} from "./PostSlice";
+import {ReactComponent as EditSVG} from "../../static/images/edit_pen.svg";
+import {useNavigate} from "react-router-dom";
 
 
 const StyledPost = styled.div`
@@ -72,7 +73,7 @@ const StyledInteractionsContainer = styled.div`
   justify-content: center;
   flex-direction: column;
   background-color: #000000;
-  min-width: 60px;
+  min-width: 50px;
   padding-left: 10px;
   position: relative;
 `;
@@ -81,6 +82,7 @@ const StyledInteractionsContainer = styled.div`
 export const StyledIconContainer = styled.div<{ last?: string; }>`
   display: flex;
   align-items: center;
+  justify-content: center;
   margin-top: ${props => props.last || "0"};
 
   &:hover {
@@ -113,7 +115,7 @@ const StyledCommentForm = styled.form`
   margin: 5px 5px 5px auto;
 `;
 
-function PostComponent({postId}: { postId: string }) {
+function PostComponent({postId, edit}: { postId: string, edit?: boolean }) {
     const activeUser = useAppSelector(selectActiveUser);
     const post = useAppSelector(state => selectPostsById(state, postId));
     const [comments, setComments] = useState<Comment[]>([]);
@@ -121,6 +123,7 @@ function PostComponent({postId}: { postId: string }) {
     const [showComments, setShowComments] = useState(false);
     const [commentContent, setCommentContent] = useState("");
     const [reloadComponent, setReloadComponent] = useState(true);
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -187,9 +190,9 @@ function PostComponent({postId}: { postId: string }) {
                     <StyledIconContainer onClick={() => setShowComments(!showComments)} title="Comments">
                         <FireSVG style={{width: "45px", height: "45px"}}/>
                     </StyledIconContainer>
-                    <StyledIconContainer title="Share - not implemented yet">
-                        <ShareSVG style={{width: "45px", height: "45px"}}/>
-                    </StyledIconContainer>
+                    {edit && <StyledIconContainer title="Edit post" onClick={() => navigate("/post/edit/" + postId)}>
+                        <EditSVG style={{width: "40px", height: "40px", color: "#ffffff"}}/>
+                    </StyledIconContainer>}
                     <StyledIconContainer last={"auto"} title="Report - not implemented yet">
                         <ReportSVG style={{width: "45px", height: "45px"}}/>
                     </StyledIconContainer>

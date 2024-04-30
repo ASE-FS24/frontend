@@ -1,7 +1,7 @@
 import {User} from "./UserType";
 import styled from "styled-components";
 import {ReactComponent as ProfileSVG} from "../../static/images/profile.svg";
-import {ReactComponent as EditIcon} from "../../static/images/edit_pen.svg"; // Assuming you have an edit icon
+import {ReactComponent as EditIcon} from "../../static/images/edit_pen.svg";
 import React, {useState, useRef, useEffect} from 'react';
 import {updateUser, updateProfilePic, getProfilePic} from "./UserService";
 

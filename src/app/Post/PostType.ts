@@ -27,3 +27,14 @@ export interface NewPost {
     image?: string;
     hashtags: Array<string>
 }
+
+export interface PostUpdate {
+    postId: string;
+    type: string;
+    status: string;
+    title: string;
+    shortDescription?: string;
+    description: string;
+    image?: string;
+    hashtags: Array<string>
+}

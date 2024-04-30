@@ -1,4 +1,4 @@
-import {NewPost, Post} from "./PostType";
+import {NewPost, Post, PostUpdate} from "./PostType";
 
 const baseurl = process.env.REACT_APP_POST_BASEURL;
 
@@ -116,6 +116,49 @@ export function createNewPost(post: NewPost): Promise<NewPost> {
                     resolve(post);
                 }, 1000); // Simulate a 1 second delay
             });
+        })
+}
+
+export function updatePost(post: PostUpdate): Promise<any> {
+    return fetch(baseurl + "posts/" + post.postId, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(post)
+    })
+        .then(response => {
+            if (!response.ok) {
+                console.log(response)
+                throw new Error(`HTTP error! status: ${response}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            return data
+        })
+        .catch(error => {
+            console.log(error);
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(post);
+                }, 1000); // Simulate a 1 second delay
+            });
+        })
+}
+
+export function deletePost(postId: string): Promise<void> {
+    return fetch(baseurl + "posts/" + postId, {
+        method: 'DELETE'
+    })
+        .then(response => {
+            if (!response.ok) {
+                console.log(response)
+                throw new Error(`HTTP error! status: ${response}`);
+            }
+        })
+        .catch(error => {
+            console.log(error);
         })
 }
 

@@ -22,7 +22,7 @@ const StyledProfileContainer = styled.div`
 `;
 
 const ProfileHeading = styled.h2`
-  font-size: 20px;
+  font-size: 24px;
   margin-bottom: 20px;
   color: #fff;
 `;
@@ -47,15 +47,25 @@ const SignOutButton = styled.button`
 
 const StyledMyPostsContainer = styled.div`
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
+  align-items: center;
   width: 50%;
   flex-direction: column;
   margin: 20px auto;
   background: rgb(255, 255, 255, 0.5);
   text-align: center;
-  padding: 20px;
+  max-height: calc(50vh - 20px);
+`;
+
+const StyledPostContainer = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  padding: 15px;
+  background: rgb(255, 255, 255, 0.5);
+  text-align: center;
   overflow: auto;
-  max-height: calc(50vh - 40px);
+  margin-top: 10px;
 `;
 
 function ProfilePage() {
@@ -65,7 +75,7 @@ function ProfilePage() {
     const activeUser = useAppSelector(selectActiveUser);
     const dispatch = useAppDispatch();
 
-    useEffect( () => {
+    useEffect(() => {
         const fetchPosts = async () => {
             const mPs = await getPostsOfUser(activeUser.username);
             setMyPosts(mPs);
@@ -89,11 +99,14 @@ function ProfilePage() {
                 {activeUser && <UserComponent user={activeUser}/>}
             </StyledProfileContainer>
             <StyledMyPostsContainer>
-                <h2>My Posts</h2>
-                {myPosts.length > 0 ? myPosts.map((post) => (
-                    <Post key={post.id} postId={post.id}/>
-                )) : <div>No posts yet, create one!</div>}
-                <StyledFilterButton selected={false} onClick={() => navigate("/post/create")}>New Post</StyledFilterButton>
+                <ProfileHeading>My Posts</ProfileHeading>
+                <StyledFilterButton selected={false} onClick={() => navigate("/post/create")}>New
+                    Post</StyledFilterButton>
+                <StyledPostContainer>
+                    {myPosts.length > 0 ? myPosts.map((post) => (
+                        <Post key={post.id} postId={post.id}  edit={post.authorId === activeUser.username}/>
+                    )) : <div>No posts yet, create one!</div>}
+                </StyledPostContainer>
             </StyledMyPostsContainer>
         </>
     );
