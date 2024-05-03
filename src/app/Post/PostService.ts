@@ -215,3 +215,41 @@ export function getPostsOfUser(userId: string): Promise<Post[]> {
             console.log(error);
         })
 }
+
+
+export function uploadFileToPost(file: File, postId: string): Promise<string> {
+    const formData = new FormData();
+    formData.append("file", file);
+    return fetch(baseurl + "posts/" + postId + "/uploadFile", {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => {
+            if (!response.ok) {
+                console.log(response)
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            return data
+        })
+        .catch(error => {
+            console.log(error);
+        })
+}
+
+export function deleteFileFromPost({fileName} : {fileName: string}): Promise<void> {
+    return fetch(baseurl + "posts/deleteFile/" + fileName, {
+        method: 'DELETE'
+    })
+        .then(response => {
+            if (!response.ok) {
+                console.log(response)
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        })
+}

@@ -8,10 +8,19 @@ import {Post, PostUpdate} from "../Post/PostType";
 import {useNavigate, useParams} from "react-router-dom";
 import {StyledSelect, StyledTextArea} from "../Register/NexusNetUserData";
 import {ReactComponent as XSVG} from "../../static/images/x.svg";
-import {deletePost, getPost, updatePost} from "../Post/PostService";
+import {deletePost, getPost, updatePost, uploadFileToPost} from "../Post/PostService";
 import {StyledCreatePostContainer, StyledHashtag, StyledHashtagsContainer, StyledPageTitle} from "./CreatePostPage";
 import {StyledFilterButton} from "./MainPage";
 import {Modal} from "./PopupMsgComponent";
+import {FileUpload} from "../Post/FileUploadComponent";
+
+export const StyledFilesLink = styled.a`
+  font-size: 1rem;
+  font-style: italic;
+  color: orchid;
+  text-decoration: underline;
+  margin: 10px 0;
+`;
 
 export default function EditPost() {
     const activeUser = useAppSelector(selectActiveUser);
@@ -25,6 +34,7 @@ export default function EditPost() {
     const [hashtags, setHashtags] = useState<string[]>([]);
     const [hashtag, setHashtag] = useState("");
     const [disabled, setDisabled] = useState(true);
+    const [fileUploaded, setFileUploaded] = useState(false);
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -52,7 +62,8 @@ export default function EditPost() {
                 title !== post.title ||
                 description !== post.description ||
                 shortDescription !== post.shortDescription ||
-                hashtags !== post.hashtags) {
+                hashtags !== post.hashtags ||
+                fileUploaded) {
                 setDisabled(false);
             } else {
                 setDisabled(true);
@@ -92,6 +103,12 @@ export default function EditPost() {
     const removeHashtag = (ht: string) => {
         const updatedHashtags = hashtags.filter(h => h !== ht);
         setHashtags(updatedHashtags);
+    }
+
+    const handleFileUpload = (files: FileList | null) => {
+        if (files !== null && post !== null) {
+            uploadFileToPost(files[0], post.id).then(() => setFileUploaded(true));
+        }
     }
 
     return (
@@ -139,6 +156,10 @@ export default function EditPost() {
                                  value={hashtag}
                                  onChange={(event) => setHashtag(event.target.value)}
                                  onKeyDown={onKeyDown}/>
+                    {post && post.fileUrls.map((fileUrl) => (
+                        <StyledFilesLink>{fileUrl}</StyledFilesLink>
+                    ))}
+                    <FileUpload onFileSelect={handleFileUpload}/>
 
                     <StyledButton disabled={disabled} type={"submit"}>Update</StyledButton>
                     <StyledFilterButton selected={false} onClick={(event) => {

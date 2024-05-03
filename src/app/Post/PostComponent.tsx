@@ -12,11 +12,12 @@ import {Comment} from "../Comment/CommentType";
 import {StyledButtonSmall, StyledInput} from "../Pages/LoginPage";
 import {useAppDispatch, useAppSelector} from "../hooks";
 import {selectActiveUser} from "../User/LoggedInUserSlice";
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 import {likePost} from "./PostService";
 import {fetchPost, selectPostsById} from "./PostSlice";
 import {ReactComponent as EditSVG} from "../../static/images/edit_pen.svg";
 import {useNavigate} from "react-router-dom";
+import {StyledFilesLink} from "../Pages/EditPostPage";
 
 
 const StyledPost = styled.div`
@@ -115,6 +116,13 @@ const StyledCommentForm = styled.form`
   margin: 5px 5px 5px auto;
 `;
 
+const StyledFilesTitle = styled.div`
+  font-size: 1.5rem;
+  margin: 20px 0 10px 0;
+  font-style: italic;
+  border-bottom: 1px solid white;
+`;
+
 function PostComponent({postId, edit}: { postId: string, edit?: boolean }) {
     const activeUser = useAppSelector(selectActiveUser);
     const post = useAppSelector(state => selectPostsById(state, postId));
@@ -182,6 +190,16 @@ function PostComponent({postId, edit}: { postId: string, edit?: boolean }) {
                     </StyledPostHeader>
                     <StyledPostTitle>{post.title}</StyledPostTitle>
                     <StyledPostDescription>{post.description}</StyledPostDescription>
+                    {post.fileUrls.length > 0 ?
+                        <>
+                            <StyledFilesTitle>Attachments</StyledFilesTitle>
+                            {post.fileUrls.map((url) => (
+                                <StyledFilesLink>
+                                    {url}
+                                </StyledFilesLink>
+                            ))}
+                        </> : null
+                    }
                 </StyledPostContent>
                 <StyledInteractionsContainer>
                     <StyledIconContainer onClick={like} title="Like">
@@ -206,10 +224,11 @@ function PostComponent({postId, edit}: { postId: string, edit?: boolean }) {
                         <CommentComponent key={comment.id} comment={comment} setReloadComponent={setReloadComponent}/>
                     )) : <StyledNoCommentsContainer>No comments yet...</StyledNoCommentsContainer>}
                     {activeUser !== null ?
-                                <StyledCommentForm onSubmit={handleCommentFormSubmit}>
-                                    <StyledInput type="text" value={commentContent} onChange={(e) => setCommentContent(e.target.value)} />
-                                    <StyledButtonSmall type="submit">Comment</StyledButtonSmall>
-                                </StyledCommentForm> :
+                        <StyledCommentForm onSubmit={handleCommentFormSubmit}>
+                            <StyledInput type="text" value={commentContent}
+                                         onChange={(e) => setCommentContent(e.target.value)}/>
+                            <StyledButtonSmall type="submit">Comment</StyledButtonSmall>
+                        </StyledCommentForm> :
                         <StyledNoCommentsContainer>Sign in to comment</StyledNoCommentsContainer>}
                 </StyledCommentsContainer>
             }

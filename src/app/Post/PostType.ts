@@ -14,7 +14,8 @@ export interface Post {
     editedDateTime: string;
     comments: Array<Comment>
     likeNumber: number;
-    hashtags: Array<string>
+    hashtags: Array<string>;
+    fileUrls: Array<string>;
 }
 
 export interface NewPost {
