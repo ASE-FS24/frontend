@@ -95,7 +95,9 @@ export default function EditPost() {
     }
 
     return (
-        <>  {modal && post !== null && <Modal setModal={setModal} action={() => deletePost(post.id)}
+        <>  {modal && post !== null && <Modal setModal={setModal} action={() => {
+            deletePost(post.id).then(() => navigate("/"));
+        }}
                                               text={`Are you sure you want to delete the post?`}/>}
             <Header/>
             <StyledCreatePostContainer>
