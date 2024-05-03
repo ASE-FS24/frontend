@@ -26,12 +26,12 @@ const StyledConfirmMessage = styled.p`
   margin-top: -25px;
 `;
 
-export const BaseButton = styled.button<{ margin?: string, disabled?: boolean }>`
+export const StyledButton2 = styled.button<{ margin?: string, disabled?: boolean }>`
   border: 1px solid #ff0000;
   background-color: #000000;
   color: #ffffff;
   border-radius: 5px;
-  width: 150px;
+  width: 300px;
   height: 40px;
   font-size: 1.5rem;
   font-weight: bold;
@@ -50,9 +50,6 @@ export const BaseButton = styled.button<{ margin?: string, disabled?: boolean }>
   }
 `;
 
-export const StyledButton2 = styled(BaseButton)<{ textLength: number }>`
-  width: ${({ textLength }) => textLength * 10}px; // Adjust the factor based on your design
-`;
 export default function ForgotPassword() {
   const [username, setUsername] = useState("");
   const [code, setCode] = useState("");
@@ -94,7 +91,7 @@ export default function ForgotPassword() {
       <StyledLoginContainer>
         <StyledConfirmMessageTitle>Password reset successful!</StyledConfirmMessageTitle>
         <StyledConfirmMessage>You can now log in with your new password.</StyledConfirmMessage>
-        <StyledButton onClick={() => navigate("/login")}>Back to Login</StyledButton>
+        <StyledButton2 onClick={() => navigate("/login")}>Back to Login</StyledButton2>
       </StyledLoginContainer>
     );
   }
@@ -114,7 +111,7 @@ export default function ForgotPassword() {
             value={username}
             onChange={(event) => setUsername(event.target.value)}
           />
-          <StyledButton type="button" onClick={handleSendCode}>Send Confirmation Code</StyledButton>
+          <StyledButton2 type="button" onClick={handleSendCode}>Send Confirmation Code</StyledButton2>
           {error && <p>{error}</p>}
         </StyledForm>
       )}
@@ -134,7 +131,7 @@ export default function ForgotPassword() {
             value={newPassword}
             onChange={(event) => setNewPassword(event.target.value)}
           />
-          <StyledButton type="submit">Reset Password</StyledButton>
+          <StyledButton2 type="submit">Reset Password</StyledButton2>
           {error && <p>{error}</p>}
         </StyledForm>
       )}
@@ -147,11 +144,11 @@ export default function ForgotPassword() {
             value={newPassword}
             onChange={(event) => setNewPassword(event.target.value)}
           />
-          <StyledButton type="button" onClick={handleResetPassword}>Set New Password</StyledButton>
+          <StyledButton2 type="button" onClick={handleResetPassword}>Set New Password</StyledButton2>
           {error && <p>{error}</p>}
         </StyledForm>
       )}
-      <StyledButton onClick={() => navigate("/login")}>Back to Login</StyledButton>
+      <StyledButton2 onClick={() => navigate("/login")}>Back to Login</StyledButton2>
     </StyledLoginContainer>
   );
 }
