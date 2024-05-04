@@ -36,7 +36,7 @@ export async function getChatOfParticipants(participant1: string, participant2: 
 }
 
 export async function sendMessage(message: MessageType): Promise<Chat> {
-    return fetch(baseurl + "chats", {
+    return fetch(baseurl + "messages", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
