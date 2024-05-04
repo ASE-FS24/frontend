@@ -9,6 +9,7 @@ import styled from "styled-components";
 import CreatePost from "./app/Pages/CreatePostPage";
 import MyNetwork from "./app/Pages/MyNetwork";
 import EditPost from "./app/Pages/EditPostPage";
+import {ChatPage} from "./app/Pages/ChatPage";
 
 const StyledMain = styled.main`
   background: center no-repeat url("/background.jpg");
@@ -28,7 +29,8 @@ function App() {
                     <Route path="/profile" element={<ProfilePage/>}/>
                     <Route path="/post/create" element={<CreatePost/>}/>
                     <Route path="/post/edit/:postId" element={<EditPost />}/>
-                    <Route path="network" element={<MyNetwork/>}/>
+                    <Route path="/network" element={<MyNetwork/>}/>
+                    <Route path="/chat" element={<ChatPage/>}/>
                 </Routes>
             </StyledMain>
         </BrowserRouter>
