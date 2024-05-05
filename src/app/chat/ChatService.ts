@@ -35,6 +35,7 @@ export async function getChatOfParticipants(participant1: string, participant2: 
         })
         .catch(error => {
             console.log(error);
+            throw new Error(`HTTP error! status: ${error}`);
         })
 }
 

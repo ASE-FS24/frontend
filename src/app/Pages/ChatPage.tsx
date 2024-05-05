@@ -143,9 +143,9 @@ const StyledMessageInput = styled.input`
   border-radius: 15px;
   padding: 0 10px;
   color: #ffffff;
-  margin: auto 10px auto auto;
+  margin: auto 20px;
   height: 40px;
-  width: 50%;
+  width: calc(100% - 100px);
   min-width: 20px;
 
   &::placeholder {
@@ -178,7 +178,9 @@ export function ChatPage() {
     const loggedInUser = useAppSelector(selectActiveUser);
     const [chats, setChats] = useState<Chat[]>([]);
     const [activeChat, setActiveChat] = useState<Chat | null>(null);
+    const [isFirstLoad, setIsFirstLoad] = useState(true);
     const messagesEndRef = useRef<null | HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement | null>(null);
     const [message, setMessage] = useState("");
 
     useEffect(() => {
@@ -191,30 +193,46 @@ export function ChatPage() {
                     setActiveChat(chat);
                 }
             }
-            console.log(fetchedChats)
         }
 
         fetchChats().then();
     }, [])
 
+    function fetchChat() {
+        if (activeChat) {
+            const participant1 = activeChat.participant1 === loggedInUser.username ? activeChat.participant1 : activeChat.participant2
+            const participant2 = activeChat.participant1 === loggedInUser.username ? activeChat.participant2 : activeChat.participant1
+            getChatOfParticipants(participant1, participant2).then(chat => setActiveChat(chat));
+        }
+    }
+
     // fetch message every 2 seconds
     useEffect(() => {
         if (activeChat) {
             const interval = setInterval(async () => {
-                const participant1 = activeChat.participant1 === loggedInUser.username ? activeChat.participant1 : activeChat.participant2
-                const participant2 = activeChat.participant1 === loggedInUser.username ? activeChat.participant2 : activeChat.participant1
-                const chat = await getChatOfParticipants(participant1, participant2);
-                setActiveChat(chat);
+                fetchChat();
             }, 2000);
             return () => clearInterval(interval);
         }
     }, [activeChat]);
 
     useEffect(() => {
+        if (isFirstLoad) {
+            scrollAndFocus();
+            setIsFirstLoad(false);
+            return;
+        }
+    }, [activeChat])
+
+    function scrollAndFocus() {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({behavior: "smooth"});
         }
-    }, [activeChat]);
+        if (inputRef.current) {
+            inputRef.current.focus();
+        }
+
+    }
 
     function sendNewMessage() {
         if (message !== "" && activeChat) {
@@ -225,7 +243,16 @@ export function ChatPage() {
             }
             sendMessage(newMessage).then(() => {
                 setMessage("");
+                setIsFirstLoad(true);
+                fetchChat();
             });
+        }
+    }
+
+    const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter" && message !== "") {
+            e.preventDefault();
+            sendNewMessage();
         }
     }
 
@@ -236,7 +263,10 @@ export function ChatPage() {
                 <StyledChatsContainer>
                     <StyledHeading>Chats</StyledHeading>
                     {chats.length > 0 && chats.map(chat => (
-                        <StyledChatHeader onClick={() => setActiveChat(chat)}
+                        <StyledChatHeader onClick={() => {
+                            setActiveChat(chat);
+                            setIsFirstLoad(true);
+                        }}
                                           $active={chat.id === activeChat?.id}
                                           key={chat.id}>{chat.participant2 === loggedInUser.username ? chat.participant1 : chat.participant2}</StyledChatHeader>
                     ))}
@@ -257,9 +287,11 @@ export function ChatPage() {
                             </StyledMessagesContainer>
                             <StyledMessageInputContainer>
                                 <StyledMessageInput id="message"
+                                                    ref={inputRef}
                                                     value={message}
                                                     placeholder=""
-                                                    onChange={(event) => setMessage(event.target.value)}/>
+                                                    onChange={(event) => setMessage(event.target.value)}
+                                                    onKeyDown={onKeyDown}/>
                                 <StyledSendMessageSVGContainer title="Send message" disabled={message === ""}
                                                                onClick={sendNewMessage}>
                                     <MessageSVG style={{width: "50px", height: "50px", margin: "5px -3px -5px 3px"}}/>
