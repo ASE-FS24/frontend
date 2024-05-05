@@ -12,6 +12,9 @@ export async function getChatsOfUser(userName: string): Promise<Chat[]> {
             return response.json()
         })
         .then(data => {
+            data.sort((a: Chat, b: Chat) => {
+                return new Date(b.messages[b.messages.length - 1].timestamp).getTime() - new Date(a.messages[a.messages.length - 1].timestamp).getTime();
+            })
             return data
         })
         .catch(error => {

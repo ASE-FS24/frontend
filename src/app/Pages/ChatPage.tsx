@@ -7,6 +7,7 @@ import {useAppSelector} from "../hooks";
 import {selectActiveUser} from "../User/LoggedInUserSlice";
 import {dateFormatter} from "../Util/util";
 import {ReactComponent as MessageSVG} from "../../static/images/Message.svg";
+import {useParams} from "react-router-dom";
 
 
 const StyledMainContainer = styled.div`
@@ -74,13 +75,13 @@ const StyledOverlay = styled.div`
   z-index: 1;
 `;
 
-const StyledChatHeader = styled.div<{ active: boolean }>`
+const StyledChatHeader = styled.div<{ $active: boolean }>`
   display: flex;
   justify-content: center;
   width: 100%;
   color: #ffffff;
   height: 60px;
-  background-color: ${props => props.active ? "rgb(255, 255, 255, 0.5)" : "rgb(255, 255, 255, 0.3)"};
+  background-color: ${props => props.$active ? "rgb(255, 255, 255, 0.5)" : "rgb(255, 255, 255, 0.3)"};
   font-size: 2rem;
   text-align: center;
   align-items: center;
@@ -105,21 +106,21 @@ const StyledLargeHeading = styled.h1`
 
 `;
 
-const StyledChatMessage = styled.div<{ active: boolean }>`
+const StyledChatMessage = styled.div<{ $active: boolean }>`
   position: relative;
   display: flex;
   min-width: 150px;
   width: fit-content;
   max-width: 80%;
-  margin: ${props => props.active ? "5px 0 5px auto" : "5px auto 5px 0"};
-  background-color: ${props => props.active ? "rgba(0,171,255,1)" : "rgba(150,150,150,1)"};
+  margin: ${props => props.$active ? "5px 0 5px auto" : "5px auto 5px 0"};
+  background-color: ${props => props.$active ? "rgba(0,171,255,1)" : "rgba(150,150,150,1)"};
   padding: 10px 10px 25px 10px;
   border-radius: 15px;
   color: #ffffff;
   font-size: 1.5rem;
 `;
 
-const StyledMessageDate = styled.div<{ active: boolean }>`
+const StyledMessageDate = styled.div`
   position: absolute;
   bottom: 5px;
   right: 15px;
@@ -173,6 +174,7 @@ const StyledSendMessageSVGContainer = styled.div<{ disabled: boolean }>`
 
 
 export function ChatPage() {
+    const {chatId} = useParams();
     const loggedInUser = useAppSelector(selectActiveUser);
     const [chats, setChats] = useState<Chat[]>([]);
     const [activeChat, setActiveChat] = useState<Chat | null>(null);
@@ -183,6 +185,12 @@ export function ChatPage() {
         const fetchChats = async () => {
             const fetchedChats = await getChatsOfUser(loggedInUser.username);
             setChats(fetchedChats);
+            if (chatId !== undefined) {
+                const chat = fetchedChats.find(chat => chat.id === chatId);
+                if (chat) {
+                    setActiveChat(chat);
+                }
+            }
             console.log(fetchedChats)
         }
 
@@ -193,7 +201,9 @@ export function ChatPage() {
     useEffect(() => {
         if (activeChat) {
             const interval = setInterval(async () => {
-                const chat = await getChatOfParticipants(activeChat.participant1, activeChat.participant2);
+                const participant1 = activeChat.participant1 === loggedInUser.username ? activeChat.participant1 : activeChat.participant2
+                const participant2 = activeChat.participant1 === loggedInUser.username ? activeChat.participant2 : activeChat.participant1
+                const chat = await getChatOfParticipants(participant1, participant2);
                 setActiveChat(chat);
             }, 2000);
             return () => clearInterval(interval);
@@ -227,37 +237,35 @@ export function ChatPage() {
                     <StyledHeading>Chats</StyledHeading>
                     {chats.length > 0 && chats.map(chat => (
                         <StyledChatHeader onClick={() => setActiveChat(chat)}
-                                          active={chat.id === activeChat?.id}
+                                          $active={chat.id === activeChat?.id}
                                           key={chat.id}>{chat.participant2 === loggedInUser.username ? chat.participant1 : chat.participant2}</StyledChatHeader>
                     ))}
                 </StyledChatsContainer>
                 <StyledActiveChatContainer>
-                    {activeChat &&
+                    {activeChat !== null ?
                         <>
                             <StyledLargeHeading>{activeChat.participant2 === loggedInUser.username ? activeChat.participant1 : activeChat.participant2}</StyledLargeHeading>
                             <StyledMessagesContainer>
                                 <StyledOverlay/>
                                 {activeChat.messages.map(message => (
-                                    <StyledChatMessage active={message.sender === loggedInUser.username}
+                                    <StyledChatMessage $active={message.sender === loggedInUser.username}
                                                        key={message.id}>{message.content}
-                                        <StyledMessageDate
-                                            active={message.sender === loggedInUser.username}>{dateFormatter(message.timestamp)}</StyledMessageDate>
+                                        <StyledMessageDate>{dateFormatter(message.timestamp)}</StyledMessageDate>
                                     </StyledChatMessage>
                                 ))}
                                 <div ref={messagesEndRef}/>
                             </StyledMessagesContainer>
-
-                        </>}
-                    <StyledMessageInputContainer>
-                        <StyledMessageInput id="message"
-                                            value={message}
-                                            placeholder=""
-                                            onChange={(event) => setMessage(event.target.value)}/>
-                        <StyledSendMessageSVGContainer title="Send message" disabled={message === ""}
-                                                       onClick={sendNewMessage}>
-                            <MessageSVG style={{width: "50px", height: "50px", margin: "5px -3px -5px 3px"}}/>
-                        </StyledSendMessageSVGContainer>
-                    </StyledMessageInputContainer>
+                            <StyledMessageInputContainer>
+                                <StyledMessageInput id="message"
+                                                    value={message}
+                                                    placeholder=""
+                                                    onChange={(event) => setMessage(event.target.value)}/>
+                                <StyledSendMessageSVGContainer title="Send message" disabled={message === ""}
+                                                               onClick={sendNewMessage}>
+                                    <MessageSVG style={{width: "50px", height: "50px", margin: "5px -3px -5px 3px"}}/>
+                                </StyledSendMessageSVGContainer>
+                            </StyledMessageInputContainer>
+                        </> : <div>Select a chat to start messaging</div>}
                 </StyledActiveChatContainer>
             </StyledMainContainer>
         </>

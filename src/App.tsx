@@ -30,7 +30,7 @@ function App() {
                     <Route path="/post/create" element={<CreatePost/>}/>
                     <Route path="/post/edit/:postId" element={<EditPost />}/>
                     <Route path="/network" element={<MyNetwork/>}/>
-                    <Route path="/chat" element={<ChatPage/>}/>
+                    <Route path="/chat/:chatId?" element={<ChatPage />}/>
                 </Routes>
             </StyledMain>
         </BrowserRouter>
