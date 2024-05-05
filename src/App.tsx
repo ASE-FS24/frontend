@@ -10,6 +10,7 @@ import CreatePost from "./app/Pages/CreatePostPage";
 import MyNetwork from "./app/Pages/MyNetwork";
 import EditPost from "./app/Pages/EditPostPage";
 import {ChatPage} from "./app/Pages/ChatPage";
+import ForgotPassword from "./app/Pages/ForgotPassword";
 
 const StyledMain = styled.main`
   background: center no-repeat url("/background.jpg");
@@ -31,6 +32,7 @@ function App() {
                     <Route path="/post/edit/:postId" element={<EditPost />}/>
                     <Route path="/network" element={<MyNetwork/>}/>
                     <Route path="/chat/:chatId?" element={<ChatPage />}/>
+                    <Route path="/forgot-password" element={<ForgotPassword/>}/>
                 </Routes>
             </StyledMain>
         </BrowserRouter>
