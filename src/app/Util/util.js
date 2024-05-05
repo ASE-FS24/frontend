@@ -7,11 +7,10 @@ export function dateFormatter(dateTime) {
     const hours = date.getHours().toString().padStart(2, '0');
     const minutes = date.getMinutes().toString().padStart(2, '0');
 
-    return `${hours}:${minutes} ${day}.${month}.${year}`;
+    return `${hours}:${minutes} - ${day}.${month}.${year}`;
 }
 
 export function stringToDate(parts) {
-    console.log(parts)
     const year = parts[0];
     const month = parts[1];
     const day = parts[2];

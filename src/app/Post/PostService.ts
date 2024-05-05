@@ -1,4 +1,4 @@
-import {NewPost, Post} from "./PostType";
+import {NewPost, Post, PostUpdate} from "./PostType";
 
 const baseurl = process.env.REACT_APP_POST_BASEURL;
 
@@ -119,6 +119,49 @@ export function createNewPost(post: NewPost): Promise<NewPost> {
         })
 }
 
+export function updatePost(post: PostUpdate): Promise<any> {
+    return fetch(baseurl + "posts/" + post.postId, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(post)
+    })
+        .then(response => {
+            if (!response.ok) {
+                console.log(response)
+                throw new Error(`HTTP error! status: ${response}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            return data
+        })
+        .catch(error => {
+            console.log(error);
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(post);
+                }, 1000); // Simulate a 1 second delay
+            });
+        })
+}
+
+export function deletePost(postId: string): Promise<void> {
+    return fetch(baseurl + "posts/" + postId, {
+        method: 'DELETE'
+    })
+        .then(response => {
+            if (!response.ok) {
+                console.log(response)
+                throw new Error(`HTTP error! status: ${response}`);
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        })
+}
+
 export function getPost(postId: string): Promise<Post> {
     return fetch(baseurl + "posts/" + postId)
         .then(response => {
@@ -154,4 +197,59 @@ export function likePost(postId: string, userId: string): Promise<void | Respons
             console.log(error);
         })
 
+}
+
+export function getPostsOfUser(userId: string): Promise<Post[]> {
+    return fetch(baseurl + "posts/user/" + userId)
+        .then(response => {
+            if (!response.ok) {
+                console.log(response)
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            return data
+        })
+        .catch(error => {
+            console.log(error);
+        })
+}
+
+
+export function uploadFileToPost(file: File, postId: string): Promise<string> {
+    const formData = new FormData();
+    formData.append("file", file);
+    return fetch(baseurl + "posts/" + postId + "/uploadFile", {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => {
+            if (!response.ok) {
+                console.log(response)
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            return data
+        })
+        .catch(error => {
+            console.log(error);
+        })
+}
+
+export function deleteFileFromPost(path: string): Promise<void> {
+    return fetch(baseurl + "posts/deleteFile/" + path, {
+        method: 'DELETE'
+    })
+        .then(response => {
+            if (!response.ok) {
+                console.log(response)
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        })
 }

@@ -6,6 +6,10 @@ import {useAppSelector} from "../hooks";
 import {fetchFollows, selectActiveUser} from "./LoggedInUserSlice";
 import {ReactComponent as UnfollowSVG} from "../../static/images/person-dash-fill.svg";
 import {useState} from "react";
+import {ReactComponent as MessageSVG} from "../../static/images/Message.svg";
+import {getChatOfParticipants, sendMessage} from "../chat/ChatService";
+import {MessageType} from "../chat/MessageType";
+import {useNavigate} from "react-router-dom";
 
 
 const StyledConnection = styled.div`
@@ -38,6 +42,7 @@ function ConnectionComponent({connection}: { connection: UserSummary }) {
     const [expand, setExpand] = useState<boolean>(false);
     const [completeUser, setCompleteUser] = useState<User | null>(null);
     const loggedInUser = useAppSelector(selectActiveUser);
+    const navigate = useNavigate();
 
     function reloadData() {
         fetchFollows(loggedInUser.id);
@@ -52,6 +57,21 @@ function ConnectionComponent({connection}: { connection: UserSummary }) {
         setExpand(!expand);
     }
 
+    function sendFirstMessage() {
+        const message: MessageType = {
+            sender: loggedInUser.username,
+            receiver: connection.username,
+            content: "👋"
+        }
+        getChatOfParticipants(loggedInUser.username, connection.username)
+            .then((data) => navigate(`/chat/${data.id}`))
+            .catch((error) => {
+                if (error.message.includes('404')) {
+                    sendMessage(message).then((data) => navigate(`/chat/${data.id}`));
+                }
+            });
+    }
+
     return (
         <StyledConnection onClick={getUserData}>
             <StyledUserSummary>
@@ -62,6 +82,12 @@ function ConnectionComponent({connection}: { connection: UserSummary }) {
                     unfollowUser(loggedInUser.id, connection.id).then(() => reloadData());
                 }}>
                     <UnfollowSVG style={{width: "35px", height: "35px"}}/>
+                </StyledSVGContainer>
+                <StyledSVGContainer onClick={(event) => {
+                    event.stopPropagation();
+                    sendFirstMessage();
+                }}>
+                    <MessageSVG style={{width: "35px", height: "35px"}}/>
                 </StyledSVGContainer>
             </StyledUserSummary>
             {expand && completeUser && <StyledUserDetailsContainer>
