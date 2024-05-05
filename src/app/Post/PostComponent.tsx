@@ -195,7 +195,7 @@ function PostComponent({postId, edit}: { postId: string, edit?: boolean }) {
                             <StyledFilesTitle>Attachments</StyledFilesTitle>
                             {post.fileUrls.map((url) => (
                                 <StyledFilesLink>
-                                    {url.split("/")[-1]}
+                                    {url.split("/").pop()}
                                 </StyledFilesLink>
                             ))}
                         </> : null

@@ -8,18 +8,35 @@ import {Post, PostUpdate} from "../Post/PostType";
 import {useNavigate, useParams} from "react-router-dom";
 import {StyledSelect, StyledTextArea} from "../Register/NexusNetUserData";
 import {ReactComponent as XSVG} from "../../static/images/x.svg";
-import {deletePost, getPost, updatePost, uploadFileToPost} from "../Post/PostService";
+import {deleteFileFromPost, deletePost, getPost, updatePost, uploadFileToPost} from "../Post/PostService";
 import {StyledCreatePostContainer, StyledHashtag, StyledHashtagsContainer, StyledPageTitle} from "./CreatePostPage";
 import {StyledFilterButton} from "./MainPage";
 import {Modal} from "./PopupMsgComponent";
 import {FileUpload} from "../Post/FileUploadComponent";
 
-export const StyledFilesLink = styled.a`
+export const StyledFilesLink = styled.a<{ $color?: string }>`
   font-size: 1rem;
   font-style: italic;
-  color: orchid;
+  color: ${props => props.$color ? props.$color : "orchid"};
   text-decoration: underline;
   margin: 10px 0;
+`;
+
+const StyledLinkContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  svg {
+    margin-left: 10px;
+    color: black;
+  }
+
+  svg:hover {
+    cursor: pointer;
+    scale: 1.1;
+    color: red;
+  }
 `;
 
 export default function EditPost() {
@@ -70,7 +87,7 @@ export default function EditPost() {
             }
         }
 
-    }, [type, title, description, shortDescription, hashtags])
+    }, [type, title, description, shortDescription, hashtags, fileUploaded])
 
 
     function submitUpdatePost(event: React.FormEvent<HTMLFormElement>) {
@@ -157,7 +174,11 @@ export default function EditPost() {
                                  onChange={(event) => setHashtag(event.target.value)}
                                  onKeyDown={onKeyDown}/>
                     {post && post.fileUrls.map((fileUrl) => (
-                        <StyledFilesLink>{fileUrl}</StyledFilesLink>
+                        <StyledLinkContainer>
+                            <StyledFilesLink $color={'#ffffff'}>{fileUrl.split("/").pop()}</StyledFilesLink>
+                            <XSVG onClick={() => deleteFileFromPost(fileUrl).then(() => window.location.reload())}
+                                  style={{width: "30px", height: "30px"}}/>
+                        </StyledLinkContainer>
                     ))}
                     <FileUpload onFileSelect={handleFileUpload}/>
 

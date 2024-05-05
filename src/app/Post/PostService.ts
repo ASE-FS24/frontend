@@ -239,8 +239,8 @@ export function uploadFileToPost(file: File, postId: string): Promise<string> {
         })
 }
 
-export function deleteFileFromPost({fileName} : {fileName: string}): Promise<void> {
-    return fetch(baseurl + "posts/deleteFile/" + fileName, {
+export function deleteFileFromPost(path: string): Promise<void> {
+    return fetch(baseurl + "posts/deleteFile/" + path, {
         method: 'DELETE'
     })
         .then(response => {
