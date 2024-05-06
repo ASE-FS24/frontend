@@ -174,7 +174,8 @@ const StyledSendMessageSVGContainer = styled.div<{ disabled: boolean }>`
 
 
 export function ChatPage() {
-    const {chatId} = useParams();
+    const { chatId } = useParams();
+    const [cId, setCId] = useState<string | undefined>(chatId);
     const loggedInUser = useAppSelector(selectActiveUser);
     const [chats, setChats] = useState<Chat[]>([]);
     const [activeChat, setActiveChat] = useState<Chat | null>(null);
@@ -183,20 +184,16 @@ export function ChatPage() {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [message, setMessage] = useState("");
 
-    useEffect(() => {
-        const fetchChats = async () => {
-            const fetchedChats = await getChatsOfUser(loggedInUser.username);
-            setChats(fetchedChats);
-            if (chatId !== undefined) {
-                const chat = fetchedChats.find(chat => chat.id === chatId);
-                if (chat) {
-                    setActiveChat(chat);
-                }
+    const fetchChats = async () => {
+        const fetchedChats = await getChatsOfUser(loggedInUser.username);
+        setChats(fetchedChats);
+        if (chatId !== undefined) {
+            const chat = fetchedChats.find(chat => chat.id === cId);
+            if (chat) {
+                setActiveChat(chat);
             }
         }
-
-        fetchChats().then();
-    }, [])
+    }
 
     function fetchChat() {
         if (activeChat) {
@@ -206,6 +203,17 @@ export function ChatPage() {
         }
     }
 
+    useEffect(() => {
+        setCId(chatId);
+        fetchChats().then();
+
+        const interval = setInterval(async () => {
+            fetchChats().then();
+        }, 5000);
+        return () => clearInterval(interval);
+
+    }, [])
+
     // fetch message every 2 seconds
     useEffect(() => {
         if (activeChat) {
@@ -214,7 +222,7 @@ export function ChatPage() {
             }, 2000);
             return () => clearInterval(interval);
         }
-    }, [activeChat]);
+    }, [activeChat, chatId]);
 
     useEffect(() => {
         if (isFirstLoad) {
@@ -265,6 +273,7 @@ export function ChatPage() {
                     {chats.length > 0 && chats.map(chat => (
                         <StyledChatHeader onClick={() => {
                             setActiveChat(chat);
+                            setCId(chat.id);
                             setIsFirstLoad(true);
                         }}
                                           $active={chat.id === activeChat?.id}
