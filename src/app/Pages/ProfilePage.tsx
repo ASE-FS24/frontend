@@ -1,6 +1,6 @@
 import {useAppDispatch, useAppSelector} from "../hooks";
 import styled from "styled-components";
-import {logOut, selectActiveUser} from "../User/LoggedInUserSlice";
+import {getLoggedInUserThunk, logOut, selectActiveUser} from "../User/LoggedInUserSlice";
 import UserComponent from "../User/UserComponent";
 import {signOut} from "../Util/auth";
 import {useNavigate} from "react-router-dom";
@@ -18,7 +18,6 @@ const StyledProfileContainer = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  max-height: calc(50vh - 84px);
 `;
 
 const ProfileHeading = styled.h2`
@@ -26,6 +25,12 @@ const ProfileHeading = styled.h2`
   margin-bottom: 20px;
   color: #fff;
 `;
+
+const PostHeading = styled.h2`
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #080808;
+    `;
 
 const SignOutButton = styled.button`
   position: absolute; /* Position relative to the container */
@@ -55,9 +60,11 @@ const StyledMyPostsContainer = styled.div`
   background: rgb(255, 255, 255, 0.5);
   text-align: center;
   max-height: calc(50vh - 20px);
+    padding-bottom: 20px;
 `;
 
 const StyledPostContainer = styled.div`
+    width: 90%;
   display: flex;
   justify-content: flex-start;
   flex-direction: column;
@@ -82,12 +89,17 @@ function ProfilePage() {
         };
 
         fetchPosts().then();
-    }, [])
+    }, [activeUser]);
+
+    useEffect(() => {
+        dispatch(getLoggedInUserThunk(activeUser.username));
+    }, [dispatch, activeUser.username]);
+
 
     const handleSignOut = () => {
-        signOut(); // Perform signout action
+        signOut();
         dispatch(logOut())
-        navigate("/login"); // Redirect to login page after signout
+        navigate("/login");
     };
 
     return (
@@ -95,11 +107,11 @@ function ProfilePage() {
             <Header/>
             <StyledProfileContainer>
                 <SignOutButton onClick={handleSignOut}>Sign out</SignOutButton>
-                <ProfileHeading>Welcome {activeUser && activeUser.username}</ProfileHeading>
+                <ProfileHeading>Welcome {activeUser?.username}</ProfileHeading>
                 {activeUser && <UserComponent user={activeUser}/>}
             </StyledProfileContainer>
             <StyledMyPostsContainer>
-                <ProfileHeading>My Posts</ProfileHeading>
+                <PostHeading>My Posts</PostHeading>
                 <StyledFilterButton selected={false} onClick={() => navigate("/post/create")}>New
                     Post</StyledFilterButton>
                 <StyledPostContainer>
