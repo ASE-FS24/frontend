@@ -153,7 +153,7 @@ export default function Login() {
                        value={password}
                        onChange={(event) => setPassword(event.target.value)}/>
                 <StyledButtonContainer>
-                    <StyledButton margin={"15px"} onClick={() => navigate("/register")}>Register</StyledButton>
+                    <StyledButton type="button" margin={"15px"} onClick={() => navigate("/register")}>Register</StyledButton>
                     <StyledButton disabled={disabled} margin={"15px"} type={"submit"}>Login</StyledButton>
                 </StyledButtonContainer>
                 {error && <StyledError>{error}</StyledError>}
