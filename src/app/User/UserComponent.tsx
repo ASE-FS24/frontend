@@ -146,7 +146,7 @@ const SaveButton = styled.button`
 export function UserComponent({user}: { user: User }) {
 
     const [editableField, setEditableField] = useState<string | null>(null);
-    let [editedUser, setEditedUser] = useState<User>({...user});
+    const [editedUser, setEditedUser] = useState<User>({...user});
     const [profilePic, setProfilePic] = useState<string | null>(null);
 
 
