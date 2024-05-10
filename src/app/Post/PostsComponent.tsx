@@ -207,7 +207,7 @@ export function PostsComponent() {
             </StyledToolbarContainer>
             <StyledPosts>
                 {posts && posts.map((post) => (
-                    <Post key={post.id} postId={post.id} edit={post.authorId === loggedInUser.username}/>
+                    <Post key={post.id} postId={post.id} edit={loggedInUser && post.authorId === loggedInUser.username}/>
                 ))}
             </StyledPosts>
         </StyledContentContainer>
