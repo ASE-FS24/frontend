@@ -134,20 +134,24 @@ function PostComponent({postId, edit}: { postId: string, edit?: boolean }) {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        async function fetchData() {
-            await dispatch(fetchPost(postId));
-            const postComments = await getComments(postId);
-            postComments.sort((a, b) => {
-                const d1 = stringToDate(a.createdAt);
-                const d2 = stringToDate(b.createdAt);
-                return d1.getTime() - d2.getTime();
-            });
-            setComments(postComments);
-        }
+    async function fetchData() {
+        await dispatch(fetchPost(postId));
+        const postComments = await getComments(postId);
+        postComments.sort((a, b) => {
+            const d1 = new Date(a.createdAt);
+            const d2 = new Date(b.createdAt);
+            return d1.getTime() - d2.getTime();
+        });
+        setComments(postComments);
+        setReloadComponent(false);
+    }
 
-        fetchData().then();
+    useEffect(() => {
+        if (reloadComponent) {
+            fetchData().then();
+        }
     }, [reloadComponent]);
+
 
     useEffect(() => {
         if (post) {
@@ -196,7 +200,7 @@ function PostComponent({postId, edit}: { postId: string, edit?: boolean }) {
                         <>
                             <StyledFilesTitle>Attachments</StyledFilesTitle>
                             {post.fileUrls.map((url) => (
-                                <StyledFilesLink onClick={() => window.open(url, "_blank")}>
+                                <StyledFilesLink key={url} onClick={() => window.open(url, "_blank")}>
                                     {url.split("/").pop()}
                                 </StyledFilesLink>
                             ))}

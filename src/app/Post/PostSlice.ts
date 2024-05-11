@@ -60,13 +60,6 @@ interface RootState {
 }
 
 // export const selectAllPosts = (state: RootState) => state.posts.entities;
-function compareCreationDate(post1: Post, post2: Post) {
-    const date1 = post1.edited ? post1.editedDateTime : post1.createdDateTime;
-    const date2 = post2.edited ? post2.editedDateTime : post2.createdDateTime;
-    const d1 = stringToDate(date1);
-    const d2 = stringToDate(date2);
-    return d2.getTime() - d1.getTime();
-}
 export const selectPostsById = (state: RootState, id: string): Post =>
     state.posts.entities.find((post: Post) => post.id === id);
 
@@ -74,7 +67,4 @@ export const selectPostsState = (state: RootState) => state.posts.status;
 
 const selectPostsEntities = (state: RootState) => state.posts.entities;
 
-export const selectAllPosts = createSelector(
-    [selectPostsEntities],
-    (postsEntities) => [...postsEntities].sort(compareCreationDate)
-);
+export const selectAllPosts = (state: RootState) => state.posts.entities;

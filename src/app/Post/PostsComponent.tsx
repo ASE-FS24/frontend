@@ -11,6 +11,7 @@ import {ReactComponent as LikeSVG} from "../../static/images/heart.svg";
 import {ReactComponent as SearchSVG} from "../../static/images/search.svg";
 import Post from "../Post/PostComponent";
 import {selectActiveUser} from "../User/LoggedInUserSlice";
+import {compareCreationDate} from "../Util/util";
 
 
 const StyledContentContainer = styled.div`
@@ -206,7 +207,7 @@ export function PostsComponent() {
                 </StyledToolRowContainer>
             </StyledToolbarContainer>
             <StyledPosts>
-                {posts && posts.map((post) => (
+                {posts && [...posts].sort(compareCreationDate).map((post) => (
                     <Post key={post.id} postId={post.id} edit={loggedInUser && post.authorId === loggedInUser.username}/>
                 ))}
             </StyledPosts>
