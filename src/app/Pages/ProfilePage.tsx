@@ -59,7 +59,7 @@ const StyledMyPostsContainer = styled.div`
   margin: 20px auto;
   background: rgb(255, 255, 255, 0.5);
   text-align: center;
-  max-height: calc(50vh - 20px);
+  max-height: calc(50vh - 60px);
   padding-bottom: 20px;
   overflow: auto;
 `;
