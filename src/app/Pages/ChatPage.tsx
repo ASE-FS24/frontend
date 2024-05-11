@@ -174,7 +174,7 @@ const StyledSendMessageSVGContainer = styled.div<{ disabled: boolean }>`
 
 
 export function ChatPage() {
-    const { chatId } = useParams();
+    const {chatId} = useParams();
     const [cId, setCId] = useState<string | undefined>(chatId);
     const loggedInUser = useAppSelector(selectActiveUser);
     const [chats, setChats] = useState<Chat[]>([]);
@@ -184,85 +184,77 @@ export function ChatPage() {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [message, setMessage] = useState("");
 
+    // Fetch chats and set active chat if chatId is provided
     const fetchChats = async () => {
         const fetchedChats = await getChatsOfUser(loggedInUser.username);
         setChats(fetchedChats);
-        if (chatId !== undefined) {
-            const chat = fetchedChats.find(chat => chat.id === cId);
+
+        if (chatId) {
+            const chat = fetchedChats.find(chat => chat.id === chatId);
             if (chat) {
                 setActiveChat(chat);
             }
         }
-    }
+    };
 
-    function fetchChat() {
+// Fetch chat of active participants
+    const fetchChat = async () => {
         if (activeChat) {
-            const participant1 = activeChat.participant1 === loggedInUser.username ? activeChat.participant1 : activeChat.participant2
-            const participant2 = activeChat.participant1 === loggedInUser.username ? activeChat.participant2 : activeChat.participant1
-            getChatOfParticipants(participant1, participant2).then(chat => setActiveChat(chat));
+            const participant1 = activeChat.participant1 === loggedInUser.username ? activeChat.participant1 : activeChat.participant2;
+            const participant2 = activeChat.participant1 === loggedInUser.username ? activeChat.participant2 : activeChat.participant1;
+            const chat = await getChatOfParticipants(participant1, participant2);
+            setActiveChat(chat);
         }
-    }
+    };
 
+// Fetch chats every 5 seconds
     useEffect(() => {
         setCId(chatId);
-        fetchChats().then();
+        fetchChats();
 
-        const interval = setInterval(async () => {
-            fetchChats().then();
-        }, 5000);
+        const interval = setInterval(fetchChats, 5000);
         return () => clearInterval(interval);
+    }, []);
 
-    }, [])
-
-    // fetch message every 2 seconds
+// Fetch chat every 2 seconds if activeChat is present
     useEffect(() => {
         if (activeChat) {
-            const interval = setInterval(async () => {
-                fetchChat();
-            }, 2000);
+            const interval = setInterval(fetchChat, 2000);
             return () => clearInterval(interval);
         }
     }, [activeChat, chatId]);
 
+// Scroll and focus when activeChat changes or on first load
     useEffect(() => {
-        if (isFirstLoad) {
-            scrollAndFocus();
-            setIsFirstLoad(false);
-            return;
-        }
-    }, [activeChat])
-
-    function scrollAndFocus() {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({behavior: "smooth"});
         }
         if (inputRef.current) {
             inputRef.current.focus();
         }
+    }, [activeChat, isFirstLoad]);
 
-    }
-
-    function sendNewMessage() {
+// Send new message
+    const sendNewMessage = async () => {
         if (message !== "" && activeChat) {
             const newMessage: MessageType = {
                 content: message,
                 sender: loggedInUser.username,
                 receiver: activeChat.participant1 === loggedInUser.username ? activeChat.participant2 : activeChat.participant1
-            }
-            sendMessage(newMessage).then(() => {
-                setMessage("");
-                setIsFirstLoad(true);
-                fetchChat();
-            });
+            };
+            await sendMessage(newMessage);
+            setMessage("");
+            fetchChat();
         }
-    }
+    };
 
+// Handle key down event
     const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" && message !== "") {
             e.preventDefault();
             sendNewMessage();
         }
-    }
+    };
 
     return (
         <>
