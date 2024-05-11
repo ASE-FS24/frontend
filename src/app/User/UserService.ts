@@ -180,7 +180,6 @@ export async function getProfilePic(userId: string, endpoint: string = "users"):
         const response = await fetch(baseurl + endpoint + `/${userId}/profilePicture`, {
             method: 'GET',
         });
-        console.log(response)
 
         if (!response.ok) {
             // If the response is not successful, throw an error

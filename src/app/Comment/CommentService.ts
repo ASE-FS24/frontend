@@ -64,12 +64,6 @@ export function getComments(postId: string): Promise<Comment[]> {
         })
         .catch(error => {
             console.log(error);
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    const filteredComments = mockComments.filter((c) => c.postId === postId);
-                    resolve(filteredComments);
-                }, 1000); // Simulate a 1 second delay
-            });
         })
 }
 

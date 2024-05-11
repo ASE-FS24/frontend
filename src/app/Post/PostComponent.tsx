@@ -137,13 +137,15 @@ function PostComponent({postId, edit}: { postId: string, edit?: boolean }) {
     async function fetchData() {
         await dispatch(fetchPost(postId));
         const postComments = await getComments(postId);
-        postComments.sort((a, b) => {
-            const d1 = new Date(a.createdAt);
-            const d2 = new Date(b.createdAt);
-            return d1.getTime() - d2.getTime();
-        });
-        setComments(postComments);
-        setReloadComponent(false);
+        if (postComments !== undefined) {
+            postComments.sort((a, b) => {
+                const d1 = new Date(a.createdAt);
+                const d2 = new Date(b.createdAt);
+                return d1.getTime() - d2.getTime();
+            });
+            setComments(postComments);
+            setReloadComponent(false);
+        }
     }
 
     useEffect(() => {

@@ -207,7 +207,6 @@ export function UserComponent({user}: { user: User }) {
         const fetchProfilePic = async () => {
             try {
                 const picUrl = await getProfilePic(user.id);
-                console.log(picUrl)
                 if (picUrl === null) {
                     return;
                 }

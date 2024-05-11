@@ -8,6 +8,7 @@ interface IPostState {
     entities: any[];
     status: string;
 }
+
 const initialState: IPostState = {
     entities: [],
     status: 'idle'
@@ -45,9 +46,11 @@ export const postsSlice = createSlice({
                 state.entities = [...state.entities, payload];
             })
             .addCase(fetchPost.fulfilled, (state, {payload}) => {
-                const index = state.entities.findIndex((post) => post.id === payload.id);
-                if (index !== -1) {
-                    state.entities[index] = payload;
+                if (payload !== undefined) {
+                    const index = state.entities.findIndex((post) => post.id === payload.id);
+                    if (index !== -1) {
+                        state.entities[index] = payload;
+                    }
                 }
             })
     }

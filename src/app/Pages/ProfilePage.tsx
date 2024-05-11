@@ -60,7 +60,8 @@ const StyledMyPostsContainer = styled.div`
   background: rgb(255, 255, 255, 0.5);
   text-align: center;
   max-height: calc(50vh - 20px);
-    padding-bottom: 20px;
+  padding-bottom: 20px;
+  overflow: auto;
 `;
 
 const StyledPostContainer = styled.div`
@@ -116,7 +117,7 @@ function ProfilePage() {
                     Post</StyledFilterButton>
                 <StyledPostContainer>
                     {myPosts && myPosts.length > 0 ? myPosts.map((post) => (
-                        <Post key={post.id} postId={post.id}  edit={post.authorId === activeUser.username}/>
+                        post ? <Post key={post.id} postId={post.id}  edit={post.authorId === activeUser.username}/> : null
                     )) : <div>No posts yet, create one!</div>}
                 </StyledPostContainer>
             </StyledMyPostsContainer>
