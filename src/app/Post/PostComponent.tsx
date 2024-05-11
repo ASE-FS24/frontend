@@ -127,7 +127,7 @@ function PostComponent({postId, edit}: { postId: string, edit?: boolean }) {
     const activeUser = useAppSelector(selectActiveUser);
     const post = useAppSelector(state => selectPostsById(state, postId));
     const [comments, setComments] = useState<Comment[]>([]);
-    const postDate = dateFormatter(post.edited ? post.editedDateTime : post.createdDateTime);
+    const [postDate, setPostDate] = useState<string>();
     const [showComments, setShowComments] = useState(false);
     const [commentContent, setCommentContent] = useState("");
     const [reloadComponent, setReloadComponent] = useState(true);
@@ -135,7 +135,8 @@ function PostComponent({postId, edit}: { postId: string, edit?: boolean }) {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        async function fetchComments(postId: string) {
+        async function fetchData() {
+            await dispatch(fetchPost(postId));
             const postComments = await getComments(postId);
             postComments.sort((a, b) => {
                 const d1 = stringToDate(a.createdAt);
@@ -145,13 +146,14 @@ function PostComponent({postId, edit}: { postId: string, edit?: boolean }) {
             setComments(postComments);
         }
 
-        if (reloadComponent) {
-            dispatch(fetchPost(post.id));
-            fetchComments(post.id).then();
-            setReloadComponent(false)
-        }
+        fetchData().then();
+    }, [reloadComponent]);
 
-    }, [post.id, reloadComponent]);
+    useEffect(() => {
+        if (post) {
+            setPostDate(dateFormatter(post.edited ? post.editedDateTime : post.createdDateTime));
+        }
+    }, [post])
 
     const handleCommentFormSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -177,7 +179,7 @@ function PostComponent({postId, edit}: { postId: string, edit?: boolean }) {
 
     return (
         <>
-            <StyledPost>
+            {post && <StyledPost>
                 <StyledPostContent>
                     <StyledPostHeader>
                         <StyledPostType color={post.type === "POST" ? "#00aaff" : "#ff0000"}>
@@ -194,7 +196,7 @@ function PostComponent({postId, edit}: { postId: string, edit?: boolean }) {
                         <>
                             <StyledFilesTitle>Attachments</StyledFilesTitle>
                             {post.fileUrls.map((url) => (
-                                <StyledFilesLink>
+                                <StyledFilesLink onClick={() => window.open(url, "_blank")}>
                                     {url.split("/").pop()}
                                 </StyledFilesLink>
                             ))}
@@ -217,8 +219,8 @@ function PostComponent({postId, edit}: { postId: string, edit?: boolean }) {
                     <StyledLikes>{post.likeNumber}</StyledLikes>
                 </StyledInteractionsContainer>
 
-            </StyledPost>
-            {showComments &&
+            </StyledPost>}
+            {post && showComments &&
                 <StyledCommentsContainer>
                     {comments.length > 0 ? comments.map((comment) => (
                         <CommentComponent key={comment.id} comment={comment} setReloadComponent={setReloadComponent}/>

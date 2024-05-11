@@ -115,7 +115,7 @@ function ProfilePage() {
                 <StyledFilterButton selected={false} onClick={() => navigate("/post/create")}>New
                     Post</StyledFilterButton>
                 <StyledPostContainer>
-                    {myPosts.length > 0 ? myPosts.map((post) => (
+                    {myPosts && myPosts.length > 0 ? myPosts.map((post) => (
                         <Post key={post.id} postId={post.id}  edit={post.authorId === activeUser.username}/>
                     )) : <div>No posts yet, create one!</div>}
                 </StyledPostContainer>

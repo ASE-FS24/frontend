@@ -19,3 +19,10 @@ export function stringToDate(parts) {
     const second = parts[5] || 0;
     return new Date(year, month, day, hour, minute, second);
 }
+
+export function removeSecondSlashes(url) {
+    return url.replace(/(http(s)?:\/\/)|\/\//g, function (match) {
+        if (match === 'http://' || match === 'https://') return match;
+        else return '/';
+    });
+}

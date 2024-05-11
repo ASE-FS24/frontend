@@ -180,6 +180,7 @@ export async function getProfilePic(userId: string, endpoint: string = "users"):
         const response = await fetch(baseurl + endpoint + `/${userId}/profilePicture`, {
             method: 'GET',
         });
+        console.log(response)
 
         if (!response.ok) {
             // If the response is not successful, throw an error
@@ -209,6 +210,9 @@ export async function updateProfilePic(userId: string, profilePicture: File, end
 
         const response = await fetch(baseurl + endpoint + `/${userId}/profilePicture`, {
             method: 'POST',
+            headers: {
+                'Accept': '*/*'
+            },
             body: formData
         });
 
@@ -304,6 +308,30 @@ export async function getNetwork(): Promise<UserSummary[][]> {
 export async function getFollows(userId: string): Promise<UserSummary[]> {
     try {
         const response = await fetch(baseurl + `users/${userId}/follows`, {
+            method: 'GET'
+        });
+
+        if (!response.ok) {
+            // If the response is not successful, throw an error
+            throw new Error(`Failed to retrieve follows: ${response.statusText}`);
+        }
+
+        // Return the response text
+        return await response.json();
+    } catch (error) {
+        // Handle errors gracefully
+        console.error(`Error retrieving follows: ${error}`);
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(followerMockData);
+            }, 1000)
+        });
+    }
+}
+
+export async function getFollowers(userId: string): Promise<UserSummary[]> {
+    try {
+        const response = await fetch(baseurl + `users/${userId}/followers`, {
             method: 'GET'
         });
 

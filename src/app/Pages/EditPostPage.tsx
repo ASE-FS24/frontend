@@ -20,6 +20,10 @@ export const StyledFilesLink = styled.a<{ $color?: string }>`
   color: ${props => props.$color ? props.$color : "orchid"};
   text-decoration: underline;
   margin: 10px 0;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const StyledLinkContainer = styled.div`

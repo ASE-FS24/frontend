@@ -4,6 +4,7 @@ import {ReactComponent as ProfileSVG} from "../../static/images/profile.svg";
 import {ReactComponent as EditIcon} from "../../static/images/edit_pen.svg";
 import React, {useState, useRef, useEffect} from 'react';
 import {updateUser, updateProfilePic, getProfilePic, getUser} from "./UserService";
+import {removeSecondSlashes} from "../Util/util";
 
 const ProfilePicImage = styled.img`
   width: 120px;
@@ -12,16 +13,16 @@ const ProfilePicImage = styled.img`
   position: absolute;
   top: 0;
   left: 0;
-    opacity: 1;
+  opacity: 1;
 `;
 
 const UploadOverlay = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-    width: 120px;
-    height: 120px;
-    box-sizing: border-box;
+  width: 120px;
+  height: 120px;
+  box-sizing: border-box;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
@@ -32,23 +33,23 @@ const UploadOverlay = styled.div`
 
 const UploadText = styled.p`
   color: #fff;
-  font-size: 1 rem;
+  font-size: 1rem;
 `;
 
 const ProfileIconContainer = styled.div`
-    width: 147px; 
-    height: 120px;
+  width: 147px;
+  height: 120px;
 
-    margin-right: 40px;
+  margin-right: 40px;
   position: relative;
   cursor: pointer;
   background-color: #ffffff20;
-    box-sizing: border-box; 
-    display: flex;
-    justify-content: center; 
-    align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-    
+
   &:hover > ${ProfilePicImage} {
     opacity: 0.8;
   }
@@ -69,13 +70,13 @@ const InputFile = styled.input`
 `;
 
 const StyledUserContainer = styled.div`
-    width: 45%;
-    display: flex;
-    align-items: flex-start;
-    background-color: #2d2d2d;
-    color: #fff;
-    padding: 2.5%; 
-    box-shadow: 0 0 10 0 rgba(0, 0, 0, 0.5);
+  width: 45%;
+  display: flex;
+  align-items: flex-start;
+  background-color: #2d2d2d;
+  color: #fff;
+  padding: 2.5%;
+  box-shadow: 0 0 10 0 rgba(0, 0, 0, 0.5);
 `;
 
 const UserInfoRow = styled.div`
@@ -102,7 +103,7 @@ const Separator = styled.div`
 `;
 
 const UserInfoText = styled.span`
-  
+
 `;
 
 const UserInfoWrapper = styled.div`
@@ -168,7 +169,8 @@ export function UserComponent({user}: { user: User }) {
                     return;
                 }
                 // Append a timestamp to the URL so browser fetches the new image
-                setProfilePic(`${picUrl}?timestamp=${new Date().getTime()}`);
+                const fixedPicUrl = removeSecondSlashes(picUrl);
+                setProfilePic(`${fixedPicUrl}?timestamp=${new Date().getTime()}`);
             } else {
                 console.log("Failed to upload profile picture");
             }
@@ -179,7 +181,7 @@ export function UserComponent({user}: { user: User }) {
         fileInputRef.current?.click(); // Trigger file input
     };
 
-   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = event.target;
         setEditedUser((prevUser) => ({
             ...prevUser,
@@ -205,15 +207,17 @@ export function UserComponent({user}: { user: User }) {
         const fetchProfilePic = async () => {
             try {
                 const picUrl = await getProfilePic(user.id);
+                console.log(picUrl)
                 if (picUrl === null) {
                     return;
                 }
-                setProfilePic(picUrl);
+                const fixedPicUrl = removeSecondSlashes(picUrl);
+                setProfilePic(fixedPicUrl);
             } catch (error) {
                 console.error('Error fetching profile picture:', error);
             }
         };
-        fetchProfilePic();
+        fetchProfilePic().then();
     }, []);
 
     return (

@@ -1,16 +1,31 @@
 {
   "files": {
-    "main.css": "/static/css/main.f855e6bc.css",
-    "main.js": "/static/js/main.81f00901.js",
-    "static/js/453.7b6a6bf9.chunk.js": "/static/js/453.7b6a6bf9.chunk.js",
-    "static/media/logo.svg": "/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "main.css": "/static/css/main.e6c13ad2.css",
+    "main.js": "/static/js/main.68cf3407.js",
+    "static/media/network.svg": "/static/media/network.d4035cf83f90d3f5389cf2226fea244d.svg",
+    "static/media/report.svg": "/static/media/report.4edd0bbdc115820154f84ee0e58ff67f.svg",
+    "static/media/Message.svg": "/static/media/Message.378d30659168da29fb3ce8097b54a46a.svg",
+    "static/media/edit_pen.svg": "/static/media/edit_pen.bfc8580118a7c1399bdaf41965471563.svg",
+    "static/media/fire.svg": "/static/media/fire.64c82e3a94df433f7402041bbce1fd79.svg",
+    "static/media/user.svg": "/static/media/user.9e25d6151d316fa4a9b190fcf6e06ba8.svg",
+    "static/media/project.svg": "/static/media/project.1076f58ae9041874f410e5afbcdc3d64.svg",
+    "static/media/camera.svg": "/static/media/camera.2dec2b09cac4736ac4824a3c334166ca.svg",
     "index.html": "/index.html",
-    "main.f855e6bc.css.map": "/static/css/main.f855e6bc.css.map",
-    "main.81f00901.js.map": "/static/js/main.81f00901.js.map",
-    "453.7b6a6bf9.chunk.js.map": "/static/js/453.7b6a6bf9.chunk.js.map"
+    "static/media/sort-down.svg": "/static/media/sort-down.dbeb09d70e26676d0b7833c1647c746c.svg",
+    "static/media/sort-up.svg": "/static/media/sort-up.bde04bffe39dd76503426a10d14c896f.svg",
+    "static/media/heart.svg": "/static/media/heart.20f0692085213fef1c2d494438f06ba9.svg",
+    "static/media/funnel.svg": "/static/media/funnel.6e92ee28fa8a0d24987c0e52a85b830b.svg",
+    "static/media/person-plus-fill.svg": "/static/media/person-plus-fill.470ead2e15f513057e08796a82ccd752.svg",
+    "static/media/profile.svg": "/static/media/profile.b560ff8e56cdd043c48323aef4416190.svg",
+    "static/media/x.svg": "/static/media/x.a2e174932e537235e4ee281b3fd26f0d.svg",
+    "static/media/person-dash-fill.svg": "/static/media/person-dash-fill.da65caa03039a74240667fda2b9735cb.svg",
+    "static/media/search.svg": "/static/media/search.582e6fdae2c59f4e7b41bc2c538877cd.svg",
+    "static/media/funnel-fill.svg": "/static/media/funnel-fill.0a841f090d51c3060127c2daff4a494c.svg",
+    "main.e6c13ad2.css.map": "/static/css/main.e6c13ad2.css.map",
+    "main.68cf3407.js.map": "/static/js/main.68cf3407.js.map"
   },
   "entrypoints": [
-    "static/css/main.f855e6bc.css",
-    "static/js/main.81f00901.js"
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.68cf3407.js"
   ]
 }
