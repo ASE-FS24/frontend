@@ -15,10 +15,10 @@ export const StyledLoginContainer = styled.div`
   flex-direction: column;
 `;
 
-export const StyledLogoContainer = styled.div<{margin?: string}>`
+export const StyledLogoContainer = styled.div<{ margin?: string }>`
   margin-top: ${props => props.margin || '-150px'};
   position: relative;
-  
+
   &:hover {
     cursor: pointer;
   }
@@ -42,17 +42,20 @@ export const StyledForm = styled.form`
   margin: 15px 0;
 `;
 
-export const StyledInput = styled.input`
+export const StyledInput = styled.input<{ $valid?: boolean }>`
   font-size: 1.5rem;
   padding: 5px;
   border-radius: 5px;
   margin: 15px;
-  box-shadow: -5px -5px 10px 2px rgba(0,0,0,.8);
+  box-shadow: -5px -5px 10px 2px rgba(0, 0, 0, .8);
+  ${props => props.$valid === false && css`
+    border: 3px solid #ff0000;`
+  }
 `;
 
 const StyledButtonContainer = styled.div`
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 `;
 
 export const StyledButton = styled.button<{ margin?: string, disabled?: boolean }>`
@@ -64,19 +67,19 @@ export const StyledButton = styled.button<{ margin?: string, disabled?: boolean 
   height: 40px;
   font-size: 1.5rem;
   font-weight: bold;
-  box-shadow: -5px -5px 10px 2px rgba(0,0,0,.8);
+  box-shadow: -5px -5px 10px 2px rgba(0, 0, 0, .8);
   margin: ${props => props => props.margin || '15px auto'};
+
   ${props => props.disabled && css`
-     opacity: 0.5;`
-}
-  
+    opacity: 0.5;`
+  }
   &:hover {
     ${props => !props.disabled && css`
       box-shadow: -2px -2px 5px 2px rgba(0, 0, 0, .8);
       cursor: pointer;
       scale: 0.95;`
     }
-    
+
   }
 `;
 
@@ -99,8 +102,8 @@ const StyledForgotPassword = styled.div`
   font-size: 1rem;
   color: #000000;
   text-decoration: underline;
-  
-  &:hover{
+
+  &:hover {
     cursor: pointer;
   }
 `;
@@ -131,8 +134,8 @@ export default function Login() {
     }
 
     const handleForgotPassword = () => {
-      // Navigate to the forgot password page
-      navigate("/forgot-password");
+        // Navigate to the forgot password page
+        navigate("/forgot-password");
     }
 
     return (
@@ -143,22 +146,23 @@ export default function Login() {
             </StyledLogoContainer>
             <StyledForm onSubmit={onSubmit}>
                 <StyledInput id="username"
-                       type="text"
-                       placeholder="Username"
-                       value={username}
-                       onChange={(event) => setUsername(event.target.value)}/>
+                             type="text"
+                             placeholder="Username"
+                             value={username}
+                             onChange={(event) => setUsername(event.target.value)}/>
                 <StyledInput id="password"
-                       type="password"
-                       placeholder="Password"
-                       value={password}
-                       onChange={(event) => setPassword(event.target.value)}/>
+                             type="password"
+                             placeholder="Password"
+                             value={password}
+                             onChange={(event) => setPassword(event.target.value)}/>
                 <StyledButtonContainer>
-                    <StyledButton type="button" margin={"15px"} onClick={() => navigate("/register")}>Register</StyledButton>
+                    <StyledButton type="button" margin={"15px"}
+                                  onClick={() => navigate("/register")}>Register</StyledButton>
                     <StyledButton disabled={disabled} margin={"15px"} type={"submit"}>Login</StyledButton>
                 </StyledButtonContainer>
                 {error && <StyledError>{error}</StyledError>}
                 <StyledForgotPassword
-                onClick={handleForgotPassword}>Forgot your password?</StyledForgotPassword>
+                    onClick={handleForgotPassword}>Forgot your password?</StyledForgotPassword>
             </StyledForm>
         </StyledLoginContainer>
     )

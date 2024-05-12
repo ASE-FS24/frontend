@@ -101,7 +101,8 @@ export default function Register() {
                     username={username} setUsername={setUsername}
                     email={email} setEmail={setEmail}
                     password={password} setPassword={setPassword}
-                    setPage={setPage} disabled={disabled1}/>}
+                    setPage={setPage} disabled={disabled1}
+                    setError={setError}/>}
                 {page === 2 && <NexusNetSubPage firstName={firstName} setFirstName={setFirstName}
                                                 lastName={lastName} setLastName={setLastName}
                                                 motto={motto} setMotto={setMotto}
