@@ -1,8 +1,16 @@
-# NexusNet
+# frontend
 
-NexusNet is a React application developed with TypeScript and JavaScript. It provides a platform for users to interact and share posts.
+NexusNet is a React application developed with TypeScript and JavaScript. It provides a platform for users to interact and share posts. **To run the entire application refer to the [fullapp repo](https://github.com/ASE-FS24/fullapp).**
 
-## Getting Started
+## Running the app with Docker
+
+1. Build the image
+   `docker build . -t nexusnet-frontend:latest`
+2. Run the image
+   `docker run -p 3000:3000 nexusnet-frontend:latest`
+3. The app will be served on [localhost:3000](http://localhost:3000)
+
+## Running without Docker
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
