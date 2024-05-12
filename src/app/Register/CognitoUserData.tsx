@@ -1,5 +1,6 @@
 import {SetStateAction, useState} from "react";
-import {StyledButton, StyledInput} from "../Pages/LoginPage";
+import {StyledButton, StyledInput, StyledError} from "../Pages/LoginPage";
+import styled from "styled-components";
 
 interface AppProps {
     username: string;
@@ -13,22 +14,40 @@ interface AppProps {
     setError: React.Dispatch<SetStateAction<string>>;
 }
 
+const StyledPasswordMessage= styled.p`
+  color: #000000;
+  font-size: 1rem;
+  font-style: italic;
+  width: fit-content;
+  margin: 0 auto;
+  max-width: 300px;
+  background-color: #ffffff60;
+`;
+
 export function CognitoSubPage(props: AppProps) {
     const [validInput, setValidInput] = useState<boolean>(true);
+    const [passwordMessage, setPasswordMessage] = useState<string>("");
 
     function validatePassword(password: string): boolean {
         const regex = /^[\S]+.*[\S]+$/;
-        return regex.test(password) && password.length >= 8;
+        const hasUpperCase = /(?=.*[A-Z])/.test(password);
+        const hasLowerCase = /(?=.*[a-z])/.test(password);
+        const hasNumber = /(?=.*\d)/.test(password);
+        const hasSymbol = /(?=.*[@$!%*#?&])/.test(password);
+        return regex.test(password) && password.length >= 8 && hasUpperCase && hasLowerCase && hasNumber && hasSymbol;
     }
 
     function settingPassword(newPassword: string): void {
         if (!validatePassword(newPassword)) {
             setValidInput(false);
+            setPasswordMessage("Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one digit, and one special character.");
         } else {
             setValidInput(true);
+            setPasswordMessage("");
         }
         if (newPassword === "") {
             setValidInput(true);
+            setPasswordMessage("");
         }
         props.setPassword(newPassword);
     }
@@ -51,6 +70,7 @@ export function CognitoSubPage(props: AppProps) {
                          value={props.password}
                          $valid={validInput}
                          onChange={(event) => settingPassword(event.target.value)}/>
+            <StyledPasswordMessage>{passwordMessage}</StyledPasswordMessage>
             <StyledButton disabled={isButtonDisabled} onClick={() => props.setPage(2)}>Next</StyledButton>
         </>
     )
