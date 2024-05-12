@@ -65,12 +65,12 @@ function Header() {
         <StyledHeaderContainer>
             <StyledLogo src="/logo.png" onClick={() => navigate("/")}/>
             <StyledIconsContainer>
-                <StyledIconContainer title="Connections" onClick={() => navigate("/network")}>
+                {activeUser && <StyledIconContainer title="Connections" onClick={() => navigate("/network")}>
                     <NetworkSVG style={{color: "#ffffff", width: "45px", height: "45px"}}/>
-                </StyledIconContainer>
-                <StyledIconContainer title="My chats" onClick={() => navigate("/chat")}>
+                </StyledIconContainer>}
+                {activeUser && <StyledIconContainer title="My chats" onClick={() => navigate("/chat")}>
                     <MessageSVG style={{color: "#ffffff", width: "45px", height: "45px"}}/>
-                </StyledIconContainer>
+                </StyledIconContainer>}
                 {activeUser !== null ?
                     <StyledIconContainer title="My Profile" onClick={() => navigate("/profile")}>
                         <UserSVG style={{color: "#ffffff", width: "45px", height: "45px"}}/>
