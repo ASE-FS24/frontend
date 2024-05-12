@@ -33,7 +33,7 @@ export function CognitoSubPage(props: AppProps) {
         const hasUpperCase = /(?=.*[A-Z])/.test(password);
         const hasLowerCase = /(?=.*[a-z])/.test(password);
         const hasNumber = /(?=.*\d)/.test(password);
-        const hasSymbol = /(?=.*[@$!%*#?&])/.test(password);
+        const hasSymbol = /(?=.*[@$!%*#?&.,])/.test(password);
         return regex.test(password) && password.length >= 8 && hasUpperCase && hasLowerCase && hasNumber && hasSymbol;
     }
 
