@@ -47,8 +47,35 @@ To create a production build, use:
 npm run build
 ```
 
-## Built With
+## Technologies used
+The frontend of the application is built with React, a JavaScript library for building user interfaces. React's 
+component-based architecture makes it easy to create complex UIs from small, isolated and reusable pieces of code. 
+It also optimizes rendering to the DOM, making applications faster and more efficient.  
 
-- [React](https://reactjs.org/)
-- [TypeScript](https://www.typescriptlang.org/)
-- [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+### Package manager
+The project uses npm (Node Package Manager) as a package manager, which handles the management of dependencies for the 
+application. It allows developers to install, update, and use JavaScript packages in their projects.
+
+### Styling
+The application's styling is done using styled-components, a CSS-in-JS library that allows developers to write actual 
+CSS code to style their components. It also removes the mapping between components and styles, which means that when 
+you're defining your styles, you're actually creating a normal React component.  
+
+### Routing
+The project also uses React Router for routing, which is a standard library for routing in React. It enables the 
+navigation among views of various components in a React Application, allowing the developer to define multiple routes 
+for the user.  
+
+### State management
+The application state management is handled by Redux, a predictable state container for JavaScript apps. It helps you 
+write applications that behave consistently, run in different environments (client, server, and native), and are easy 
+to test.  
+
+## Source Code
+The source code for the frontend of the application can be found in the [src](./src) directory. The main components
+are located in the [components](./src/app/Pages) directory, while the Redux store configuration is in the
+[store](./src/app/store.ts) file. The [App.tsx](./src/App.tsx) file is the entry point for the application. The 
+[Pages](./src/app/Pages) directory contains the main components of the application, such as the Home, Profile, and
+Chat components. The different folders like `chat`, `Comment`, `Post`, and `User` contain the components, services and 
+redux slices related to the respective entities. The [static](./src/static/images) directory contains the images used in
+the application.
