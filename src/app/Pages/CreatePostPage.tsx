@@ -134,8 +134,8 @@ export default function CreatePost() {
                                     placeholder="Description of your post"
                                     onChange={(event) => setDescription(event.target.value)}/>
                     <StyledHashtagsContainer>
-                        {hashtags.map((h) => (
-                            <StyledHashtag key={hashtag}>#{h}
+                        {hashtags.map((h, index) => (
+                            <StyledHashtag key={index}>#{h}
                                 <XSVG onClick={() => removeHashtag(h)} style={{color: "#ffffff", width: "20px", height: "20px"}}/>
                             </StyledHashtag>
                         ))}

@@ -63,6 +63,15 @@ const StyledPostTitle = styled.div`
   border-bottom: 1px solid white;
 `;
 
+const StyledPostShortDescription = styled.div`
+  font-size: 1.5rem;
+  text-align: left;
+  margin: 0 5px;
+  padding: 10px 0;
+  font-style: italic;
+  color: #00aaff;
+`;
+
 const StyledPostDescription = styled.div`
   font-size: 1.5rem;
   text-align: left;
@@ -197,6 +206,7 @@ function PostComponent({postId, edit}: { postId: string, edit?: boolean }) {
                         <StyledPostAuthor>{post.authorId} - {postDate}</StyledPostAuthor>
                     </StyledPostHeader>
                     <StyledPostTitle>{post.title}</StyledPostTitle>
+                    <StyledPostShortDescription>{post.shortDescription}</StyledPostShortDescription>
                     <StyledPostDescription>{post.description}</StyledPostDescription>
                     {post.fileUrls.length > 0 ?
                         <>
