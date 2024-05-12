@@ -320,11 +320,7 @@ export async function getFollows(userId: string): Promise<UserSummary[]> {
     } catch (error) {
         // Handle errors gracefully
         console.error(`Error retrieving follows: ${error}`);
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(followerMockData);
-            }, 1000)
-        });
+        return []
     }
 }
 
@@ -344,11 +340,8 @@ export async function getFollowers(userId: string): Promise<UserSummary[]> {
     } catch (error) {
         // Handle errors gracefully
         console.error(`Error retrieving followers: ${error}`);
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(followerMockData);
-            }, 1000)
-        });
+        return []
+
     }
 }
 

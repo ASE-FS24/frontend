@@ -14,7 +14,7 @@ interface AppProps {
     setError: React.Dispatch<SetStateAction<string>>;
 }
 
-const StyledPasswordMessage= styled.p`
+const StyledPasswordMessage = styled.p`
   color: #000000;
   font-size: 1rem;
   font-style: italic;
@@ -33,7 +33,7 @@ export function CognitoSubPage(props: AppProps) {
         const hasUpperCase = /(?=.*[A-Z])/.test(password);
         const hasLowerCase = /(?=.*[a-z])/.test(password);
         const hasNumber = /(?=.*\d)/.test(password);
-        const hasSymbol = /(?=.*[@$!%*#?&.,])/.test(password);
+        const hasSymbol = /(?=.*[!@#$%^&*()_+\-=\[\]{}|'])/.test(password);
         return regex.test(password) && password.length >= 8 && hasUpperCase && hasLowerCase && hasNumber && hasSymbol;
     }
 
