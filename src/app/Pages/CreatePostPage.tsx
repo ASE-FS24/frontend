@@ -1,19 +1,17 @@
 import styled from "styled-components";
-import {StyledButton, StyledError, StyledForm, StyledInput, StyledLoginContainer} from "./LoginPage";
+import {StyledButton, StyledForm, StyledInput} from "./LoginPage";
 import Header from "./Header";
-import {useEffect, useId, useState} from "react";
+import {useEffect, useState} from "react";
 import {useAppDispatch, useAppSelector} from "../hooks";
-import {selectActiveUser, setLoggedInUser} from "../User/LoggedInUserSlice";
-import {NewPost, Post} from "../Post/PostType";
+import {selectActiveUser} from "../User/LoggedInUserSlice";
+import {NewPost} from "../Post/PostType";
 import {createPost} from "../Post/PostSlice";
 import {useNavigate} from "react-router-dom";
 import {StyledSelect, StyledTextArea} from "../Register/NexusNetUserData";
 import {ReactComponent as XSVG} from "../../static/images/x.svg";
 
 
-
-
-const StyledCreatePostContainer = styled.div`
+export const StyledCreatePostContainer = styled.div`
   display: flex;
   margin: 100px 0 0 0;
   justify-content: center;
@@ -21,13 +19,13 @@ const StyledCreatePostContainer = styled.div`
   flex-direction: column;
 `;
 
-const StyledPageTitle = styled.div`
+export const StyledPageTitle = styled.div`
   font-size: 2.5rem;
   font-weight: bold;
   color: #ffffff;
 `;
 
-const StyledHashtagsContainer = styled.div`
+export const StyledHashtagsContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -35,7 +33,7 @@ const StyledHashtagsContainer = styled.div`
   padding: 0 15px;
 `;
 
-const StyledHashtag = styled.div`
+export const StyledHashtag = styled.div`
   background-color: #282c34;
   font-size: 0.75rem;
   width: fit-content;

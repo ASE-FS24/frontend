@@ -1,4 +1,4 @@
-import {FollowUser, User, UserSummary} from "./UserType";
+import {User, UserSummary} from "./UserType";
 
 const baseurl = process.env.REACT_APP_USER_BASEURL;
 
@@ -152,7 +152,7 @@ export function getUserByUsername(username: string): Promise<User> {
         });
 }
 
-export async function updateUser(user: User, endpoint: string = "users"): Promise<User | null> {
+export async function updateUser(user: User, endpoint: string = "users"): Promise<boolean | null> {
     try {
         const response = await fetch(baseurl + endpoint + `/id/${user.id}`, {
             method: 'PUT',
@@ -167,14 +167,11 @@ export async function updateUser(user: User, endpoint: string = "users"): Promis
             throw new Error(`Failed to edit user: ${response.statusText}`);
         }
 
-        // Return the edited user data
-        return await response.json();
+        return true;
     } catch (error) {
         // Handle errors gracefully
-        console.error(`Error editing user: ${error}`);
-        console.log("Mock user created:");
-        console.log(JSON.stringify(user));
-        return null;
+        console.error(`Error editing user ${user.username}: ${error}`);
+        return false;
     }
 }
 
@@ -189,8 +186,14 @@ export async function getProfilePic(userId: string, endpoint: string = "users"):
             throw new Error(`Failed to retrieve profile picture: ${response.statusText}`);
         }
 
+        const responseBody = await response.text();
+
+        if(responseBody === "") {
+            return null;
+        }
+
         // Return the response text (URL of the profile picture)
-        return await response.text();
+        return responseBody;
     } catch (error) {
         // Handle errors gracefully
         console.error(`Error retrieving profile picture: ${error}`);
@@ -206,6 +209,9 @@ export async function updateProfilePic(userId: string, profilePicture: File, end
 
         const response = await fetch(baseurl + endpoint + `/${userId}/profilePicture`, {
             method: 'POST',
+            headers: {
+                'Accept': '*/*'
+            },
             body: formData
         });
 
@@ -301,6 +307,30 @@ export async function getNetwork(): Promise<UserSummary[][]> {
 export async function getFollows(userId: string): Promise<UserSummary[]> {
     try {
         const response = await fetch(baseurl + `users/${userId}/follows`, {
+            method: 'GET'
+        });
+
+        if (!response.ok) {
+            // If the response is not successful, throw an error
+            throw new Error(`Failed to retrieve follows: ${response.statusText}`);
+        }
+
+        // Return the response text
+        return await response.json();
+    } catch (error) {
+        // Handle errors gracefully
+        console.error(`Error retrieving follows: ${error}`);
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(followerMockData);
+            }, 1000)
+        });
+    }
+}
+
+export async function getFollowers(userId: string): Promise<UserSummary[]> {
+    try {
+        const response = await fetch(baseurl + `users/${userId}/followers`, {
             method: 'GET'
         });
 

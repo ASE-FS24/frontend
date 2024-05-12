@@ -1,26 +1,28 @@
 import {User} from "./UserType";
 import styled from "styled-components";
 import {ReactComponent as ProfileSVG} from "../../static/images/profile.svg";
-import {ReactComponent as EditIcon} from "../../static/images/edit_pen.svg"; // Assuming you have an edit icon
+import {ReactComponent as EditIcon} from "../../static/images/edit_pen.svg";
 import React, {useState, useRef, useEffect} from 'react';
-import {updateUser, updateProfilePic, getProfilePic} from "./UserService";
+import {updateUser, updateProfilePic, getProfilePic, getUser} from "./UserService";
+import {removeSecondSlashes} from "../Util/util";
 
 const ProfilePicImage = styled.img`
-  width: 100%;
-  height: 100%;
+  width: 120px;
+  height: 120px;
   object-fit: cover;
   position: absolute;
   top: 0;
   left: 0;
-  opacity: 0;
+  opacity: 1;
 `;
 
 const UploadOverlay = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 120px;
+  height: 120px;
+  box-sizing: border-box;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
@@ -31,17 +33,22 @@ const UploadOverlay = styled.div`
 
 const UploadText = styled.p`
   color: #fff;
-  font-size: 14px;
+  font-size: 1rem;
 `;
 
 const ProfileIconContainer = styled.div`
-  width: 130px;
-  height: 100px;
-  margin-right: 20px;
+  width: 147px;
+  height: 120px;
+
+  margin-right: 40px;
   position: relative;
   cursor: pointer;
-  border-radius: 50%;
   background-color: #ffffff20;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
 
   &:hover > ${ProfilePicImage} {
     opacity: 0.8;
@@ -63,40 +70,13 @@ const InputFile = styled.input`
 `;
 
 const StyledUserContainer = styled.div`
+  width: 45%;
   display: flex;
-  align-items: flex-start; /* Align items at the start of the cross axis */
+  align-items: flex-start;
   background-color: #2d2d2d;
   color: #fff;
-  padding: 40px; /* Adjust padding */
-  border-radius: 30px;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
-`;
-
-const ProfileIcon = styled.label`
-  width: 100px;
-  height: 100px;
-  margin-right: 40px; /* Add margin for spacing */
-  // display: inline-block;
-  border-radius: 50%;
-  overflow: hidden;
-  position: relative;
-  cursor: pointer;
-  background-size: cover;
-  background-position: center;
-`;
-
-const UploadButton = styled.button`
-  background-color: #007bff;
-  color: #fff;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: #0056b3;
-  }
+  padding: 2.5%;
+  box-shadow: 0 0 10 0 rgba(0, 0, 0, 0.5);
 `;
 
 const UserInfoRow = styled.div`
@@ -123,7 +103,7 @@ const Separator = styled.div`
 `;
 
 const UserInfoText = styled.span`
-  white-space: nowrap; /* Prevent line break */
+
 `;
 
 const UserInfoWrapper = styled.div`
@@ -167,7 +147,6 @@ const SaveButton = styled.button`
 export function UserComponent({user}: { user: User }) {
 
     const [editableField, setEditableField] = useState<string | null>(null);
-    const [photoUrl, setPhotoUrl] = useState<string | null>(null);
     const [editedUser, setEditedUser] = useState<User>({...user});
     const [profilePic, setProfilePic] = useState<string | null>(null);
 
@@ -185,21 +164,23 @@ export function UserComponent({user}: { user: User }) {
         if (file) {
             const result = await updateProfilePic(user.id, file);
             if (result) {
-                console.log("Profile picture uploaded successfully:", result);
-                // Update UI accordingly if needed
+                let picUrl = await getProfilePic(user.id); // Assuming user.id is the user's ID
+                if (picUrl === null) {
+                    return;
+                }
+                // Append a timestamp to the URL so browser fetches the new image
+                const fixedPicUrl = removeSecondSlashes(picUrl);
+                setProfilePic(`${fixedPicUrl}?timestamp=${new Date().getTime()}`);
             } else {
                 console.log("Failed to upload profile picture");
-                // Handle error if needed
             }
         }
     };
 
-    // Function to handle profile picture upload
     const handleProfilePicUpload = () => {
         fileInputRef.current?.click(); // Trigger file input
     };
 
-    // Function to handle changes in input fields
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = event.target;
         setEditedUser((prevUser) => ({
@@ -208,14 +189,12 @@ export function UserComponent({user}: { user: User }) {
         }));
     };
 
-    // Function to handle save
     const handleSave = async () => {
         try {
-            // Call updateUser function to update user data
-            const updatedUser = await updateUser(editedUser);
-            if (updatedUser) {
-                console.log("User updated successfully:", updatedUser);
-                setEditableField(null); // Reset editableField state
+            const userUpdated = await updateUser(editedUser);
+            if (userUpdated) {
+                getUser(user.id).then((user) => setEditedUser(user));
+                setEditableField(""); // Reset editableField state
             } else {
                 console.log("Failed to update user");
             }
@@ -227,26 +206,29 @@ export function UserComponent({user}: { user: User }) {
     useEffect(() => {
         const fetchProfilePic = async () => {
             try {
-                const picUrl = await getProfilePic(user.id); // Assuming user.id is the user's ID
-                setProfilePic(picUrl);
+                const picUrl = await getProfilePic(user.id);
+                if (picUrl === null) {
+                    return;
+                }
+                const fixedPicUrl = removeSecondSlashes(picUrl);
+                setProfilePic(fixedPicUrl);
             } catch (error) {
                 console.error('Error fetching profile picture:', error);
-                // Handle error if necessary
             }
         };
-        fetchProfilePic();
-    }, [user.id]); // Run effect when user.id changes
+        fetchProfilePic().then();
+    }, []);
 
     return (
         <StyledUserContainer>
-            <ProfileIconContainer>
+            <ProfileIconContainer onClick={handleProfilePicUpload}>
                 {profilePic ? (
-                    <ProfilePicImage src={profilePic} alt="Profile"/>
+                    <ProfilePicImage src={profilePic} alt="Profile Picture"/>
                 ) : (
                     // Render a placeholder image or text if profilePic is not available
                     <ProfileSVG/>
                 )}
-                <UploadOverlay onMouseEnter={handleProfilePicUpload}>
+                <UploadOverlay>
                     <UploadText>Upload Picture</UploadText>
                     <InputFile type="file" ref={fileInputRef} onChange={handlePhotoUpload}/>
                 </UploadOverlay>
@@ -270,6 +252,7 @@ export function UserComponent({user}: { user: User }) {
                             name="firstName"
                             value={editedUser.firstName}
                             onChange={handleInputChange}
+                            maxLength={50}
                         />
                     ) : (
                         <UserInfoText>{editedUser.firstName}</UserInfoText>
@@ -284,6 +267,7 @@ export function UserComponent({user}: { user: User }) {
                             name="lastName"
                             value={editedUser.lastName}
                             onChange={handleInputChange}
+                            maxLength={50}
                         />
                     ) : (
                         <UserInfoText>{editedUser.lastName}</UserInfoText>
@@ -296,7 +280,13 @@ export function UserComponent({user}: { user: User }) {
                     <FieldBox>Email</FieldBox>
                     <Separator/>
                     {editableField === 'email' ? (
-                        <input type="text" name="email" value={editedUser.email} onChange={handleInputChange}/>
+                        <input
+                            type="text"
+                            name="email"
+                            value={editedUser.email}
+                            onChange={handleInputChange}
+                            maxLength={100}
+                        />
                     ) : (
                         <UserInfoText>{editedUser.email}</UserInfoText>
                     )}
@@ -308,8 +298,13 @@ export function UserComponent({user}: { user: User }) {
                     <FieldBox>University</FieldBox>
                     <Separator/>
                     {editableField === 'university' ? (
-                        <input type="text" name="university" value={editedUser.university}
-                               onChange={handleInputChange}/>
+                        <input
+                            type="text"
+                            name="university"
+                            value={editedUser.university}
+                            onChange={handleInputChange}
+                            maxLength={100}
+                        />
                     ) : (
                         <UserInfoText>{editedUser.university}</UserInfoText>
                     )}
@@ -321,7 +316,13 @@ export function UserComponent({user}: { user: User }) {
                     <FieldBox>Motto</FieldBox>
                     <Separator/>
                     {editableField === 'motto' ? (
-                        <input type="text" name="motto" value={editedUser.motto} onChange={handleInputChange}/>
+                        <input
+                            type="text"
+                            name="motto"
+                            value={editedUser.motto}
+                            onChange={handleInputChange}
+                            maxLength={200}
+                        />
                     ) : (
                         <UserInfoText>{editedUser.motto}</UserInfoText>
                     )}
@@ -333,7 +334,13 @@ export function UserComponent({user}: { user: User }) {
                     <FieldBox>Bio</FieldBox>
                     <Separator/>
                     {editableField === 'bio' ? (
-                        <input type="text" name="bio" value={editedUser.bio} onChange={handleInputChange}/>
+                        <input
+                            type="text"
+                            name="bio"
+                            value={editedUser.bio}
+                            onChange={handleInputChange}
+                            maxLength={500}
+                        />
                     ) : (
                         <UserInfoText>{editedUser.bio}</UserInfoText>
                     )}

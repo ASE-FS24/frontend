@@ -130,6 +130,11 @@ export default function Login() {
         }
     }
 
+    const handleForgotPassword = () => {
+      // Navigate to the forgot password page
+      navigate("/forgot-password");
+    }
+
     return (
         <StyledLoginContainer>
             <StyledLogoContainer onClick={() => navigate("/")}>
@@ -148,12 +153,12 @@ export default function Login() {
                        value={password}
                        onChange={(event) => setPassword(event.target.value)}/>
                 <StyledButtonContainer>
-                    <StyledButton margin={"15px"} onClick={() => navigate("/register")}>Register</StyledButton>
+                    <StyledButton type="button" margin={"15px"} onClick={() => navigate("/register")}>Register</StyledButton>
                     <StyledButton disabled={disabled} margin={"15px"} type={"submit"}>Login</StyledButton>
                 </StyledButtonContainer>
                 {error && <StyledError>{error}</StyledError>}
                 <StyledForgotPassword
-                onClick={() => console.log("Change password!")}>Forgot your password?</StyledForgotPassword>
+                onClick={handleForgotPassword}>Forgot your password?</StyledForgotPassword>
             </StyledForm>
         </StyledLoginContainer>
     )

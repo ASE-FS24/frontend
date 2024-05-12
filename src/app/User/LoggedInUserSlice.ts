@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {createUser, getFollows, getUser, getUserByUsername} from "./UserService";
+import {createUser, getFollowers, getFollows, getUser, getUserByUsername} from "./UserService";
 
 interface IUserState {
     value: any;
@@ -18,7 +18,10 @@ export const getLoggedInUserThunk = createAsyncThunk('users/getLoggedInUser', as
 });
 
 export const fetchFollows = createAsyncThunk('users/getConnections', async (userId: string) => {
-    return await getFollows(userId);
+    const follows = await getFollows(userId);
+    const followers = await getFollowers(userId);
+    const filteredFollowers = followers.filter(follower => !follows.some(follow => follow.id === follower.id));
+    return follows.concat(filteredFollowers);
 });
 
 export const loggedInUserSlice = createSlice({

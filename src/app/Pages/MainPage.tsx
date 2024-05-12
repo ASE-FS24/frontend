@@ -6,7 +6,7 @@ import {selectActiveUser} from "../User/LoggedInUserSlice";
 import {useNavigate} from "react-router-dom";
 import {PostsComponent} from "../Post/PostsComponent";
 import {store} from "../store";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
 
 const StyledMainPage = styled.div`
@@ -71,9 +71,10 @@ function Home() {
     const activeUser = useAppSelector(selectActiveUser);
     const navigate = useNavigate();
     const postState = useAppSelector(selectPostsState);
+    const [postsFetched, setPostsFetched] = useState<boolean>(false);
 
     useEffect(() => {
-        store.dispatch(fetchPosts());
+        store.dispatch(fetchPosts()).then(() => setPostsFetched(true));
     }, [])
 
     return (
@@ -84,11 +85,12 @@ function Home() {
                     {activeUser !== null ?
                         <>
                             <StyledMenuButton onClick={() => navigate("/post/create")}>New Post</StyledMenuButton>
-                            <StyledMenuButton>Connections</StyledMenuButton>
+                            <StyledMenuButton onClick={() => navigate("/chat")}>My Chats</StyledMenuButton>
+                            <StyledMenuButton onClick={() => navigate("/network")}>Connections</StyledMenuButton>
                         </> :
                         <></>}
                 </StyledMenuContainer>
-                {postState !== "loading" && <PostsComponent/>}
+                {postState !== "loading" && postsFetched && <PostsComponent/>}
             </StyledMainPage>
         </>
     );

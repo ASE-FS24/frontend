@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import {ReactComponent as LikeSVG} from "../../static/images/heart.svg";
 import {ReactComponent as FireSVG} from "../../static/images/fire.svg";
-import {ReactComponent as ShareSVG} from "../../static/images/share.svg";
 import {ReactComponent as ReportSVG} from "../../static/images/report.svg";
 import {ReactComponent as ProjectSVG} from "../../static/images/project.svg";
 import {ReactComponent as PostSVG} from "../../static/images/camera.svg";
@@ -13,9 +12,12 @@ import {Comment} from "../Comment/CommentType";
 import {StyledButtonSmall, StyledInput} from "../Pages/LoginPage";
 import {useAppDispatch, useAppSelector} from "../hooks";
 import {selectActiveUser} from "../User/LoggedInUserSlice";
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 import {likePost} from "./PostService";
 import {fetchPost, selectPostsById} from "./PostSlice";
+import {ReactComponent as EditSVG} from "../../static/images/edit_pen.svg";
+import {useNavigate} from "react-router-dom";
+import {StyledFilesLink} from "../Pages/EditPostPage";
 
 
 const StyledPost = styled.div`
@@ -72,7 +74,7 @@ const StyledInteractionsContainer = styled.div`
   justify-content: center;
   flex-direction: column;
   background-color: #000000;
-  min-width: 60px;
+  min-width: 50px;
   padding-left: 10px;
   position: relative;
 `;
@@ -81,6 +83,7 @@ const StyledInteractionsContainer = styled.div`
 export const StyledIconContainer = styled.div<{ last?: string; }>`
   display: flex;
   align-items: center;
+  justify-content: center;
   margin-top: ${props => props.last || "0"};
 
   &:hover {
@@ -113,34 +116,50 @@ const StyledCommentForm = styled.form`
   margin: 5px 5px 5px auto;
 `;
 
-function PostComponent({postId}: { postId: string }) {
+const StyledFilesTitle = styled.div`
+  font-size: 1.5rem;
+  margin: 20px 0 10px 0;
+  font-style: italic;
+  border-bottom: 1px solid white;
+`;
+
+function PostComponent({postId, edit}: { postId: string, edit?: boolean }) {
     const activeUser = useAppSelector(selectActiveUser);
     const post = useAppSelector(state => selectPostsById(state, postId));
     const [comments, setComments] = useState<Comment[]>([]);
-    const postDate = dateFormatter(post.edited ? post.editedDateTime : post.createdDateTime);
+    const [postDate, setPostDate] = useState<string>();
     const [showComments, setShowComments] = useState(false);
     const [commentContent, setCommentContent] = useState("");
     const [reloadComponent, setReloadComponent] = useState(true);
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        async function fetchComments(postId: string) {
-            const postComments = await getComments(postId);
+    async function fetchData() {
+        await dispatch(fetchPost(postId));
+        const postComments = await getComments(postId);
+        if (postComments !== undefined) {
             postComments.sort((a, b) => {
-                const d1 = stringToDate(a.createdAt);
-                const d2 = stringToDate(b.createdAt);
+                const d1 = new Date(a.createdAt);
+                const d2 = new Date(b.createdAt);
                 return d1.getTime() - d2.getTime();
             });
             setComments(postComments);
+            setReloadComponent(false);
         }
+    }
 
+    useEffect(() => {
         if (reloadComponent) {
-            dispatch(fetchPost(post.id));
-            fetchComments(post.id).then();
-            setReloadComponent(false)
+            fetchData().then();
         }
+    }, [reloadComponent]);
 
-    }, [post.id, reloadComponent]);
+
+    useEffect(() => {
+        if (post) {
+            setPostDate(dateFormatter(post.edited ? post.editedDateTime : post.createdDateTime));
+        }
+    }, [post])
 
     const handleCommentFormSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -166,7 +185,7 @@ function PostComponent({postId}: { postId: string }) {
 
     return (
         <>
-            <StyledPost>
+            {post && <StyledPost>
                 <StyledPostContent>
                     <StyledPostHeader>
                         <StyledPostType color={post.type === "POST" ? "#00aaff" : "#ff0000"}>
@@ -179,6 +198,16 @@ function PostComponent({postId}: { postId: string }) {
                     </StyledPostHeader>
                     <StyledPostTitle>{post.title}</StyledPostTitle>
                     <StyledPostDescription>{post.description}</StyledPostDescription>
+                    {post.fileUrls.length > 0 ?
+                        <>
+                            <StyledFilesTitle>Attachments</StyledFilesTitle>
+                            {post.fileUrls.map((url) => (
+                                <StyledFilesLink key={url} onClick={() => window.open(url, "_blank")}>
+                                    {url.split("/").pop()}
+                                </StyledFilesLink>
+                            ))}
+                        </> : null
+                    }
                 </StyledPostContent>
                 <StyledInteractionsContainer>
                     <StyledIconContainer onClick={like} title="Like">
@@ -187,26 +216,27 @@ function PostComponent({postId}: { postId: string }) {
                     <StyledIconContainer onClick={() => setShowComments(!showComments)} title="Comments">
                         <FireSVG style={{width: "45px", height: "45px"}}/>
                     </StyledIconContainer>
-                    <StyledIconContainer title="Share - not implemented yet">
-                        <ShareSVG style={{width: "45px", height: "45px"}}/>
-                    </StyledIconContainer>
+                    {edit && <StyledIconContainer title="Edit post" onClick={() => navigate("/post/edit/" + postId)}>
+                        <EditSVG style={{width: "40px", height: "40px", color: "#ffffff"}}/>
+                    </StyledIconContainer>}
                     <StyledIconContainer last={"auto"} title="Report - not implemented yet">
                         <ReportSVG style={{width: "45px", height: "45px"}}/>
                     </StyledIconContainer>
                     <StyledLikes>{post.likeNumber}</StyledLikes>
                 </StyledInteractionsContainer>
 
-            </StyledPost>
-            {showComments &&
+            </StyledPost>}
+            {post && showComments &&
                 <StyledCommentsContainer>
                     {comments.length > 0 ? comments.map((comment) => (
                         <CommentComponent key={comment.id} comment={comment} setReloadComponent={setReloadComponent}/>
                     )) : <StyledNoCommentsContainer>No comments yet...</StyledNoCommentsContainer>}
                     {activeUser !== null ?
-                                <StyledCommentForm onSubmit={handleCommentFormSubmit}>
-                                    <StyledInput type="text" value={commentContent} onChange={(e) => setCommentContent(e.target.value)} />
-                                    <StyledButtonSmall type="submit">Comment</StyledButtonSmall>
-                                </StyledCommentForm> :
+                        <StyledCommentForm onSubmit={handleCommentFormSubmit}>
+                            <StyledInput type="text" value={commentContent}
+                                         onChange={(e) => setCommentContent(e.target.value)}/>
+                            <StyledButtonSmall type="submit">Comment</StyledButtonSmall>
+                        </StyledCommentForm> :
                         <StyledNoCommentsContainer>Sign in to comment</StyledNoCommentsContainer>}
                 </StyledCommentsContainer>
             }
