@@ -229,9 +229,9 @@ function PostComponent({postId, edit}: { postId: string, edit?: boolean }) {
                     {edit && <StyledIconContainer title="Edit post" onClick={() => navigate("/post/edit/" + postId)}>
                         <EditSVG style={{width: "40px", height: "40px", color: "#ffffff"}}/>
                     </StyledIconContainer>}
-                    <StyledIconContainer last={"auto"} title="Report - not implemented yet">
-                        <ReportSVG style={{width: "45px", height: "45px"}}/>
-                    </StyledIconContainer>
+                    {/*<StyledIconContainer last={"auto"} title="Report - not implemented yet">*/}
+                    {/*    <ReportSVG style={{width: "45px", height: "45px"}}/>*/}
+                    {/*</StyledIconContainer>*/}
                     <StyledLikes>{post.likeNumber}</StyledLikes>
                 </StyledInteractionsContainer>
 
